@@ -1,32 +1,15 @@
 cff-version: 1.2.0
-message: "If you use this reproducibility bundle, please cite the repository and the associated arXiv paper. Add the ZivaHub/Figshare DOI once assigned."
-title: "Reaction-boundary volatility surface reproducibility bundle"
+title: "Code: Reaction-boundary volatility surface reproducibility code for arXiv:2607.05011"
+message: "If you use this software, please cite it using the metadata from this file."
 type: software
-version: "1.0.0"
-date-released: "2026-07-08"
 authors:
-  - family-names: Angstmann
-    given-names: Chris
   - family-names: Gebbie
     given-names: Tim
+  - family-names: Angstmann
+    given-names: Chris
+year: 2026
+doi: 10.25375/uct.32936867
 repository-code: "https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility"
-url: "https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility"
+url: "https://doi.org/10.25375/uct.32936867"
 license: MIT
-abstract: "Reduced reproducibility bundle for the supplementary simulation materials associated with arXiv:2607.05011. The bundle reproduces reaction-boundary volatility surface figures, tables, diagnostics, and sensitivity checks."
-keywords:
-  - quantitative finance
-  - local volatility
-  - market microstructure
-  - reaction-boundary variance
-  - reproducible research
-# DOI placeholder: add `doi: "10.xxxx/xxxxx"` after the ZivaHub/Figshare DOI is assigned.
-preferred-citation:
-  type: article
-  title: "Reaction-boundary variance and adjoint-consistent local-volatility projection"
-  authors:
-    - family-names: Angstmann
-      given-names: Chris
-    - family-names: Gebbie
-      given-names: Tim
-  year: 2026
-  url: "https://arxiv.org/abs/2607.05011"
+abstract: "Python reproducibility code for reaction-boundary volatility surface simulations associated with arXiv:2607.05011."
