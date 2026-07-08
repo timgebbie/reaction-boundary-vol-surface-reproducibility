@@ -1,6 +1,6 @@
 # Reaction-boundary volatility surface reproducibility bundle
 
-Version: v1.0 / planned public tag `v1.0.0`
+Version: v1.0.0
 
 Supplementary code and materials for:
 
@@ -18,18 +18,11 @@ This repository is a quantitative-finance reproducibility bundle. Its purpose is
 
 **Figure. Combined structural reaction-boundary volatility surface under the high-\(z\) response regime.** Panel A gives the boxed surface view of the projected local volatility \(\sigma_{\mathrm{loc}}\) over log-moneyness \(m=\ln(x/x_0)\) and maturity \(T\). Panel B gives the corresponding black-line contour projection of the same surface. This is the key pair in the supplement because it shows the point of the exercise: the model is not fitting an option-implied surface, but generating a structurally interpretable local-volatility shape from reaction-boundary ingredients. The high-\(z\) case emphasises the response-sensitive regime in which liquidity, resilience, and the structural response profile combine to produce a persistent skew-like surface over maturity. The contour view is included because it is easier to compare shape, monotonicity, and curvature across regimes without the visual distortion of a 3D perspective plot.
 
-The source files for this README figure are:
-
-- `figures/mpl-surface3d-combined-structural-high-z-v3.png`
-- `figures/mpl-contour-lines-combined-structural-high-z-v3.png`
-
-The combined README image is an additional presentation asset only. The original standalone figure files remain available in both PNG and PDF form.
-
 ## Current situation: v1.0
 
-The current v1.0 bundle supports the quantitative-finance claim made in the supplementary materials: a reaction-boundary variance closure can be projected into local-volatility-like surfaces whose shape reflects structural order-book ingredients rather than direct option calibration.
+The current v1.0 bundle supports the claim that a reaction-boundary variance closure can be projected into local-volatility-like surfaces whose shape reflects structural order-book ingredients rather than direct option calibration.
 
-In this current situation, the bundle provides:
+In this current situation:
 
 - reproducible simulations for the liquidity-only, resilience/response-only, and combined structural regimes;
 - low-\(z\) and high-\(z\) response cases;
@@ -38,11 +31,11 @@ In this current situation, the bundle provides:
 - diagnostics and sensitivity checks used to verify the active simulation route;
 - the supplementary-materials PDF and LaTeX source.
 
-The current v1.0 boundary is deliberately narrow. This is a **simulation and interpretation bundle** for the supplementary materials. It is not an empirical market-data calibration, not a Dupire inversion from option prices, not a trading strategy, and not a production pricing library.
+This is a **simulation and interpretation bundle** for the supplementary materials. It is not an empirical market-data calibration, not a Dupire inversion from option prices, not a trading strategy, and not a production pricing library.
 
-## Future situation: possible quantitative-finance extensions
+## Future situation: possible extensions
 
-Future versions could extend the finance content in several directions:
+Future versions could be extended in several directions:
 
 - compare the simulated reaction-boundary surfaces with empirical option-implied local-volatility surfaces;
 - calibrate liquidity, resilience, and response profiles from order-flow or limit-order-book data;
@@ -51,7 +44,7 @@ Future versions could extend the finance content in several directions:
 - examine how no-arbitrage projection or regularisation would interact with the structural surface;
 - extend the sensitivity analysis to richer parameter sweeps and alternative response kernels.
 
-Possible software improvements, such as formal packaging, command-line entry points, notebooks, continuous integration, and locked environments, are useful future enhancements. They are secondary to the current v1.0 finance objective: reproduce the supplementary simulation evidence clearly and without ambiguity.
+Possible software improvements include: formal packaging, command-line entry points, notebooks, continuous integration, and locked environments, are useful future enhancements. 
 
 ## Scientific boundary
 
@@ -170,6 +163,14 @@ v2.0.0        major restructure, formal packaging, empirical calibration, or exp
 
 ## DOI, citation, and license
 
+Reserved ZivaHub/Figshare DOI:
+
+https://doi.org/10.25375/uct.32936867
+
+Suggested citation:
+
+Gebbie, Tim; Angstmann, Chris (2026). *Code: Reaction-boundary volatility surface reproducibility code for arXiv:2607.05011*. University of Cape Town. Software. https://doi.org/10.25375/uct.32936867
+
 Concrete placeholders for the public release are below. Replace the bracketed fields once the ZivaHub/Figshare DOI has been issued.
 
 | Item | Value |
@@ -178,27 +179,17 @@ Concrete placeholders for the public release are below. Replace the bracketed fi
 | Supplementary PDF | [ReactionBoundaryVolSurface-Supplement-v0.1.pdf](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v0.1.pdf) |
 | GitHub repository | `https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility` |
 | GitHub release | `https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/releases/tag/v1.0.0` |
-| ZivaHub/Figshare DOI | `[TO BE ADDED: 10.xxxx/xxxxx]` |
-| ZivaHub/Figshare landing page | `[TO BE ADDED: https://...]` |
+| ZivaHub/Figshare DOI | [`10.25375/uct.32936867`](https://doi.org/10.25375/uct.32936867) |
+| ZivaHub/Figshare landing page | [`Code: Reaction-boundary volatility surface reproducibility code for arXiv:2607.05011`](https://zivahub.uct.ac.za/account/articles/32936867?file=66436139) |
 | Code license | MIT License |
-| Supplement/text/figures license | `[CONFIRM: CC BY 4.0 recommended]` |
+| Supplement/text/figures license | `[CC BY 4.0]` |
 
-Suggested repository citation after DOI assignment:
+## License
 
-```text
-Angstmann, C., & Gebbie, T. (2026). Reaction-boundary volatility surface
-reproducibility bundle (Version 1.0.0) [Software and supplementary materials].
-ZivaHub/Figshare. https://doi.org/[TO-BE-ADDED]
-```
+Code is released under the MIT License.
 
-Suggested code-availability statement for the arXiv update:
+Supplementary text, captions, figures, tables, and documentation are released under CC BY 4.0 unless otherwise stated.
 
-```text
-Code and supplementary materials. The Python code, configuration files,
-diagnostics, generated figures, and supplementary materials used to reproduce
-the reaction-boundary volatility-surface simulations are available at
-https://doi.org/[TO-BE-ADDED]. The public development repository is available at
-https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility.
-```
+The associated paper remains governed by its own arXiv/submission terms and is not relicensed by this repository.
 
 See also `CITATION.cff` and `DOI-CITATION-LICENSE.md`.
