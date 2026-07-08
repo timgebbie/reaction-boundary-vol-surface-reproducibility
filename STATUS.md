@@ -1,28 +1,36 @@
 # Reproducibility status
 
-Version: v1.0
+Version: v1.0 / planned public tag `v1.0.0`
 Date prepared: 2026-07-08
 
 ## Current situation: v1.0
 
-This repository is the reduced reproducibility bundle for the supplementary simulation materials associated with arXiv:2607.05011.
+The current situation is a quantitative-finance reproducibility bundle for the supplementary materials associated with [arXiv:2607.05011](https://arxiv.org/abs/2607.05011).
+
+The bundle supports the following current claim: the reaction-boundary variance construction can be simulated and projected into local-volatility-like surfaces whose shape is driven by liquidity, resilience, and structural response profiles. The current release is therefore a reproducible simulation object for the finance argument, not merely a code archive.
 
 It includes:
 
-- active Python scripts for diagnostics, table generation, figure generation, and sensitivity checks;
-- reusable helper functions;
-- configuration files for parameter ranges and structural profiles;
-- generated v3 Matplotlib figures in PDF and PNG form;
+- the liquidity-only, resilience/response-only, and combined structural surface regimes;
+- low-z and high-z response cases;
+- boxed surface and black-line contour views of the projected local-volatility surfaces;
+- configuration files linking the model parameters to the numerical profiles;
 - generated CSV and LaTeX tables;
 - diagnostic and sensitivity-check outputs;
-- supplementary-materials TeX and PDF;
+- the supplementary-materials TeX and PDF;
 - selected provenance files from the staged workspace.
 
-The bundle is intended to reproduce the figures, tables, diagnostics, and sensitivity checks used in the supplementary materials. It is not an empirical calibration package, not a market-data pipeline, and not a production local-volatility implementation.
+The current boundary is explicit. The bundle does not calibrate to option prices, does not estimate a Dupire surface from data, does not implement a production pricing engine, and does not claim that the simulated surfaces are fitted market surfaces.
 
 ## Current active route
 
 The active v1.0 route is:
+
+```bash
+python scripts/run_all.py
+```
+
+or, equivalently:
 
 ```bash
 python scripts/03_run_diagnostics.py
@@ -31,26 +39,32 @@ python scripts/05_generate_matplotlib_figures_v3.py
 python scripts/06_run_sensitivity_checks.py
 ```
 
-or:
+## Execution gates passed
 
-```bash
-python scripts/run_all.py
-```
+The reduced v1.0 bundle has passed:
 
-## Future situation: possible enhancements
+1. the author local execution gate on Windows with Python 3.13.9 using a `venv` under an Anaconda installation;
+2. the private GitHub clean-clone gate, in which the private repository was cloned into a fresh directory and `python scripts/run_all.py` completed successfully.
 
-Future versions could add:
+The confirmed final local status was:
 
-- a formal package layout;
-- automated tests;
-- continuous integration;
-- locked environments;
-- notebook walkthroughs;
-- additional parameter sweeps;
-- empirical calibration examples, if the project is later expanded.
+> Active v1.0 reproducibility route completed successfully.
 
-These enhancements are optional. They are not required for the v1.0 reproducibility claim.
+See `LOCAL-EXECUTION-GATE-v1.0.md` and `TEST-REPORT-v1.0.md` for the recorded gate notes.
+
+## Future situation: finance-first enhancements
+
+Future versions should be described first in finance terms, not software terms. Possible finance extensions include:
+
+- empirical comparison with option-implied local-volatility surfaces;
+- calibration of liquidity, resilience, and response profiles from order-flow or limit-order-book data;
+- classification of high-z and low-z regimes as possible market-state regimes;
+- links to long-memory order-flow, Hurst-type response behaviour, and market impact persistence;
+- no-arbitrage projection, smoothing, or regularisation of the structurally generated surface;
+- broader sensitivity analysis over response kernels and liquidity/resilience profiles.
+
+Software improvements such as formal packaging, command-line entry points, notebooks, continuous integration, or locked environments may be useful. They are not required for the v1.0 finance reproducibility claim.
 
 ## No-content-loss control
 
-The original staged ZIP is preserved externally and remains the complete workspace record. This reduced release preserves the active reproducibility core verbatim, retains selected provenance files, and records intentionally excluded workspace material in `REDUCTION-AUDIT.md` and `provenance/full-workspace-file-index.csv`.
+The original staged ZIP is preserved externally and remains the complete workspace record. This reduced release preserves the active reproducibility core, retains selected provenance files, and records intentionally excluded workspace material in `REDUCTION-AUDIT.md` and `provenance/full-workspace-file-index.csv`.

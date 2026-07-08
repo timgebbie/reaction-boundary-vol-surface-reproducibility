@@ -1,20 +1,14 @@
-# Reduced-bundle test report
+# Test report: v1.0
 
-Version tested: v1.0
-Date tested: 2026-07-08
+## Active route
 
-## Test object
-
-A clean copy of `ReactionBoundaryVolSurface-Reproducibility-v1.0` was tested independently of the original staged workspace.
-
-## Commands tested
+The active v1.0 route is:
 
 ```bash
-python -m compileall -q functions scripts
 python scripts/run_all.py
 ```
 
-The wrapper ran the documented active route:
+which runs:
 
 ```bash
 python scripts/03_run_diagnostics.py
@@ -23,30 +17,62 @@ python scripts/05_generate_matplotlib_figures_v3.py
 python scripts/06_run_sensitivity_checks.py
 ```
 
-## Result
+## Gate 1: author local execution gate
 
-The reduced v1.0 bundle completed the active reproducibility route successfully in the test environment.
+Passed.
 
-The diagnostic outputs recorded:
+Author test environment:
 
-- Stage 7 diagnostics: 42 checks, 0 failures.
-- Stage 9 sensitivity checks: 19 checks, 0 failures.
+```text
+Platform: Windows
+Python: 3.13.9
+Environment: venv under Anaconda installation
+```
 
-## File-count summary after reduction
+Confirmed outputs:
 
-| Area | File count |
-|---|---:|
-| `scripts/` | 5 |
-| `functions/` | 4 |
-| `config/` | 4 |
-| `figures/` | 24 |
-| `tables/` | 6 |
-| `diagnostics/` | 4 |
-| `outputs/` | 1 |
-| `captions/` | 6 |
-| `supplementary-materials/` | 4 |
-| `provenance/` | 54 |
+```text
+Stage 7 diagnostics
+Stage 8 table generation
+Matplotlib v3 figure generation
+Stage 9 sensitivity checks
+```
 
-## Note on local environments
+Final status:
 
-The supplied `requirements.txt` is inherited from the staged workspace. Before public release, confirm the final package pins on the user's local machine, especially the Matplotlib version used for final figure rendering.
+```text
+Active v1.0 reproducibility route completed successfully.
+```
+
+## Gate 2: private GitHub clean-clone gate
+
+Passed.
+
+The private repository was cloned into a fresh test directory, dependencies were installed into a fresh virtual environment, and:
+
+```bash
+python scripts/run_all.py
+```
+
+completed successfully.
+
+Final status:
+
+```text
+Active v1.0 reproducibility route completed successfully.
+```
+
+## Expected diagnostics
+
+The original staged workspace recorded:
+
+```text
+Stage 7 diagnostics: 42 checks, 0 failures
+Stage 9 sensitivity checks: 19 checks, 0 failures
+```
+
+## Note on generated PDF files
+
+After the clean-clone test, Git reported regenerated Matplotlib PDF figures as modified. This is a harmless generated-output difference and not a failed reproducibility gate. Matplotlib PDF output can differ byte-for-byte across systems because of backend metadata, font embedding, and local rendering details.
+
+The v1.0 claim is that the active route regenerates the intended scientific figures, tables, diagnostics, and sensitivity checks. It is not a claim that generated PDF binaries are byte-identical across every local environment.

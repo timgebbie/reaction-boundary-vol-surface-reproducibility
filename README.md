@@ -1,40 +1,57 @@
 # Reaction-boundary volatility surface reproducibility bundle
 
-Version: v1.0
+Version: v1.0 / planned public tag `v1.0.0`
 
-This repository contains the reduced reproducibility bundle for the supplementary simulation materials associated with:
+Supplementary code and materials for:
 
-> Chris Angstmann and Tim Gebbie, **"Reaction-boundary variance and adjoint-consistent local-volatility projection"**, arXiv:2607.05011.
+> Chris Angstmann and Tim Gebbie, **"Reaction-boundary variance and adjoint-consistent local-volatility projection"**, [arXiv:2607.05011](https://arxiv.org/abs/2607.05011).
 
-The repository is intended to reproduce the simulation figures, tables, diagnostics, and sensitivity checks used in the supplementary materials. It is a simulation-reproducibility bundle, not an empirical calibration package and not a production pricing library.
+The supplementary-materials document is included here:
+
+> [ReactionBoundaryVolSurface-Supplement-v0.1.pdf](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v0.1.pdf)
+
+This repository is a quantitative-finance reproducibility bundle. Its purpose is to show how the reaction-boundary variance construction generates projected local-volatility surface shapes from liquidity, resilience, and response terms. The code is included so that the figures, tables, diagnostics, and sensitivity checks can be regenerated from the same parameter profiles used in the supplementary materials.
+
+## Key figure: combined structural high-z response
+
+![Combined structural high-z surface and contour pair](figures/readme-combined-structural-high-z-pair-v1.png)
+
+**Figure. Combined structural reaction-boundary volatility surface under the high-\(z\) response regime.** Panel A gives the boxed surface view of the projected local volatility \(\sigma_{\mathrm{loc}}\) over log-moneyness \(m=\ln(x/x_0)\) and maturity \(T\). Panel B gives the corresponding black-line contour projection of the same surface. This is the key pair in the supplement because it shows the point of the exercise: the model is not fitting an option-implied surface, but generating a structurally interpretable local-volatility shape from reaction-boundary ingredients. The high-\(z\) case emphasises the response-sensitive regime in which liquidity, resilience, and the structural response profile combine to produce a persistent skew-like surface over maturity. The contour view is included because it is easier to compare shape, monotonicity, and curvature across regimes without the visual distortion of a 3D perspective plot.
+
+The source files for this README figure are:
+
+- `figures/mpl-surface3d-combined-structural-high-z-v3.png`
+- `figures/mpl-contour-lines-combined-structural-high-z-v3.png`
+
+The combined README image is an additional presentation asset only. The original standalone figure files remain available in both PNG and PDF form.
 
 ## Current situation: v1.0
 
-The v1.0 bundle contains:
+The current v1.0 bundle supports the quantitative-finance claim made in the supplementary materials: a reaction-boundary variance closure can be projected into local-volatility-like surfaces whose shape reflects structural order-book ingredients rather than direct option calibration.
 
-- the active Python scripts used to regenerate the tables, diagnostics, sensitivity checks, and preferred v3 Matplotlib figures;
-- the reusable numerical helper functions;
-- the parameter and structural-profile configuration files;
-- generated figure, table, diagnostic, and sensitivity outputs;
-- the supplementary-materials PDF and LaTeX source;
-- provenance notes documenting the staged construction of the bundle.
+In this current situation, the bundle provides:
 
-The active reproducibility route is intentionally small. Earlier development scripts and registers are retained under `provenance/` so that the reduction from the staged workspace is auditable without making the public route ambiguous.
+- reproducible simulations for the liquidity-only, resilience/response-only, and combined structural regimes;
+- low-\(z\) and high-\(z\) response cases;
+- surface and contour representations of the projected local-volatility surfaces;
+- parameter tables linking the mathematical construction to the numerical profiles;
+- diagnostics and sensitivity checks used to verify the active simulation route;
+- the supplementary-materials PDF and LaTeX source.
 
-## Future situation: possible enhancements
+The current v1.0 boundary is deliberately narrow. This is a **simulation and interpretation bundle** for the supplementary materials. It is not an empirical market-data calibration, not a Dupire inversion from option prices, not a trading strategy, and not a production pricing library.
 
-Future versions could add:
+## Future situation: possible quantitative-finance extensions
 
-- a formal Python package structure;
-- command-line entry points;
-- automated unit tests;
-- GitHub continuous-integration checks;
-- environment locking through `environment.yml`, `uv.lock`, or similar;
-- a notebook-based walkthrough;
-- additional parameter sweeps;
-- empirical calibration examples, if the project is later expanded beyond the current simulation-only boundary.
+Future versions could extend the finance content in several directions:
 
-These are possible enhancements, not requirements for reproducing the current supplementary figures.
+- compare the simulated reaction-boundary surfaces with empirical option-implied local-volatility surfaces;
+- calibrate liquidity, resilience, and response profiles from order-flow or limit-order-book data;
+- study whether the high-\(z\) and low-\(z\) regimes correspond to identifiable market states;
+- connect the reaction-boundary surface shape to long-memory order-flow effects and Hurst-type response behaviour;
+- examine how no-arbitrage projection or regularisation would interact with the structural surface;
+- extend the sensitivity analysis to richer parameter sweeps and alternative response kernels.
+
+Possible software improvements, such as formal packaging, command-line entry points, notebooks, continuous integration, and locked environments, are useful future enhancements. They are secondary to the current v1.0 finance objective: reproduce the supplementary simulation evidence clearly and without ambiguity.
 
 ## Scientific boundary
 
@@ -47,11 +64,11 @@ config/                  Parameter ranges and profile definitions
 functions/               Reusable numerical helpers
 scripts/                 Active v1.0 reproducibility scripts
 data/                    Data instructions; no empirical data are required
-figures/                 Preferred generated v3 figure outputs
-captions/                Standalone caption drafts for generated figures
+figures/                 Preferred generated v3 figure outputs and README figure
 tables/                  Generated CSV and LaTeX tables
 diagnostics/             Diagnostic and sensitivity-check reports
 outputs/                 Sensitivity summary outputs
+captions/                Standalone caption drafts for generated figures
 supplementary-materials/ Supplementary-materials TeX and PDF
 provenance/              Stage notes, audits, registers, source freeze, legacy scripts
 ```
@@ -72,6 +89,12 @@ On Windows PowerShell:
 .venv\Scripts\Activate.ps1
 ```
 
+On Windows CMD:
+
+```cmd
+.venv\Scripts\activate.bat
+```
+
 On macOS/Linux:
 
 ```bash
@@ -87,19 +110,19 @@ python -m pip install -r requirements.txt
 
 ## Reproducing the active outputs
 
-Run the scripts in this order:
+Run the convenience wrapper:
+
+```bash
+python scripts/run_all.py
+```
+
+or run the scripts explicitly:
 
 ```bash
 python scripts/03_run_diagnostics.py
 python scripts/01_make_tables.py
 python scripts/05_generate_matplotlib_figures_v3.py
 python scripts/06_run_sensitivity_checks.py
-```
-
-Alternatively, run the convenience wrapper:
-
-```bash
-python scripts/run_all.py
 ```
 
 Running the active route regenerates or checks:
@@ -110,14 +133,27 @@ Running the active route regenerates or checks:
 - sensitivity summaries in `outputs/`;
 - figure captions in `captions/`.
 
-## Expected checks
+## Execution gates passed
+
+The reduced v1.0 bundle has passed two execution gates:
+
+1. **Author local execution gate:** Windows, Python 3.13.9, `venv` under an Anaconda installation. The author confirmed successful completion of Stage 7 diagnostics, Stage 8 table generation, Matplotlib v3 figure generation, and Stage 9 sensitivity checks.
+2. **Private GitHub clean-clone gate:** the private GitHub repository was cloned into a fresh directory, dependencies were installed into a fresh virtual environment, and `python scripts/run_all.py` completed successfully.
+
+The expected final status line is:
+
+```text
+Active v1.0 reproducibility route completed successfully.
+```
 
 The original staged workspace recorded:
 
 - Stage 7 diagnostics: 42 checks, 0 failures;
 - Stage 9 sensitivity checks: 19 checks, 0 failures.
 
-The reduced v1.0 bundle was constructed so that the active scripts can be run independently of the larger staged workspace.
+### Note on regenerated PDF figures
+
+Running the figure-generation script may cause Git to mark generated PDF figures as modified even when the run has succeeded. This is expected: Matplotlib PDF output can differ byte-for-byte across local systems because of backend metadata, font embedding, or rendering details. The reproducibility claim is that the scripts regenerate the intended scientific figures, tables, diagnostics, and sensitivity checks; it is not a claim of byte-identical PDF files across all machines.
 
 ## Version-control policy
 
@@ -128,24 +164,41 @@ Recommended tags:
 ```text
 v1.0.0        first public reproducibility release
 v1.0.1        documentation-only corrections
-v1.1.0        minor reproducibility enhancements without changing the scientific boundary
-v2.0.0        major restructure, formal packaging, or expanded scientific scope
+v1.1.0        minor reproducibility or interpretation enhancements without changing the scientific boundary
+v2.0.0        major restructure, formal packaging, empirical calibration, or expanded scientific scope
 ```
 
-## DOI and archive plan
+## DOI, citation, and license
 
-The intended archival route is:
+Concrete placeholders for the public release are below. Replace the bracketed fields once the ZivaHub/Figshare DOI has been issued.
 
-1. make a private GitHub repository from this reduced v1.0 bundle;
-2. clean-clone test the repository locally;
-3. make the repository public;
-4. archive the public release and supplementary PDF through ZivaHub/Figshare;
-5. use the ZivaHub DOI in the arXiv paper update.
+| Item | Value |
+|---|---|
+| Associated paper | [arXiv:2607.05011](https://arxiv.org/abs/2607.05011) |
+| Supplementary PDF | [ReactionBoundaryVolSurface-Supplement-v0.1.pdf](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v0.1.pdf) |
+| GitHub repository | `https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility` |
+| GitHub release | `https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/releases/tag/v1.0.0` |
+| ZivaHub/Figshare DOI | `[TO BE ADDED: 10.xxxx/xxxxx]` |
+| ZivaHub/Figshare landing page | `[TO BE ADDED: https://...]` |
+| Code license | MIT License |
+| Supplement/text/figures license | `[CONFIRM: CC BY 4.0 recommended]` |
 
-## Citation
+Suggested repository citation after DOI assignment:
 
-Use `CITATION.cff` for repository citation metadata. Once a ZivaHub DOI is assigned, update `CITATION.cff`, this README, and the arXiv code/data availability statement.
+```text
+Angstmann, C., & Gebbie, T. (2026). Reaction-boundary volatility surface
+reproducibility bundle (Version 1.0.0) [Software and supplementary materials].
+ZivaHub/Figshare. https://doi.org/[TO-BE-ADDED]
+```
 
-## License
+Suggested code-availability statement for the arXiv update:
 
-A draft MIT license is included for the code. Confirm the final licensing choice with all authors before making the repository public. If the supplementary text and figures are to be licensed separately, state that explicitly before public release.
+```text
+Code and supplementary materials. The Python code, configuration files,
+diagnostics, generated figures, and supplementary materials used to reproduce
+the reaction-boundary volatility-surface simulations are available at
+https://doi.org/[TO-BE-ADDED]. The public development repository is available at
+https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility.
+```
+
+See also `CITATION.cff` and `DOI-CITATION-LICENSE.md`.

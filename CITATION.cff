@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "If you use this reproducibility bundle, please cite the repository and the associated arXiv paper."
+message: "If you use this reproducibility bundle, please cite the repository and the associated arXiv paper. Add the ZivaHub/Figshare DOI once assigned."
 title: "Reaction-boundary volatility surface reproducibility bundle"
 type: software
 version: "1.0.0"
@@ -9,10 +9,17 @@ authors:
     given-names: Chris
   - family-names: Gebbie
     given-names: Tim
-repository-code: "https://github.com/TO-BE-UPDATED/reaction-boundary-vol-surface-reproducibility"
-url: "https://arxiv.org/abs/2607.05011"
+repository-code: "https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility"
+url: "https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility"
 license: MIT
 abstract: "Reduced reproducibility bundle for the supplementary simulation materials associated with arXiv:2607.05011. The bundle reproduces reaction-boundary volatility surface figures, tables, diagnostics, and sensitivity checks."
+keywords:
+  - quantitative finance
+  - local volatility
+  - market microstructure
+  - reaction-boundary variance
+  - reproducible research
+# DOI placeholder: add `doi: "10.xxxx/xxxxx"` after the ZivaHub/Figshare DOI is assigned.
 preferred-citation:
   type: article
   title: "Reaction-boundary variance and adjoint-consistent local-volatility projection"
