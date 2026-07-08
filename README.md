@@ -18,7 +18,7 @@ This repository is a quantitative-finance reproducibility bundle. Its purpose is
 
 **Figure. Combined structural reaction-boundary volatility surface under the high- $z$ response regime.** Panel A gives the boxed surface view of the projected local volatility $\sigma_{\mathrm{loc}}$ over log-moneyness $m=\ln(x/x_0)$ and maturity $T$. Panel B gives the corresponding black-line contour projection of the same surface. This is the key pair in the supplement because it shows the point of the exercise: the model is not fitting an option-implied surface, but generating a structurally interpretable local-volatility shape from reaction-boundary ingredients. The high- $z$ case emphasises the response-sensitive regime in which liquidity, resilience, and the structural response profile combine to produce a persistent skew-like surface over maturity. The contour view is included because it is easier to compare shape, monotonicity, and curvature across regimes without the visual distortion of a 3D perspective plot.
 
-## Current situation: v1.0
+## Current situation: v1.0.0
 
 The current v1.0 bundle supports the claim that a reaction-boundary variance closure can be projected into local-volatility-like surfaces whose shape reflects structural order-book ingredients rather than direct option calibration.
 
