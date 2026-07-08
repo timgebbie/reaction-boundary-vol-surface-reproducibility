@@ -1,0 +1,155 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.85in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\setlist[itemize]{topsep=3pt,itemsep=2pt,parsep=0pt}
+
+\title{Stage 03 Full Theory-to-Code Map v1}
+\author{Reaction-boundary volatility surface project}
+\date{5 July 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Artefact Status}
+Full Stage 3 theory-to-code map. This is still a planning artefact. No
+code, figures, tables, parameter defaults, numerical diagnostics, or
+mathematical verification have been produced.
+
+\section*{Source Numbering Note}
+The user refers to the main surface-generating result as Eq.~18 and the
+response-function asymptotic cases as Eq.~22. In the frozen source, the
+stable labels are:
+\begin{itemize}
+  \item Main-result closure: \texttt{eq:main-operational-result} in the
+  main results section, repeated as \texttt{eq:operational-result} in the
+  derivation.
+  \item Response-function integral: \texttt{eq:F-definition}.
+  \item Two response-function regimes: \texttt{eq:F-asymp}.
+  \item Deterministic-clock projection: \texttt{eq:deterministic-localvol}.
+  \item Operational kernel notation: \texttt{eq:Xi}.
+\end{itemize}
+Later code and run notes should cite the source labels as well as any
+paper equation numbers.
+
+\section*{Core Computational Route}
+The first implementation should not simulate the signed-order-flow path or
+the Abel response path directly. It should implement the reduced-form
+surface engine:
+\[
+ a_u^{(\Delta)}(S,u)
+ \simeq
+ \left[\frac{\mathcal A_{\rm eff}(S,u)}{\mathcal L_u(S,u)^2}\right]
+ \Delta^{-\gamma(S,u)}
+ \mathcal F_{\gamma(S,u)}(\nu_u(S,u)\Delta),
+\]
+then apply the deterministic-clock projection
+\[
+ \sigma_{\rm loc}^2(S,t)=\alpha(t)\Xi(S,U(t);\Delta).
+\]
+
+\begin{longtable}{p{0.15\linewidth}p{0.21\linewidth}p{0.25\linewidth}p{0.27\linewidth}}
+\toprule
+Source label & Theory object & Computational object & Required gate before code \\
+\midrule
+\texttt{eq:main-operational-result}, \texttt{eq:operational-result} &
+Operational variance closure \(a_u^{(\Delta)}(S,u)\) &
+Function target: evaluate operational variance over a state/maturity or state/time grid &
+Stage 5 must choose state axis, parameter profiles, and response-regime branch. \\
+\midrule
+\texttt{eq:Xi} &
+Operational kernel \(\Xi(S,u;\Delta)\) &
+Alias or wrapper for the operational closure used in clock projection &
+Must remain an order-book object until the clock multiplier is applied. \\
+\midrule
+\texttt{eq:F-asymp} &
+Low-\(z\) response case \( \mathcal F_\gamma(z)\sim \tan(\pi\gamma/2)/[2(1-\gamma)]\) &
+Response regime A: small \(z=\nu\Delta\), constant in \(z\) for fixed \(\gamma\) &
+Need admissible \(\gamma\) range away from \(1\); record low-\(z\) condition. \\
+\midrule
+\texttt{eq:F-asymp} &
+High-\(z\) response case \( \mathcal F_\gamma(z)\sim K_\gamma^{(0)}z^{\gamma-1}\) &
+Response regime B: large \(z=\nu\Delta\), resilience-scale decay for \(0<\gamma<1\) &
+Need implementation of \(K_\gamma^{(0)}\) and admissible \(\gamma\) range. \\
+\midrule
+\texttt{eq:Kgamma} &
+High-\(z\) prefactor \(K_\gamma^{(0)}\) &
+Helper function target if high-\(z\) branch is implemented &
+Requires gamma-function library choice and endpoint safeguards. \\
+\midrule
+\texttt{eq:deterministic-localvol} &
+Calendar-time local variance \(\sigma_{\rm loc}^2(S,t)\) &
+Deterministic clock projection function &
+Need \(\alpha(t)\) and \(U(t)\) convention. Use deterministic clock only. \\
+\midrule
+\texttt{eq:homogeneous-result} &
+Homogeneous benchmark \(\sigma_{\rm eff}^2\) &
+Scalar diagnostic and baseline sanity check &
+Use for baseline comparison, not as the full surface if state dependence is needed. \\
+\midrule
+\texttt{eq:linear-book} and explanatory text after \texttt{eq:operational-result} &
+Liquidity slope suppresses motion through \(1/\mathcal L(S)^2\) &
+Primary candidate for stock-price dependence: declare \(\mathcal L(S)\) profile &
+Stage 5 must specify the profile and label it as a modelling choice. \\
+\midrule
+\texttt{eq:Aeff} &
+\(\mathcal A_{\rm eff}=A_m/D_u\) &
+Effective signed-forcing intensity parameter or profile &
+Decide constant versus state/time dependence. \\
+\midrule
+\texttt{eq:coarse-rate} &
+Finite operational scale \(\Delta\) &
+Configuration parameter; not calendar maturity &
+Record units and grid; do not confuse with \(T\). \\
+\bottomrule
+\end{longtable}
+
+\section*{First Surface Convention To Decide Later}
+The first surface should be generated over one of the following:
+\begin{itemize}
+  \item \(S=\log x\) and maturity \(T\);
+  \item stock price \(x\) and maturity \(T\), with \(S=\log x\) internally;
+  \item log-moneyness and maturity \(T\).
+\end{itemize}
+The map recommends stock price or log-moneyness for reader-facing figures,
+while keeping \(S=\log x\) internally because the source theory uses \(S\)
+as the boundary/log-price state.
+
+\section*{Refactored Stock-Dependence Strategy}
+Stock dependence should be generated by explicit structural profiles, not
+by hiding all shape in a single surface. The first numerical design should
+therefore prepare three simulation profiles:
+\begin{enumerate}
+  \item Liquidity-only: vary \(\mathcal L(S)\), hold
+  \(\mathcal A_{\rm eff}\), \(\nu\), \(\gamma\), and \(\alpha\) fixed.
+  This isolates the inverse-square liquidity channel.
+  \item Resilience-response-only: vary \(\nu(S)\), hold
+  \(\mathcal A_{\rm eff}\), \(\mathcal L\), \(\gamma\), and \(\alpha\)
+  fixed. This isolates the \(z(S)=\nu(S)\Delta\) channel in
+  \(\mathcal F_\gamma(z)\), especially in the high-\(z\) regime.
+  \item Combined structural: vary \(\mathcal L(S)\), \(\nu(S)\), and
+  optionally \(\mathcal A_{\rm eff}(S)\) together to produce a stylised
+  stress or skew surface. This profile must be labelled as simulation
+  phenomenology rather than calibration.
+\end{enumerate}
+
+\section*{Mandatory Later Outputs}
+\begin{itemize}
+  \item Parameter-range table, with raw CSV and standalone LaTeX table.
+  \item Response-regime table for the two \(\mathcal F_\gamma\) cases.
+  \item Matched surface-and-contour output for the low-\(z\) response case.
+  \item Matched surface-and-contour output for the high-\(z\) response case.
+\end{itemize}
+
+\section*{Deferred Objects}
+The spectral cumulant, finite-cutoff response, pricing PDE, stochastic or
+non-unique clocks, empirical calibration, and direct signed-order-flow path
+simulation are deferred. They should not enter the first implementation
+unless a later stage explicitly revises scope.
+
+\end{document}

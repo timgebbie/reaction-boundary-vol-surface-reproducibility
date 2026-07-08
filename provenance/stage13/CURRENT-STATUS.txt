@@ -1,0 +1,147 @@
+Current status
+
+Project: reaction-boundary-volatility-surface
+Date: 5 July 2026
+Stage: Stage 13 complete candidate
+Complexity mode: Standard
+Routing: simulation only
+Working form: Python-first standalone scripts with Markdown run notes
+
+Completed in Stage 2
+- Created workspace folder tree.
+- Froze supplied theory source as source-v0.
+- Froze supplied BibTeX source as references-v0.
+- Froze supplied computational guide bundle as source-v0.
+- Archived revised Stage 00 planning checkpoint.
+- Created control files for status, artefact register, source freeze,
+  configuration policy, run notes, data instructions, and Stage 2 report.
+
+Completed in Stage 3
+- Created full theory-to-code map.
+- Mapped user Eq. 18 and Eq. 22 references to stable source labels.
+- Recorded the main-result closure as the first computational route.
+- Recorded both Eq. 22 response regimes as mandatory simulation branches.
+- Recorded liquidity L(S) as the first candidate stock-price dependence
+  channel.
+- Created assumption/approximation, parameter-source, response-regime, and
+  surface-design registers.
+
+Completed in Stage 4
+- Refactored the simulation strategy so stock dependence may enter through
+  liquidity, forcing intensity, resilience/response, memory, and activity.
+- Recorded three first-pass simulation profiles: liquidity-only,
+  resilience-response-only, and combined structural.
+- Audited the modelling status of each stock-dependence channel.
+- Confirmed that the response factor should be simulated in both Eq. 22
+  asymptotic regimes before considering a bridging integral.
+- Confirmed that all profiles remain simulation phenomenology, not
+  calibration or empirical validation.
+
+Completed in Stage 5
+- Selected dimensionless log-moneyness `m = log(x/x0)` as the internal
+  state axis.
+- Selected maturity `T` as the plotting time axis.
+- Designed the projected local-volatility surface engine.
+- Defined first-pass dimensionless parameter ranges and profile formulas.
+- Planned six profile-by-response-regime surface outputs.
+- Planned mandatory tables, scripts, and diagnostics.
+- Confirmed Python-first standalone scripts with Markdown run notes.
+
+Completed in Stage 6
+- Created parameter-range CSV.
+- Created profile-definition JSON.
+- Implemented response-regime helper functions.
+- Implemented structural-profile helper functions.
+- Implemented projected variance and volatility surface evaluators.
+- Ran a lightweight Python syntax compilation check; full numerical
+  diagnostics remain Stage 7.
+
+Completed in Stage 7
+- Created and ran the diagnostics script.
+- Generated diagnostic CSV and Markdown outputs.
+- Verified 42 of 42 checks.
+- Confirmed positive and finite response factors, profile components,
+  variance surfaces, and volatility surfaces.
+- Confirmed homogeneous state-flat baseline.
+- Confirmed resilience-only low/high response contrast.
+- Removed the unnecessary SciPy dependency after diagnostics exposed the
+  local environment did not provide it.
+
+Completed in Stage 8
+- Generated three CSV/LaTeX table pairs.
+- Generated six surface-plus-contour PDF figures.
+- Generated six raw compressed surface outputs.
+- Generated six summary CSV outputs.
+- Generated six standalone caption drafts.
+- Generated figure-table manifest and provenance register.
+- Render-checked one representative PDF and visually confirmed it is
+  nonblank and readable.
+- Completed controlled v3 figure refinement using Matplotlib.
+- Generated separate boxed 3D surface and true line-contour plots in both
+  PDF and PNG formats.
+- Marked v3 Matplotlib figures as the preferred figure family.
+
+Completed in Stage 9
+- Ran sensitivity, robustness, and edge-case checks.
+- Verified 19 of 19 checks with no failures.
+- Confirmed monotonicity in `A_eff0`, inverse monotonicity in `L0`, and
+  high-z resilience suppression.
+- Confirmed grid robustness across coarse, baseline, and fine grids.
+- Pruned superseded v1/v2 generated artefacts from the active workspace to
+  keep the next bundle lean.
+- Replaced the active figure-table manifest with a v3-focused manifest.
+
+Completed in Stage 10
+- Added reproducibility build notes.
+- Added figure reproduction notes.
+- Added requirements file.
+- Added reproducibility manifest.
+- Prepared current workspace as the reproducibility package source.
+
+Completed in Stage 11
+- Opened the user review gate for interpretation.
+- Proposed standalone supplement filename:
+  `ReactionBoundaryVolSurface-Supplement-v0.1.tex`.
+- Proposed supplement structure and drafting phases.
+- Created a science-only standalone TeX outline for the supplement.
+
+Completed in Stage 12
+- Created the first full science-only supplementary-materials TeX draft:
+  `ReactionBoundaryVolSurface-Supplement-v0.1.tex`.
+- Included the reaction-boundary closure, response-regime approximations,
+  structural simulation profiles, numerical implementation summary,
+  parameter table, response-regime table, profile table, all six v3
+  surface/contour figure pairs, robustness notes, and limitations.
+- Compiled the supplement locally with `pdflatex`.
+- Rendered the compiled PDF to PNG pages for visual QA.
+- Added float barriers so each profile's figures remain with its subsection.
+
+Completed in Stage 13
+- Enriched the supplement with a section distinguishing projected structural
+  volatility surfaces from calibrated Dupire local-volatility surfaces.
+- Clarified that the current comparison is qualitative and phenomenological,
+  not a no-arbitrage pricing calibration.
+- Clarified that later empirical comparison should align the state coordinate
+  with log-strike or log-forward moneyness.
+- Added a generative AI disclosure section to the supplement.
+- Added a collaborator-facing local-volatility interpretation note.
+- Recompiled the supplement to a 9-page PDF and render-checked the layout.
+
+Still not started
+- User-facing review of the enriched supplement wording.
+
+Current modelling decisions
+- Simulation only.
+- Use main-result closure identified by the user as Eq. 18.
+- Simulate both response-function regimes from Eq. 22: low-z and high-z.
+- Treat stock-price dependence as most likely entering first through
+  declared state-dependent profiles, with liquidity L(S) and
+  resilience-response z(S)=nu(S) Delta as the clearest channels.
+- Mandatory later outputs: parameter-range table, response-regime table,
+  and matched surface-plus-contour figures for both Eq. 22 cases.
+- Stage 5 expands this to six surface outputs: three structural profiles
+  times two response regimes.
+
+Recommended next step
+Review the enriched supplement wording and decide whether the local-volatility
+interpretation should be shortened for paper inclusion.

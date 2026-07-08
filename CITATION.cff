@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this reproducibility bundle, please cite the repository and the associated arXiv paper."
+title: "Reaction-boundary volatility surface reproducibility bundle"
+type: software
+version: "1.0.0"
+date-released: "2026-07-08"
+authors:
+  - family-names: Angstmann
+    given-names: Chris
+  - family-names: Gebbie
+    given-names: Tim
+repository-code: "https://github.com/TO-BE-UPDATED/reaction-boundary-vol-surface-reproducibility"
+url: "https://arxiv.org/abs/2607.05011"
+license: MIT
+abstract: "Reduced reproducibility bundle for the supplementary simulation materials associated with arXiv:2607.05011. The bundle reproduces reaction-boundary volatility surface figures, tables, diagnostics, and sensitivity checks."
+preferred-citation:
+  type: article
+  title: "Reaction-boundary variance and adjoint-consistent local-volatility projection"
+  authors:
+    - family-names: Angstmann
+      given-names: Chris
+    - family-names: Gebbie
+      given-names: Tim
+  year: 2026
+  url: "https://arxiv.org/abs/2607.05011"

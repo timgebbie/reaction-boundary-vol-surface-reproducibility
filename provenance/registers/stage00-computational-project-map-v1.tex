@@ -1,0 +1,114 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\setlist[itemize]{topsep=3pt,itemsep=2pt,parsep=0pt}
+\setlist[enumerate]{topsep=3pt,itemsep=2pt,parsep=0pt}
+
+\title{Stage 00 Computational Project Map v1}
+\author{Reaction-boundary volatility surface project}
+\date{5 July 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Artefact Status}
+Draft computational map. Stage 1 and Stage 1A only. No implementation,
+figures, tables, numerical verification, or mathematical verification has
+been performed.
+
+\section*{Source Theory}
+Primary source:
+\begin{itemize}
+  \item \texttt{CATG-BSMFromAdjointProjection-FMF-v1.8(3).tex}
+  \item \texttt{BSMFromAdjointProjection-FMF-v1.8(3).bib}
+\end{itemize}
+
+\section*{Project Aim}
+Develop a Python-first computational workflow that simulates a reasonable
+approximation to the reaction-boundary volatility implied by the latent
+order-book theory and generates a volatility surface from the main-result
+closure. This is a simulation-only project at this stage.
+
+\section*{Scope Decision}
+Routing: simulation only.
+
+No empirical data, option quotes, calibration routines, data cleaning,
+sampling-window choices, or fitted market surfaces are part of the current
+workflow. A later human comparison to a calibrated surface may be useful,
+but it is outside this project unless explicitly added by a new control
+decision.
+
+\section*{Source Sections To Use}
+\begin{itemize}
+  \item Main-result operational closure, identified by the user as the
+  target Eq.~18 rather than the earlier spectral/cumulant formula.
+  \item Clock projection for a deterministic activity clock.
+  \item Non-unique time and adjoint-real projections, only as a later
+  caveat layer unless the simulation explicitly models clock ambiguity.
+  \item Reaction-boundary response and Green-function cumulant as source
+  motivation, not as first-pass direct simulation targets.
+  \item Appendix finite-cutoff spectral form only as a deferred numerical
+  refinement.
+\end{itemize}
+
+\section*{Main Computational Objects}
+\begin{itemize}
+  \item Primary target: the main-result operational reaction-boundary
+  variance closure, using the source label \texttt{eq:operational-result}
+  or its equivalent final numbered equation:
+  \[
+    a_u^{(\Delta)}(S,u)
+    \simeq
+    \left[\frac{\mathcal A_{\rm eff}(S,u)}{\mathcal L_u(S,u)^2}\right]
+    \Delta^{-\gamma(S,u)}
+    \mathcal F_{\gamma(S,u)}(\nu_u(S,u)\Delta).
+  \]
+  \item Deterministic-clock local variance projection
+  \[
+    \sigma_{\rm loc}^2(S,t)=\alpha(t)\Xi(S,U(t);\Delta).
+  \]
+  \item The same object written as
+  \(\Xi(S,u;\Delta)\) for deterministic-clock projection.
+  \item Volatility surface representation over stock price or log-price
+  state and maturity after choosing a surface-generation convention.
+\end{itemize}
+
+\section*{Key Modelling Questions For Stage 2--5}
+\begin{itemize}
+  \item Response function: do not simulate the full response path first.
+  First choose a controlled approximation or numerical evaluation of
+  \(\mathcal F_\gamma(z)\), with \(z=\nu\Delta\).
+  The two asymptotic cases in the response-function equation identified
+  by the user as Eq.~22 should both be simulated: the low-resilience /
+  small-\(z\) case and the high-resilience / large-\(z\) case.
+  \item Stock-price dependence: the first plausible source is
+  state-dependent liquidity \(\mathcal L(S)\), since the kernel contains
+  \(1/\mathcal L(S)^2\). State-dependent \(\mathcal A_{\rm eff}(S)\),
+  \(\nu(S)\), \(\gamma(S)\), or \(\alpha(t)\) may be introduced only as
+  explicit modelling choices.
+  \item Surface axes: decide whether the first surface uses \(S=\log x\),
+  stock price \(x\), or log-moneyness. The project should not hide this
+  convention.
+\end{itemize}
+
+\section*{Prudent Initial Outputs}
+\begin{enumerate}
+  \item A standalone parameter-range table.
+  \item A two-panel figure: surface plot of simulated local volatility and
+  contour projection of the same surface, with the two Eq.~22 response
+  regimes either shown as separate panels or generated as matched outputs.
+  \item A response-regime diagnostic plot or table comparing the two
+  asymptotic cases of \(\mathcal F_\gamma(z)\).
+  \item Optional liquidity-profile plot, only if state-dependent
+  \(\mathcal L(S)\) is used to create stock-price dependence.
+\end{enumerate}
+
+\section*{Claims Boundary}
+The computation should be labelled as simulation or illustration.
+Computational evidence must not be treated as proof of the theory, and
+visual surface shape must not be described as empirical validation.
+
+\end{document}

@@ -1,0 +1,42 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+\title{Stage 00 Parameter Register v1}
+\author{Reaction-boundary volatility surface project}
+\date{5 July 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Artefact Status}
+Draft parameter register. No numerical default has been accepted. The
+first table output should record simulation parameter ranges rather than
+calibrated values.
+
+\begin{longtable}{p{0.16\linewidth}p{0.25\linewidth}p{0.22\linewidth}p{0.27\linewidth}}
+\toprule
+Symbol & Meaning & Computational role & Status \\
+\midrule
+\(\mathcal A_{\rm eff}\) & Effective signed-forcing intensity divided by diffusion scale & Multiplies operational variance kernel & Need simulation range and normalisation. \\
+\(\mathcal L(S)\) & Local latent-book slope & Primary source of stock-price or log-price dependence through \(1/\mathcal L(S)^2\) & Need homogeneous baseline and one declared state-dependent profile. \\
+\(\nu\) & Resilience parameter & Enters \(z=\nu\Delta\) in response function & Need operational-time units and range. \\
+\(\gamma\) & Long-memory exponent, \(0<\gamma<1\) & Controls scale dependence \(\Delta^{-\gamma}\) and response function & Need range away from endpoints. \\
+\(\Delta\) & Operational coarse-graining scale & Sets finite-scale variance coefficient and \(z=\nu\Delta\) & Must not be confused with calendar maturity. \\
+\(\mathcal F_\gamma(z)\) & Response factor & Two asymptotic cases from Eq.~22 inside Eq.~18 closure & Mandatory low-\(z\) and high-\(z\) simulation cases; bridging method unresolved. \\
+\(\alpha(t)\) & Activity rate \(\mathrm dU/\mathrm dt\) & Projects operational variance into calendar time & Deterministic only; likely constant or simple maturity profile first. \\
+\(U(t)\) & Operational clock & Calendar-to-operational mapping & Deterministic only. \\
+\(S\) or \(x\) & Log-price state or stock price & Surface state axis & Need convention: \(S=\log x\), \(x\), or log-moneyness. \\
+\(T\) & Maturity horizon & Surface maturity axis after deterministic projection & Need simulation range only. \\
+\bottomrule
+\end{longtable}
+
+\section*{Parameter Policy}
+Parameter defaults and ranges must be recorded in a configuration file
+during Stage 2 or Stage 5. The first mandatory table is a parameter-range
+table with raw CSV and standalone LaTeX versions.
+
+\end{document}

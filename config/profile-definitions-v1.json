@@ -1,0 +1,61 @@
+{
+  "version": "v1",
+  "status": "implementation draft",
+  "state_axis": {
+    "name": "log_moneyness",
+    "symbol": "m",
+    "definition": "m = log(x / x0)",
+    "range": [-0.30, 0.30],
+    "num_points": 121
+  },
+  "maturity_axis": {
+    "symbol": "T",
+    "units": "years",
+    "range": [0.08333333333333333, 2.0],
+    "num_points": 96
+  },
+  "baseline": {
+    "gamma": 0.55,
+    "Delta": 1.0,
+    "A_eff0": 1.0,
+    "L0": 1.0,
+    "z_low": 0.05,
+    "z_high0": 10.0,
+    "alpha0": 1.0,
+    "a_short": 0.25,
+    "tau_alpha": 0.50,
+    "L_skew": 0.80,
+    "L_smile": 1.50,
+    "nu_skew": 1.00,
+    "A_stress": 0.75,
+    "L_floor": 0.20
+  },
+  "profiles": {
+    "liquidity_only": {
+      "varies": ["L(m)"],
+      "holds_constant": ["A_eff", "z", "gamma", "alpha"],
+      "description": "Isolates inverse-square liquidity channel."
+    },
+    "resilience_response_only": {
+      "varies": ["z(m) = nu(m) Delta"],
+      "holds_constant": ["A_eff", "L", "gamma", "alpha"],
+      "description": "Isolates response-channel stock dependence through z(m)."
+    },
+    "combined_structural": {
+      "varies": ["L(m)", "z(m) = nu(m) Delta", "A_eff(m)"],
+      "holds_constant": ["gamma", "simple alpha(T)"],
+      "description": "Stylised structural skew/stress profile."
+    }
+  },
+  "response_regimes": {
+    "low_z": {
+      "condition": "z = nu Delta << 1",
+      "formula": "tan(pi gamma / 2) / (2 (1 - gamma))"
+    },
+    "high_z": {
+      "condition": "z = nu Delta >> 1",
+      "formula": "K_gamma_0(gamma) z^(gamma - 1)"
+    }
+  }
+}
+

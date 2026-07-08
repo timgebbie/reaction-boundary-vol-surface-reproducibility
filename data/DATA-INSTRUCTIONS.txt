@@ -1,0 +1,13 @@
+Data instructions
+
+Artefact status: Stage 2 data-plan placeholder
+
+This project is simulation only.
+
+No empirical market data, option quotes, calibrated surfaces, sampling
+windows, data filters, or calibration files are required at this stage.
+
+If empirical data are introduced later, pause and revise the workflow
+routing before using the data. The current workspace is not claiming to be
+a data-science or calibration workflow.
+

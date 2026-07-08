@@ -1,0 +1,51 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{enumitem}
+\setlist[itemize]{topsep=3pt,itemsep=2pt,parsep=0pt}
+\setlist[enumerate]{topsep=3pt,itemsep=2pt,parsep=0pt}
+
+\title{Stage 00 Stage Sequence v1}
+\author{Reaction-boundary volatility surface project}
+\date{5 July 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Artefact Status}
+Draft stage sequence. Stage 1 and Stage 1A only have been completed.
+
+\section*{Recommended Sequence}
+\begin{enumerate}
+  \item Stage 2: Freeze source, set version structure, and establish
+  configuration control for a simulation-only project.
+  \item Stage 3: Create full theory-to-code map for the operational kernel,
+  deterministic clock projection, response factor, liquidity-state
+  dependence, the two Eq.~22 response regimes, and optional finite-cutoff
+  integral.
+  \item Stage 4: Audit references, algorithms, and modelling choices,
+  especially treatment of the two asymptotic cases of \(\mathcal F_\gamma\),
+  the liquidity profile, and the surface axes.
+  \item Stage 5: Design the numerical method and Python-first tooling.
+  \item Stage 6: Implement the first computational target only, likely the
+  main-result kernel evaluator after Stage 5 selects the response-factor
+  method.
+  \item Stage 7: Run diagnostics before any figure is treated as reliable.
+  \item Stage 8: Generate the mandatory parameter-range table, the
+  response-regime table, and matched surface-and-contour figures for both
+  Eq.~22 response cases.
+  \item Stage 9: Run sensitivity, robustness, and edge-case checks.
+  \item Stage 10: Build reproducibility package.
+  \item Stage 11: User review gate.
+  \item Stage 12: Controlled iteration.
+  \item Stage 13: Computational synthesis and interpretation.
+  \item Stage 14: Final audit and clean computational bundle.
+\end{enumerate}
+
+\section*{Stage-Stop Rule}
+Stop now and wait for user control input before Stage 2. The command
+``proceed'' should mean: proceed to source freeze and workspace setup using
+the revised simulation-only Stage 1 and Stage 1A status.
+
+\end{document}

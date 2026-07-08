@@ -1,0 +1,3 @@
+regime,condition,formula,depends_on_z
+low_z,z = nu Delta << 1,tan(pi gamma / 2) / (2 (1 - gamma)),False
+high_z,z = nu Delta >> 1,K_gamma_0(gamma) z^(gamma - 1),True

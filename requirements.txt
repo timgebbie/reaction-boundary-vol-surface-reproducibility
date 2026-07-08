@@ -1,0 +1,5 @@
+numpy>=1.25
+matplotlib==3.11.0
+reportlab>=4.0
+pillow>=9.0
+

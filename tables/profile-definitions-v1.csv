@@ -1,0 +1,4 @@
+profile,varies,holds_constant,description
+liquidity_only,L(m),"A_eff, z, gamma, alpha",Isolates inverse-square liquidity channel.
+resilience_response_only,z(m) = nu(m) Delta,"A_eff, L, gamma, alpha",Isolates response-channel stock dependence through z(m).
+combined_structural,"L(m), z(m) = nu(m) Delta, A_eff(m)","gamma, simple alpha(T)",Stylised structural skew/stress profile.

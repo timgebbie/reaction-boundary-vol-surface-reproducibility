@@ -1,0 +1,73 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.9in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+\title{Stage 00 Theory-to-Code Map v1}
+\author{Reaction-boundary volatility surface project}
+\date{5 July 2026}
+
+\begin{document}
+\maketitle
+
+\section*{Artefact Status}
+Draft theory-to-code map. This is a planning artefact only.
+
+\begin{longtable}{p{0.18\linewidth}p{0.22\linewidth}p{0.28\linewidth}p{0.22\linewidth}}
+\toprule
+Source object & Mathematical object & Computational representation & Caveat or gate \\
+\midrule
+Main-result closure, user-identified Eq.~18 &
+\(a_u^{(\Delta)}(S,u)\simeq [\mathcal A_{\rm eff}(S,u)/\mathcal L_u(S,u)^2]\Delta^{-\gamma(S,u)}
+\mathcal F_{\gamma(S,u)}(\nu_u(S,u)\Delta)\) &
+Primary simulation equation for the first volatility surface &
+Do not start from the earlier spectral/cumulant formula unless Stage 5 explicitly selects that route. \\
+\midrule
+Response factor &
+\(\mathcal F_\gamma(z)\), \(z=\nu\Delta\) &
+Two controlled asymptotic cases from the response-function equation identified as Eq.~22: low-\(z\) and high-\(z\) &
+This is the main numerical worry. Stage 5 should decide whether the first simulation uses only the two asymptotic cases or also a bridging numerical evaluation. \\
+\midrule
+Stock-price dependence &
+Likely enters first through \(\mathcal L(S)\), and possibly later through \(\mathcal A_{\rm eff}(S)\), \(\nu(S)\), \(\gamma(S)\), or \(\alpha(t)\) &
+State-dependent parameter profile over \(S=\log x\), \(x\), or log-moneyness &
+The liquidity profile must be declared as a modelling choice, not derived silently. \\
+\midrule
+Clock projection &
+\(\sigma_{\rm loc}^2(S,t)=\alpha(t)\Xi(S,U(t);\Delta)\) &
+Map operational kernel to calendar-time local variance &
+Use deterministic clock only. Non-unique time is out of scope for this simulation. \\
+\midrule
+Homogeneous benchmark &
+\(\sigma_{\rm eff}^2=\alpha_0[\mathcal A_{\rm eff,0}/\mathcal L_0^2]\Delta^{-\gamma_0}\mathcal F_{\gamma_0}(\nu_0\Delta)\) &
+Baseline scalar check and reference parameter case &
+Use as diagnostic or baseline. \\
+\midrule
+Appendix finite-cutoff spectral form &
+Finite-cutoff integral for \(a_{u,\tau_0}^{(\Delta)}\) &
+Deferred numerical refinement &
+Not part of first surface unless the response-factor approximation fails. \\
+\midrule
+Pricing PDE &
+Local-volatility PDE with \(\Xi^\mathbb Q\) &
+Out of scope for first simulation &
+Do not introduce pricing experiments unless explicitly requested. \\
+\bottomrule
+\end{longtable}
+
+\section*{Initial Code Targets, Not Yet Implemented}
+\begin{enumerate}
+  \item Parameter-range register and configuration file.
+  \item Response-factor method decision for \(\mathcal F_\gamma(z)\).
+  \item Explicit low-\(z\) and high-\(z\) response-regime cases from Eq.~22.
+  \item Main-result kernel evaluator.
+  \item Deterministic-clock projection.
+  \item Surface grid builder.
+  \item Parameter-range table script.
+  \item Two-panel surface-and-contour figure script.
+\end{enumerate}
+
+\end{document}

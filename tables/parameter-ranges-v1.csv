@@ -1,0 +1,15 @@
+parameter,baseline,range_min,range_max,role
+gamma,0.55,0.30,0.80,long-memory exponent; avoid endpoints 0 and 1
+Delta,1.0,0.5,2.0,operational coarse-graining scale
+A_eff0,1.0,0.5,2.0,effective signed-forcing intensity scale
+L0,1.0,0.75,1.5,baseline liquidity slope
+z_low,0.05,0.01,0.10,low-z response-regime marker
+z_high0,10.0,5.0,25.0,high-z response-regime marker
+alpha0,1.0,0.5,2.0,baseline deterministic activity
+a_short,0.25,0.0,0.75,short-maturity activity lift
+tau_alpha,0.50,0.25,1.0,activity decay scale in years
+L_skew,0.80,0.0,1.5,lower liquidity on downside when positive
+L_smile,1.50,0.0,3.0,thinner liquidity away from center
+nu_skew,1.00,0.0,2.0,weaker downside resilience when positive
+A_stress,0.75,0.0,1.5,stronger downside forcing in combined profile
+L_floor,0.20,0.10,0.50,positive floor for liquidity profile

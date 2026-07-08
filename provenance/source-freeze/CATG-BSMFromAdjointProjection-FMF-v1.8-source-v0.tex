@@ -1,0 +1,598 @@
+% AIMS Frontiers of Mathematical Finance submission draft using AMS-LaTeX use AMS if required
+\documentclass[11pt]{amsart}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsfonts,bm}
+\usepackage{amsthm}
+\usepackage{hyperref}
+\usepackage{lineno}
+\linenumbers
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+\setlength{\emergencystretch}{1.5em}
+
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\M}{\mathbb{M}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\dd}{\,\mathrm{d}}
+\newcommand{\ii}{\mathrm{i}}
+\newcommand{\wh}[1]{\widehat{#1}}
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\sigloc}{\sigma_{\mathrm{loc}}}
+\newcommand{\Aeff}{\mathcal{A}_{\mathrm{eff}}}
+\newcommand{\Fcal}{\mathcal{F}}
+\newcommand{\Xiop}{\Xi}
+\newcommand{\V}{\mathcal{V}}
+\newcommand{\Ad}{\operatorname{Ad}}
+\newcommand{\Pair}[2]{\left\langle #1,#2\right\rangle}
+\newcommand{\Bop}{\mathcal{B}}
+\newcommand{\Gop}{\mathcal{G}}
+% for the appendix B
+\newcommand{\Pproj}{\mathcal{P}}
+\newcommand{\Kern}{\mathcal{K}}
+\newcommand{\Sdom}{\mathcal S}
+\newcommand{\Dclaim}{\mathcal{D}_{\!B}}
+\newcommand{\Ddens}{\mathcal{D}_{\!G}}
+\newcommand{\Ical}{\mathcal{I}}
+\newcommand{\IntVar}{\mathcal{I\!V}}
+\newcommand{\PairS}[2]{\left\langle #1,#2\right\rangle_{\Sdom}}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\theoremstyle{plain}
+\newtheorem{proposition}{Proposition}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+\newtheorem{theorem}{Theorem}
+
+\begin{document}
+
+\title[Reaction-boundary variance]{Reaction-boundary variance and adjoint-consistent local-volatility projection}
+
+\author{Chris Angstmann}
+\address{School of Mathematics and Statistics, University of New South Wales, Sydney, NSW 2052, Australia}
+% \email{add email}
+
+\author{Tim Gebbie}
+\address{Department of Statistical Sciences, University of Cape Town, Rondebosch 7701, Western Cape, South Africa}
+% \email{add email}
+
+\subjclass[2020]{91G20, 91G80, 60G44, 60H30, 82C41}
+\keywords{operational time; reaction boundary; local volatility; non-unique time; adjoint operators; market incompleteness; latent order book}
+
+\begin{abstract}
+We derive an operational-time variance kernel for a latent-order-book reaction boundary and use it to separate three objects usually collapsed in calendar-time volatility models: a structural boundary cumulant, a clock projection, and a pricing-measure choice. The reaction boundary is the zero of a bid--ask imbalance field. For a locally linear book, signed order-flow perturbations displace this zero through a damped Abel response kernel, so the variance of boundary increments is obtained as a finite-scale Green-function cumulant rather than introduced as a primitive diffusion coefficient. For long-memory forcing with exponent $0<\gamma<1$, the operational variance has a closed asymptotic form involving effective signed-forcing intensity, liquidity slope, resilience, memory, and operational coarse-graining scale. A deterministic activity clock gives the benchmark local-volatility projection. More general, non-unique clocks generate candidate calendar-time pricing systems. We argue that such projections are admissible only when the induced forward density operator and backward valuation operator remain adjoint on the same state space. Adjoint consistency is therefore a reality constraint on operational-to-calendar time projection: it disciplines non-unique time and identifies where incompleteness enters.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+
+Volatility is often introduced at the level of a calendar-time diffusion, either postulated directly as in Black--Scholes--Merton or inferred from option prices in local-volatility models \cite{BlackScholes1973,Merton1973,Dupire1994,Gatheral2006}. The inference viewpoint is also linked to state-price recovery from option prices, where cross-strike curvature carries information about risk-neutral densities \cite{BreedenLitzenberger1978}. Here we reverse this order. We first compute a mesoscopic transport coefficient for a reaction boundary in a latent order book. Only after this operational-time coefficient is obtained do we discuss its projection into calendar time.
+
+The reaction boundary is the log-price location at which a local bid--ask imbalance field changes sign. For a locally linear latent book, small imbalance perturbations are converted into boundary displacements by the inverse local book slope. Signed order-flow perturbations are propagated to the boundary by the same damped Abel response kernel that appears in latent-liquidity accounts of concave market impact \cite{bouchaud2009markets,toth2011anomalous,Mastromatteo2014,Donier2015}. However, the object computed here is not the mean impact path. It is the second cumulant of the boundary displacement over a finite operational scale.
+
+Let $S(u)$ denote the log-price value of the reaction boundary in operational time $u$. The formal infinitesimal target for the operational variance of the reaction boundary is then:
+\begin{equation}
+ a_u(S,u)=\lim_{h\downarrow0}\frac{1}{h}
+ \E\left[(S(u+h)-S(u))^2\mid S(u)=S\right].
+ \label{eq:au-target}
+\end{equation}
+This fixes the transport coefficient that would appear in a local diffusion closure. In the Green-function calculation below the Abel kernel is singular at the origin, and the operational variance is therefore realised as a regularised, coarse-grained coefficient $a_u^{(\Delta)}(S,u)$ over a mesoscopic operational scale $\Delta$. The limiting notation in Eq.~\eqref{eq:au-target} should thus be read as the local target of the closure, while the object carried into the spectral calculation and clock projection is the finite-scale operational cumulant.
+
+Concretely, for a deterministic activity clock $u=U(t)$, the calendar-time local variance used in the mesoscopic closure is obtained by multiplying the operational variance by the activity rate,
+\begin{equation}
+ \sigloc^2(S,t)=\alpha(t)a_u^{(\Delta)}(S,U(t)),
+ \qquad \alpha(t)=\frac{\dd U(t)}{\dd t}.
+ \label{eq:clock-map}
+\end{equation}
+When the scale $\Delta$ is suppressed, Eq.~\eqref{eq:clock-map} reduces to the usual shorthand $\sigloc^2=\alpha a_u$. Thus the local-volatility coefficient is not assumed as a primitive property of the traded price. It is an activity-rescaled boundary cumulant: the order-book response determines the operational variance, while the clock determines how that operational variance is sampled in calendar time.
+
+This construction separates three layers that are often collapsed into a single volatility coefficient. The first layer is the local reaction-boundary response of the latent book. The second layer is the cumulant calculation for long-memory signed forcing in operational time. The third layer is the projection from operational time to calendar time. In this respect the paper is close to the subordination and time-change tradition, but differs by leaving the clock as an admissibility problem rather than specifying it at the outset \cite{Bochner1949,Clark1973,CarrWu2004}. A deterministic clock gives the benchmark local-volatility equation. A non-unique clock leaves the operational cumulant unchanged but changes the projection, so that incompleteness or clock uncertainty enters at the time-change layer rather than inside the Green-function kernel itself \cite{AngstmannGebbie2026NonUniqueTime}.
+
+The purpose here is to derive a finite-scale operational variance coefficient for a reaction-boundary price process and to identify the conditions under which its projection into calendar time defines a local-volatility pricing model. The construction combines latent-order-book response, long-memory signed forcing, and forward--backward adjoint consistency. The result is a structural decomposition of local volatility into boundary variance, activity, and pricing-measure choice.
+
+\section{Main results and contribution}
+
+The paper has three linked results. The first is the operational reaction-boundary variance kernel. Under the local assumptions stated below, the finite-scale operational variance rate satisfies
+\begin{equation}
+ a_u^{(\Delta)}(S,u)
+ \simeq
+ \left[\frac{\Aeff(S,u)}{\cL_u(S,u)^2}\right]
+ \Delta^{-\gamma(S,u)}
+ \Fcal_{\gamma(S,u)}(\nu_u(S,u)\Delta),
+ \label{eq:main-operational-result}
+\end{equation}
+where $\Aeff=A_m/D_u$ and $\Fcal_\gamma$ is the dimensionless response function in Eq.~\eqref{eq:F-definition}. This is a mesoscopic transport coefficient: it is local in $(S,u)$ but resolved at operational scale $\Delta$.
+
+The second result is the deterministic-clock projection. If $u=U(t)$ is absolutely continuous with activity rate $\alpha(t)=\dd U/\dd t$, then the corresponding calendar-time local variance is
+\begin{equation}
+ \sigloc^2(S,t)=\alpha(t)\Xiop(S,U(t);\Delta),
+ \label{eq:main-clock-result}
+\end{equation}
+where $\Xiop$ denotes the operational kernel in Eq.~\eqref{eq:Xi}. Under a chosen pricing measure this gives the benchmark local-volatility PDE in Eq.~\eqref{eq:pde}.
+
+The third result is a consistency criterion for non-unique time. If the clock is drawn from a family $\mathfrak U$, a projection of $\Xiop$ into calendar time is not automatically a pricing model. It is a pricing model only when the projected backward valuation operator and the projected forward density operator are adjoint on the same state space and information set. This is the adjoint-reality constraint developed in Sec.~\ref{sec:adjoint-real}. It is the step that distinguishes a coherent calendar-time representation from a formal variance projection.
+
+\section{Reaction-boundary response}
+Let $\Phi(x,u)$ be the bid--ask imbalance field and let the reaction boundary be defined by
+\begin{equation}
+ \Phi(y(u),u)=0.
+ \label{eq:zero-boundary}
+\end{equation}
+We write $y(u)$ for the zero of the imbalance field and $S(u)$ for the corresponding log-price state used in the variance and pricing functions.
+
+Near a simple zero, assume a locally linear latent book \cite{bouchaud2009markets,toth2011anomalous,Donier2015},
+\begin{equation}
+ \Phi^*(x,u)\simeq-\cL_u(x-y(u)),
+  \label{eq:linear-book}
+ \end{equation}
+ where $\cL_u=-\partial_x\Phi^*(y(u),u)>0$.
+ 
+A perturbation $\Psi$ obeys the frozen-coefficient response equation
+\begin{equation}
+ \partial_u\Psi=D_u\partial_{xx}\Psi-\nu_u\Psi+m(u)\delta(x-y(u)),
+ \label{eq:response-pde}
+\end{equation}
+where $D_u$ is replenishment/diffusion, $\nu_u$ resilience, and $m(u)$ signed forcing. The associated boundary kernel is
+\begin{equation}
+ g_{\nu,D}(\tau)=\frac{e^{-\nu\tau}}{\sqrt{4\pi D\tau}},\qquad \tau>0.
+ \label{eq:abel-kernel}
+\end{equation}
+The boundary displacement is therefore, to first order,
+\begin{equation}
+ Y(u)=y(u)-y_0\simeq\frac{1}{\cL_u}\int_0^u g_{\nu,D}(u-s)m(s)\dd s.
+ \label{eq:linear-response}
+\end{equation}
+This formula is local in the usual response-theory sense. The slope $\cL_u$, diffusion scale $D_u$, resilience $\nu_u$, and boundary location are frozen over the response window used to compute the increment; their dependence on state and operational time is restored in the local closure below. Physically, the book slope converts imbalance into displacement, while the damped Abel kernel describes how past signed forcing is transmitted to the present boundary. This is the same local response mechanism that underlies square-root impact in latent-liquidity models \cite{Mastromatteo2014,Donier2015,Benzaquen2018}, now applied to a second cumulant rather than only to mean impact. Dependence on $(S,u)$ is restored after the local cumulant is computed.
+
+\section{Green-function cumulant}
+The Abel kernel is singular at zero, so the operational variance used in the closure is regularised at a mesoscopic scale $\Delta$:
+\begin{equation}
+ a_u^{(\Delta)}(S,u)=\frac{1}{\Delta}
+ \Var\left[Y(u+\Delta)-Y(u)\mid S(u)=S\right].
+ \label{eq:coarse-rate}
+\end{equation}
+This is the finite-scale transport coefficient carried through the remainder of the calculation. It is local in $(S,u)$, but it is not an unregularised microscopic limit; the scale $\Delta$ is part of the mesoscopic description.
+Use the regularised kernel
+\begin{equation}
+ g_{\nu,D}^{(\tau_0)}(r)=
+ \frac{\exp[-\nu(r+\tau_0)]}{\sqrt{4\pi D(r+\tau_0)}}\mathbf{1}_{r\ge0}
+ \label{eq:regularized-kernel}
+\end{equation}
+and a locally stationary long-memory forcing covariance
+\begin{equation}
+ C_m(\tau;S,u)=A_m(S,u)(|\tau|+\tau_0)^{-\gamma(S,u)},
+ \label{eq:forcing-cov}
+\end{equation}
+where $ 0<\gamma<1$.
+The sign-memory exponent may be interpreted through the hidden-order splitting mechanism of Lillo, Mike and Farmer \cite{LilloMikeFarmer2005}. 
+
+With the Fourier convention 
+\begin{equation}
+    C_m(\tau)=(2\pi)^{-1}\int e^{\ii\omega\tau}S_m(\omega)\dd\omega,
+\end{equation}
+the exact coarse-grained spectral form is
+\begin{equation}
+ a_u^{(\Delta)}=\frac{1}{\Delta\cL_u^2}\frac{1}{2\pi}
+ \int_{-\infty}^{\infty}4\sin^2\left(\frac{\omega\Delta}{2}\right)
+ \left|\wh g_{\nu,D}^{(\tau_0)}(\omega)\right|^2S_m(\omega)\dd\omega.
+ \label{eq:spectral-cumulant}
+\end{equation}
+This is the standard Wiener--Khinchin/filtering representation for the variance of a linear filter of a locally stationary forcing process. Here the increment
+\(Y(u+\Delta)-Y(u)\) from Eq.~\eqref{eq:coarse-rate} contributes the transfer function \(e^{i\omega\Delta}-1\), whose squared modulus is \(4\sin^2(\omega\Delta/2)\); the boundary response contributes \(|\widehat g(\omega)|^2\); and the forcing contributes the spectrum \(S_m(\omega)\) \cite{Priestley1981}. The formula is exact for the frozen local coefficients and the regularised kernel. The subsequent approximation enters only when the finite-cutoff spectrum and finite-cutoff response are replaced by their low-frequency, zero-cutoff asymptotic forms.
+
+\section{Asymptotic closure}
+
+For $\Delta/\tau_0\gg1$, the low-frequency forcing spectrum is
+\begin{equation}
+ \frac{S_m(\omega)}{A_m}\sim C_\gamma |\omega|^{\gamma-1},
+ \qquad
+ C_\gamma=2\Gamma(1-\gamma)\sin\left(\frac{\pi\gamma}{2}\right).
+ \label{eq:spectrum-asymp}
+\end{equation}
+The microstructural motivation for the exponent is order splitting \cite{LilloMikeFarmer2005}, while the transform itself is the usual long-memory spectral calculation \cite{Beran1994}.
+The zero-cutoff kernel from Eq.~\eqref{eq:spectral-cumulant} has
+\begin{equation}
+ \wh g_{\nu,D}(\omega)=\frac{1}{2\sqrt{D}}(\nu+
+ i\omega)^{-1/2},
+ \end{equation}
+such that the power spectrum is
+\begin{equation}
+ |\wh g_{\nu,D}|^2=\frac{1}{4D\sqrt{\nu^2+\omega^2}}.
+ \label{eq:g-transform}
+\end{equation}
+The transform follows from the Gamma-integral/Laplace transform of the
+Abel kernel $t^{-1/2}\mathbf 1_{t>0}$ (or equivalently the Riemann--Liouville fractional-integral kernel), placing the response calculation in the same analytical family as fractional and long-memory filtering methods \cite{MillerRoss1993,Beran1994,Priestley1981}.
+This gives the asymptotic closure
+\begin{equation}
+ a_u^{(\Delta)}(S,u)
+ \simeq
+ \left[\frac{A_m(S,u)}{\cL_u(S,u)^2D_u(S,u)}\right]
+ \Delta^{-\gamma(S,u)}
+ \Fcal_{\gamma(S,u)}(\nu_u(S,u)\Delta).
+ \label{eq:closure-before-Aeff}
+\end{equation}
+The powers and constants in Eq.~\eqref{eq:closure-before-Aeff} follow directly from substituting Eqs.~\eqref{eq:spectrum-asymp} and \eqref{eq:g-transform} into Eq.~\eqref{eq:spectral-cumulant} and setting $\xi=\omega\Delta$. The factor $|\omega|^{\gamma-1}$ contributes $\Delta^{1-\gamma}$, the response denominator contributes
+\[
+ \frac{\Delta}{\sqrt{(\nu\Delta)^2+\xi^2}},
+\]
+and the outside rate normalisation contributes $1/\Delta$. The net scale is therefore $\Delta^{-\gamma}$, with the remaining dimensionless integral collected into $\Fcal_\gamma(\nu\Delta)$.
+Defining the effective signed-forcing intensity
+\begin{equation}
+ \Aeff(S,u)=\frac{A_m(S,u)}{D_u(S,u)},
+ \label{eq:Aeff}
+\end{equation}
+one obtains the local mesoscopic, Markovian reduced-form operational-variance closure
+\begin{equation}
+ a_u^{(\Delta)}(S,u)
+ \simeq
+ \left[\frac{\Aeff(S,u)}{\cL_u(S,u)^2}\right]
+ \Delta^{-\gamma(S,u)}
+ \Fcal_{\gamma(S,u)}(\nu_u(S,u)\Delta).
+ \label{eq:operational-result}
+\end{equation}
+The bracketed factor makes the inverse-liquidity dependence explicit: stronger effective signed forcing increases the boundary variance, while a steeper local book suppresses boundary motion quadratically. The factor $\Delta^{-\gamma}$ carries the coarse-graining dependence induced by long-memory signed order flow, and the dimensionless argument $\nu_u\Delta$ compares the resilience time scale of the book with the operational scale over which the boundary increment is measured.
+
+With the normalization used in Eq.~\eqref{eq:operational-result}, the response function may be written as the dimensionless spectral integral
+\begin{equation}
+ \Fcal_\gamma(z)=
+ \frac{C_\gamma}{2\pi}
+ \int_{-\infty}^{\infty}
+ \frac{\sin^2(\xi/2)|\xi|^{\gamma-1}}
+ {\sqrt{z^2+\xi^2}}\,\dd\xi,
+ \qquad 0<\gamma<1,
+ \label{eq:F-definition}
+\end{equation}
+up to the same zero-cutoff asymptotic normalization used in passing from Eq.~\eqref{eq:spectral-cumulant} to Eq.~\eqref{eq:closure-before-Aeff}. The response function is not fitted; it is constrained by asymptotics:
+\begin{equation}
+ \Fcal_\gamma(z)\sim
+ \begin{cases}
+ \displaystyle \frac{\tan(\pi\gamma/2)}{2(1-\gamma)},& z\ll1,\\[1.2em]
+ \displaystyle K_\gamma^{(0)}z^{\gamma-1},& z\gg1,
+ \end{cases}
+ \label{eq:F-asymp}
+\end{equation}
+where
+\begin{equation}
+ K_\gamma^{(0)}=\frac{\Gamma(1-\gamma)\sin(\pi\gamma/2)\Gamma(\gamma/2)\Gamma((1-\gamma)/2)}{2\pi^{3/2}}.
+ \label{eq:Kgamma}
+\end{equation}
+The two limits in Eq.~\eqref{eq:F-asymp} follow from beta/gamma integral identities and asymptotic scaling of oscillatory integrals: for \(z\ll1\) the denominator is asymptotically \(|\xi|\), while for
+\(z\gg1\) the scaling \(\xi=zy\) and oscillatory averaging of
+\(\sin^2(zy/2)\) gives the displayed coefficient
+\cite{GradshteynRyzhik,Wong2001}. The high-resilience prefactor is the zero-cutoff long-memory value; finite cutoff corrections can modify the prefactor but not the scaling.
+
+\section{Clock projection and pricing}
+
+Let
+\begin{equation}
+ \Xiop(S,u;\Delta)=
+ \left[\frac{\Aeff(S,u)}{\cL_u(S,u)^2}\right]
+ \Delta^{-\gamma(S,u)}
+ \Fcal_{\gamma(S,u)}(\nu_u(S,u)\Delta).
+ \label{eq:Xi}
+\end{equation}
+This is the operational-time variance kernel obtained from the reaction-boundary cumulant. It is still an order-book object: it depends on signed-forcing intensity, local liquidity, resilience, memory, and the operational scale $\Delta$. It becomes a calendar-time local variance only after a clock has been chosen.
+
+For a deterministic activity clock $u=U(t)$, the benchmark projection is
+\begin{equation}
+\sigloc^2(S,t)=\alpha(t)\Xiop(S,U(t);\Delta).
+ \label{eq:deterministic-localvol}
+\end{equation}
+Equation~\eqref{eq:deterministic-localvol} says that the clock does not change the Green-function cumulant itself. It only determines the rate at which operational boundary variance is sampled in calendar time. Higher activity therefore amplifies calendar-time variance, even when the operational response kernel is unchanged.
+
+Under a risk-neutral measure, in the usual no-arbitrage pricing framework, the corresponding pricing PDE uses the risk-neutral version of the same projected kernel \cite{HarrisonPliska1981,DelbaenSchachermayer1994,Duffie2001}:
+\begin{equation}
+ V_t+(r-q)xV_x+\frac12\alpha(t)\Xiop^\Q(\log x,U(t);\Delta)x^2V_{xx}-rV=0.
+ \label{eq:pde}
+\end{equation}
+Here $x$ is the traded price, so that the boundary state entering the operational kernel is $S=\log x$. The PDE is therefore a benchmark projection of the mesoscopic reaction-boundary variance into the usual local-volatility pricing form, not an independent postulate of a diffusion coefficient.
+
+In log-price variables, the corresponding projected backward operator has the schematic risk-neutral form
+\begin{equation}
+ \Bop_t^U f(S)=b^\Q(S,t)\partial_S f(S)+\frac12\alpha(t)\Xiop^\Q(S,U(t);\Delta)\partial_{SS}f(S),
+ \label{eq:backward-operator}
+\end{equation}
+with the usual killing term $-r f$ added for discounted claims. In the pure diffusion benchmark corresponding to Eq.~\eqref{eq:pde},
+\[
+ b^\Q(S,t)=r-q-\frac12\alpha(t)\Xiop^\Q(S,U(t);\Delta),
+\]
+subject to the usual convention changes if discounting or numeraires are absorbed into the state-price density. The forward density operator is the formal adjoint
+\begin{equation}
+ (\Bop_t^U)^\dagger p=-\partial_S\left(b^\Q(S,t)p\right)+\frac12\partial_{SS}\left(\alpha(t)\Xiop^\Q(S,U(t);\Delta)p\right),
+ \label{eq:forward-adjoint}
+\end{equation}
+up to boundary and numeraire conventions. For a deterministic clock the multiplier $\alpha(t)$ is common to both sides, so the forward--backward adjoint structure is inherited from the operational generator. This inheritance is no longer automatic when the projection is stochastic, filtered, or non-unique.
+
+The homogeneous benchmark freezes $\Aeff$, $\cL_u$, $\nu_u$, and $\gamma$:
+\begin{equation}
+ \sigma_{\rm eff}^2=\alpha_0
+ \left[\frac{{\Aeff}_0}{\cL_0^2}\right]
+ \Delta^{-\gamma_0}
+ \Fcal_{\gamma_0}(\nu_0\Delta).
+ \label{eq:homogeneous-result}
+\end{equation}
+This expression gives the homogeneous closure of the theory. Activity multiplies the operational variance kernel; effective signed forcing supplies boundary fluctuations; the local liquidity slope suppresses those fluctuations quadratically; resilience damps the contribution of persistent forcing; and the memory exponent controls the coarse-graining dependence through $\Delta^{-\gamma_0}$.
+
+The formula is best stated measure-generically. Under an admissible measure $\M$,
+\begin{equation}
+ \Xiop_0^{\M}(\Delta)=
+ \left[\frac{{\Aeff}_0^{\M}}{(\cL_0^{\M})^2}\right]
+ \Delta^{-\gamma_0^{\M}}
+ \Fcal_{\gamma_0^{\M}}(\nu_0^{\M}\Delta).
+ \label{eq:measure-generic}
+\end{equation}
+The pricing PDE uses the $\Q$ version. This avoids identifying physical order-flow statistics with risk-neutral quantities before specifying a risk-premium model. This is the point at which model uncertainty enters in a way comparable to robust or uncertain-model valuation: the same structural kernel may support different pricing systems once the admissible measure and projection class are varied \cite{DenisMartini2006,Cont2006}. In general,
+\begin{equation}
+ \Xiop^{\mathbb P}(S,u;\Delta)\ne \Xiop^{\mathbb Q}(S,u;\Delta),
+ \label{eq:P-not-Q-kernel}
+\end{equation}
+because the signed-forcing intensity, liquidity response, resilience, memory exponent, or clock-risk compensation may change under the pricing measure. The derivation supplies the operational functional form; a pricing application must specify, estimate, or constrain the transformation from the physical kernel to the risk-neutral kernel. 
+
+
+\section{Non-unique time and adjoint-real projections}
+\label{sec:adjoint-real}
+The non-unique-time extension keeps the operational kernel \eqref{eq:Xi} and changes only the projection. For a family of clocks $\mathfrak U$,
+\begin{equation}
+ \Sigma_{\mathfrak U}^2(S,t)=\mathcal P_{\mathfrak U}[\Xiop(S,u;\Delta);t].
+ \label{eq:NUT-projection}
+\end{equation}
+The operator $\mathcal P_{\mathfrak U}$ denotes a projection from operational to calendar time. For a deterministic absolutely continuous clock it reduces to the multiplier in Eq.~\eqref{eq:deterministic-localvol}, namely $\mathcal P_{\mathfrak U}[\Xiop;t]=\alpha(t)\Xiop(S,U(t);\Delta)$. For a stochastic, filtered, or non-unique clock it represents the corresponding conditional projection over admissible operational-time increments under the chosen pricing measure.
+
+\begin{definition}[Projected pricing pair]
+Given an operational kernel $\Xiop(S,u;\Delta)$ and a clock projection $U\in\mathfrak U$, a projected pricing pair is a pair $(\Bop_t^U,\Gop_t^U)$, where $\Bop_t^U$ acts backward on claims and $\Gop_t^U$ acts forward on state laws. The pair is interpreted as a one-state pricing representation only when both operators are defined on compatible domains and are associated with the same projected transition mechanism.
+\end{definition}
+
+\begin{definition}[Adjoint-real clock]
+A clock projection $U\in\mathfrak U$ is called adjoint-real if its projected pair satisfies
+\begin{equation}
+ \Pair{p}{\Bop_t^U V}=\Pair{\Gop_t^U p}{V}
+ \label{eq:adjoint-real-condition}
+\end{equation}
+for all admissible densities $p$ and claims $V$, after including the appropriate discounting, boundary, killing, and numeraire terms. The set of adjoint-real clocks is
+\begin{equation}
+ \Ad(\mathfrak U)=\{U\in\mathfrak U:\; \Gop_t^U=(\Bop_t^U)^\dagger\;\text{on the chosen state space}\}.
+ \label{eq:Ad-set}
+\end{equation}
+\end{definition}
+
+\begin{proposition}[Adjoint consistency as a reality constraint] \label{prop:adjoint-real}
+A non-unique operational-to-calendar projection defines a coherent one-state pricing system only if its clock belongs to $\Ad(\mathfrak U)$. A projection that maps the operational variance kernel into a plausible backward pricing coefficient, but does not induce the corresponding adjoint forward law on the same state space and information set, is a formal coefficient projection rather than a pricing model.
+\end{proposition}
+
+\begin{proof}[Proof outline] \label{proof:adjoint-realoutline}
+A one-state risk-neutral pricing representation requires a single projected transition mechanism. Acting backward on claims this mechanism gives a valuation semigroup and its infinitesimal operator $\Bop_t^U$; acting forward on state laws it gives the density evolution and its operator $\Gop_t^U$. Consistency of valuation and transition probabilities requires the bilinear pairing between densities and claims to be preserved, up to the usual discounting and cash-flow terms. Differentiating this pairing gives Eq.~\eqref{eq:adjoint-real-condition}. If the projected backward coefficient and the projected forward law are not adjoints, the representation prices claims under one calendar-time mechanism while evolving probabilities under another. Such a construction does not define a coherent one-state pricing model.
+\end{proof}
+
+\begin{remark}[A hidden-clock counterexample]
+Suppose the clock has an unobserved state $Z_t$. Over a short calendar
+interval $[t,t+\Delta t]$, a one-state backward projection may use the coefficient
+\begin{equation}
+ \Sigma_{\Delta t}^2(S,t)
+ =
+ \frac{1}{\Delta t}
+ \E^\Q\!\left[
+   \int_{U(t)}^{U(t+\Delta t)}
+   \Xiop(S,u;\Delta)\dd u
+   \,\middle|\, S_t=S
+ \right].
+\end{equation}
+If $U$ is absolutely continuous this reduces formally to
+$\E^\Q[\dot U_t\Xiop(S,U_t;\Delta)\mid S_t=S]$ as $\Delta t \downarrow0$.
+Thus the displayed coefficient can give a plausible scalar pricing PDE.
+But if the law of future clock increments depends on $Z_t$ beyond $S_t$,
+then the density of $S_t$ alone is not closed under the same operator.
+The adjoint-real representation is then obtained only after enlarging the
+state to $(S_t,Z_t)$, or else the one-state projection must be rejected.
+\end{remark}
+
+A maturity-level object can now be written as
+\begin{equation}
+ \V_{t,T}^{\mathfrak U}=\E^\Q\left[\int_{U(t)}^{U(T)}\Xiop^\Q(S(u),u;\Delta)\dd u\mid\mathcal F_t\right],
+ \label{eq:NUT-IV}
+\end{equation}
+provided that the expectation is taken under a pricing measure and clock projection for which the induced forward--backward pair is adjoint-real. When $U(t)$ is deterministic, \eqref{eq:NUT-IV} reduces to $\int_t^T\alpha(s)\Xiop^\Q(S,U(s);\Delta)\dd s$, recovering the benchmark. If several elements of $\Ad(\mathfrak U)$ survive, non-unique time remains as incompleteness: prices depend on the chosen adjoint-real projection or on the chosen pricing measure over clock risk. If $\Ad(\mathfrak U)$ is empty for the chosen state space, the state space must be enlarged or the projection class rejected \cite{AngstmannGebbie2026NonUniqueTime}.
+
+\section{Relation to local volatility, time changes, and projection}
+
+The deterministic-clock PDE in Eq.~\eqref{eq:pde} has the same algebraic form as a local-volatility pricing equation. The interpretation is different. In a standard local-volatility model the coefficient is specified directly in calendar time or inferred from option prices. Here it is the projection of an operational reaction-boundary cumulant, and the operational kernel can be discussed before any calendar-time clock is selected.
+
+The asymptotic form of $\Xiop$ is what makes the adjoint condition concrete. Non-unique time does not change the Green-function cumulant itself: it changes how the scale-dependent kernel, with its explicit $\Delta^{-\gamma}\Fcal_\gamma(\nu\Delta)$ dependence, is sampled and conditioned in calendar time. Thus two clocks can agree on a scalar projected variance at a point while implying different forward laws once hidden activity, filtration, or clock-risk information is taken into account. The local-volatility equation should therefore be read as an admissible projection of the asymptotic kernel, not as a primitive replacement for the operational model.
+
+The construction is also distinct from a standard time-changed process. A standard time-change model specifies a deterministic or stochastic clock and then studies the induced calendar-time process \cite{Bochner1949,Clark1973,CarrWu2004}. Here the clock is part of the modelling ambiguity. The family $\mathfrak U$ contains candidate projections, whereas $\Ad(\mathfrak U)$ contains only those projections that preserve the forward--backward adjoint relation needed for pricing. This places the clock choice closer to a model-uncertainty problem than to a purely parametric calibration problem \cite{DenisMartini2006,Cont2006}.
+
+Finally, the adjoint-real condition is not the same as a Markovian projection or marginal mimicking result. Markovian projection asks whether a possibly non-Markovian calendar-time process can be represented by a Markov process with matching marginal distributions \cite{Gyongy1986,BrunickShreve2013}. The present question is earlier: given an operational kernel, which projections into calendar time produce mutually consistent forward and backward operators? The answer is not supplied by the variance projection alone. It is supplied by adjoint consistency. Thus the asymptotic form of the boundary kernel makes the candidate local variance explicit, while the adjoint condition decides whether this candidate can live on the proposed state space as a pricing model.
+
+\section{Discussion and limitations}
+
+Here we provide a simple analytic bridge from microstructure response to local volatility. It uses the same Green-function response that explains concave impact \cite{toth2011anomalous,Mastromatteo2014, Donier2015}; but computes a second cumulant rather than a deterministic impact path. The microstructural input also sits in the broader order-flow-memory and latent-liquidity literature, where persistent signed flow, hidden-order splitting, slow liquidity digestion, and impact invariance are treated as structural market features rather than exogenous volatility factors \cite{LilloMikeFarmer2005,Bouchaud2004,bouchaud2009markets,Benzaquen2018}. The deterministic projection gives a local-volatility coefficient in the usual pricing PDE. The non-unique-time extension leaves the operational kernel unchanged and moves model uncertainty into the projection layer. The construction should therefore be read as a structural closure rather than an empirical volatility model. This distinction is important.
+
+What is derived is the form of a mesoscopic operational variance kernel once the local book slope, resilience, signed-forcing intensity, memory exponent, and operational coarse-graining scale are specified. What is assumed is local linearity of the latent book, frozen response coefficients over the increment window, locally stationary long-memory signed forcing, finite operational coarse graining, and a controlled low-frequency asymptotic regime. The key limitations then follow as: (i) the homogeneous limit is not a calibrated data model, (ii) the physical order-flow statistics are not identified directly with risk-neutral quantities, and (iii) it is not given that the finite-cutoff corrections are negligible in every empirical regime.
+
+The relation to the broader non-unique-time discussion is therefore specific. The present paper does not require a full operational-time lattice construction, a full meta-order impact model, or a multivariate correlation model. It uses only the local linear response of the boundary, the forcing covariance, and the clock projection. The broader motivation for treating clock choice as a source of incompleteness is discussed in \cite{AngstmannGebbie2026NonUniqueTime}; the derivation here is self-contained.
+
+We do not assert that the physical signed-order-flow covariance is itself the risk-neutral covariance, nor that the finite-cutoff asymptotic prefactor is universal across assets or sampling schemes. Nor do we claim that every long-memory or fractional extension remains a scalar local-volatility model. If the projected variance retains its own memory state, the Dupire coefficient is a marginal projection of richer variance dynamics rather than the primitive boundary variance itself. 
+
+Instead, the paper identifies the structural objects that must be transformed, calibrated, or projected before the kernel can be used for pricing. In this sense the formula is most useful as a disciplined decomposition of local volatility into liquidity response, signed-flow memory, activity, and measure choice, and makes concrete the role of time non-uniqueness in discrete event-driven systems. 
+
+%The result is not empirical and it leaves open the physical-to-risk-neutral transformation and finite-cutoff corrections to the high-resilience prefactor. These are natural next theoretical refinements, while data estimation and numerical validation are separate projects.
+
+\section{Conclusion}
+
+In summary, what we have derived is a coarse-grained local variance coefficient from the linear response of a reaction boundary in a latent order book. The key result is Eq.~\eqref{eq:operational-result}. It expresses the variance of boundary increments in terms of directly interpretable structural quantities: the effective signed-forcing intensity $\Aeff$, the local liquidity slope $\cL$, the resilience $\nu$, the long-memory exponent $\gamma$, and the operational coarse-graining scale $\Delta$.
+
+In simple physical terms, stronger signed forcing increases boundary variance, while a steeper latent book suppresses boundary motion through the inverse-square factor $1/\cL^2$. Long-memory order flow controls the scale dependence through $\Delta^{-\gamma}$, and resilience enters through the response function $\Fcal_\gamma(\nu\Delta)$, filtering the contribution of persistent forcing according to the ratio between the book relaxation scale and the measurement scale. 
+
+Equation~\eqref{eq:deterministic-localvol} then gives the deterministic-clock benchmark: calendar-time local variance is the operational boundary variance multiplied by the activity rate $\alpha(t)$. Thus activity does not alter the Green-function response kernel; it determines how rapidly operational fluctuations are sampled in calendar time. 
+
+Finally, Eq.~\eqref{eq:homogeneous-result} gives the homogeneous closed form, where the structural quantities are frozen. This limit is not meant to be a complete empirical model, but it is the clearest summary of the mechanism: activity amplifies variance, signed forcing supplies fluctuations, liquidity absorbs them quadratically, resilience damps persistent memory, and the memory exponent determines how the observed variance changes with coarse graining. The non-unique-time extension preserves this operational cumulant and moves incompleteness, or clock uncertainty, into the projection from operational to calendar time.
+
+The mathematical message is simple. The Green-function calculation determines an operational variance kernel under explicit local and asymptotic assumptions. The local-volatility pricing interpretation then requires a clock and a pricing measure. If the clock is unique and deterministic, the result reduces to an activity-rescaled local-volatility coefficient. If the clock is non-unique, the admissible projections are those that preserve the adjoint relation between valuation and density evolution. This is where the microstructure calculation meets mathematical finance: the order book supplies the operational cumulant, but pricing requires an adjoint-real calendar-time representation.
+
+\section*{Acknowledgments}
+During preparation of this manuscript, the authors used a generative-AI tool for language editing and consistency checks. The authors reviewed and edited all outputs and take full responsibility for the content of the manuscript.
+
+% Use plain for a self-contained amsart review PDF. If AIMS requests AIMS.bst after acceptance, switch to \bibliographystyle{AIMS}.
+\bibliographystyle{plain}
+\bibliography{BSMFromAdjointProjection-FMF-v1.8}
+
+\appendix
+\section{Finite-cutoff spectral form}
+\label{app:finite-cutoff}
+The asymptotic closure in Eq.~\eqref{eq:operational-result} uses the low-frequency, zero-cutoff approximation to the regularised spectral cumulant. This appendix records the finite-cutoff object from which that approximation is taken.
+
+With
+\begin{equation}
+ g_{\nu,D}^{(\tau_0)}(r)=\frac{\exp[-\nu(r+\tau_0)]}{\sqrt{4\pi D(r+\tau_0)}}\mathbf 1_{r\ge0},
+\end{equation}
+the exact filtered coefficient at operational scale $\Delta$ is
+\begin{equation}
+ a_{u,\tau_0}^{(\Delta)}=
+ \frac{1}{\Delta\cL_u^2}\frac{1}{2\pi}
+ \int_{-\infty}^{\infty}4\sin^2\left(\frac{\omega\Delta}{2}\right)
+ \left|\wh g_{\nu,D}^{(\tau_0)}(\omega)\right|^2
+ S_m^{(\tau_0)}(\omega)\dd\omega,
+ \label{eq:finite-cutoff-cumulant}
+\end{equation}
+where $S_m^{(\tau_0)}$ is the spectrum associated with
+\begin{equation}
+ C_m^{(\tau_0)}(\tau)=A_m(|\tau|+\tau_0)^{-\gamma}.
+\end{equation}
+The zero-cutoff calculation replaces
+\begin{equation}
+ \left|\wh g_{\nu,D}^{(\tau_0)}(\omega)\right|^2
+ \quad\text{by}\quad
+ \frac{1}{4D\sqrt{\nu^2+\omega^2}}
+\end{equation}
+and
+\begin{equation}
+ S_m^{(\tau_0)}(\omega)
+ \quad\text{by}\quad
+ A_m C_\gamma |\omega|^{\gamma-1}
+\end{equation}
+in the low-frequency regime relevant to $\Delta/\tau_0\gg1$. Under the change of variables $\xi=\omega\Delta$, these approximations give Eq.~\eqref{eq:operational-result}. Finite $\tau_0$ modifies the prefactor and the crossover at large $\nu\Delta$, but it does not change the leading long-memory scaling in the controlled regime where the increment scale is separated from the cutoff scale. This is deliberately stated at the spectral level. A calibrated finite-cutoff model would retain Eq.~\eqref{eq:finite-cutoff-cumulant} directly rather than replacing it by the asymptotic response function $\Fcal_\gamma$.
+
+\section{Adjoint consistency for projected clocks}
+\label{app:adjoint-consistency}
+
+In Proposition \ref{prop:adjoint-real} we provide the clock consistency reality condition and then provide a short outline for the proof strategy. Here we prove the consistency assertion using the proposed kernel-duality argument for Markov transition mechanisms and their infinitesimal generators \cite{EthierKurtz1986,Dynkin1965MarkovProcessesI,Feller1971Volume2}. We do not prove existence or uniqueness of a pricing measure, but identify the minimal coherence condition required once an operational-time variance kernel is projected into calendar time.  A projected clock can be used as a one-state pricing representation only when the backward valuation operator for claims and the forward state-price operator for laws are induced by the same discounted, or killed, state-price kernel. This serves as the formal version of the adjoint-real consistency requirement used in the main text; and makes more explicit the operational-lattice and non-unique-time interpretations in \cite{AngstmannGebbieBSMFromLattice2026,AngstmannGebbie2026NonUniqueTime}.
+
+\begin{definition}[Projected one-state pricing mechanism]
+Fix a log-price domain $\Sdom\subseteq\mathbb R$, a calendar interval $[0,T]$, a pricing measure $\Q$, and a class $\mathfrak U$ of operational-to-calendar projections for an operational variance kernel $\Xiop(S,u;\Delta)$.  For $U\in\mathfrak U$, a projected one-state pricing mechanism is a two-parameter discounted, or killed, state-price kernel
+\[
+ \Kern^U_{s,t}(S,\dd Y),\qquad S,Y\in\Sdom,\qquad 0\leq s\leq t\leq T,
+\]
+on the log-price domain $\Sdom$.  Its backward action on claims is
+\[
+ (P^U_{s,t}V)(S)=\int_{\Sdom}V(Y)\Kern^U_{s,t}(S,\dd Y),
+\]
+and its forward action on state-price measures is the dual action of the same kernel.  Thus, whenever state-price densities exist with respect to the log-price coordinate $S$,
+\[
+ \PairS{p}{V}:=\int_{\Sdom}V(S)p(S)\dd S,
+ \qquad
+ \PairS{p}{P^U_{s,t}V}=\PairS{(P^U_{s,t})^*p}{V}.
+\]
+\end{definition}
+
+\begin{definition}[Adjoint-real projection]
+For the chosen log-price domain, information set, operator domains, boundary convention, and discounting/killing convention, define
+\[
+ \Ad(\mathfrak U)
+ :=
+ \left\{
+ U\in\mathfrak U:
+ \PairS{p}{\Bop_t^U V}=\PairS{\Gop_t^U p}{V}
+ \text{ for all admissible } p,V
+ \right\}.
+\]
+Here $\Bop_t^U$ is the backward claim generator and $\Gop_t^U$ is the forward state-price generator associated with the same projected mechanism.
+\end{definition}
+
+\begin{theorem}[Adjoint consistency as a necessary coherence constraint]
+\label{thm:adjoint-consistency-v12}
+Let $U\in\mathfrak U$.  Suppose that $U$ defines a coherent one-state projected pricing mechanism on the information set $\Ical_t^S$ through a single discounted, or killed, state-price kernel $\Kern^U_{s,t}$.  Suppose further that, on compatible domains $\Dclaim(t)$ and $\Ddens(t)$, the paired short-step expansions
+\[
+ P^U_{t,t+h}V=V+h\Bop^U_tV+o(h),\qquad
+ (P^U_{t,t+h})^*p=p+h\Gop^U_tp+o(h)
+\]
+hold after pairing with admissible tests.  Then, for every admissible state-price density $p\in\Ddens(t)$ and every admissible claim or test function $V\in\Dclaim(t)$,
+\begin{equation}
+ \PairS{p}{\Bop^U_tV}=\PairS{\Gop^U_tp}{V}.
+ \label{eq:adjoint-consistency-v12}
+\end{equation}
+Consequently $U\in\Ad(\mathfrak U)$ for the selected log-price domain, information set, and boundary/discount convention.  Hence a non-unique operational-to-calendar projection can serve as a coherent one-state pricing representation only if its backward claim operator and forward state-price operator are adjoints of the same projected mechanism.
+
+In particular, if a projection supplies only a scalar coefficient
+\[
+ \Sigma_U^2(S,t)=\Pproj_U[\Xiop(S,u;\Delta);t]
+\]
+for a plausible backward pricing equation, but does not supply the corresponding forward state-price evolution through the same one-state mechanism, then it is a coefficient projection rather than a coherent one-state pricing model.
+\end{theorem}
+
+\begin{proof}
+For a fixed projection $U$, write $P_{s,t}=P^U_{s,t}$.  Since the backward valuation of claims and the forward evolution of state-price laws are induced by the same discounted or killed kernel, the finite-step duality identity holds:
+\[
+ \PairS{p}{P_{s,t}V}=\PairS{P_{s,t}^*p}{V}.
+\]
+This is simply Fubini--Tonelli applied to
+\[
+ (P_{s,t}V)(S)=\int_{\Sdom}V(Y)\Kern^U_{s,t}(S,\dd Y),
+\]
+with the common kernel moved from the claim side to the state-price side.
+
+Apply the identity over the short interval $[t,t+h]$.  Using the paired generator expansions gives
+\[
+ \PairS{p}{V+h\Bop^U_tV+o(h)}
+ =
+ \PairS{p+h\Gop^U_tp+o(h)}{V}.
+\]
+Cancel $\PairS{p}{V}$, divide by $h$, and let $h\downarrow0$.  The paired remainders vanish by assumption, yielding
+\[
+ \PairS{p}{\Bop^U_tV}=\PairS{\Gop^U_tp}{V}.
+\]
+This is precisely the adjoint-consistency condition in \eqref{eq:adjoint-consistency-v12}.  Therefore any coherent one-state projected pricing mechanism must belong to $\Ad(\mathfrak U)$.
+
+The coefficient-only statement follows because the preceding argument cannot be started from a scalar variance map alone.  The proof requires a common finite-step state-price mechanism and its dual action on state-price laws.  A projected scalar variance may therefore be a useful local coefficient, but it is not by itself a coherent one-state pricing model.  This proves the necessary condition.
+\end{proof}
+
+\begin{remark}[Deterministic-clock benchmark]
+If $U$ is deterministic and absolutely continuous with $\dot U(t)=\alpha(t)$, and if the risk-neutral log-price variance is
+\[
+ a_U^\Q(S,t)=\alpha(t)\Xiop^\Q(S,U(t);\Delta),
+\]
+then the killed log-price pricing generator may be written
+\[
+ \Bop^U_t f=b_U^\Q f_S+\frac12a_U^\Q f_{SS}-rf,
+ \qquad
+ b_U^\Q=r-q-\frac12a_U^\Q.
+\]
+Its formal adjoint is
+\[
+ \Gop^U_t p=-\partial_S(b_U^\Q p)+\frac12\partial_{SS}(a_U^\Q p)-rp,
+\]
+assuming compact support or boundary conditions that remove boundary terms.  In price coordinates this gives the corresponding killed local-volatility pricing equation
+\[
+ V_t+(r-q)xV_x+\frac12\alpha(t)\Xiop^\Q(\log x,U(t);\Delta)x^2V_{xx}-rV=0.
+\]
+\end{remark}
+
+\begin{remark}[Hidden clocks and state enlargement]
+If clock increments depend on hidden information not measurable with respect to $\Ical_t^S$, then a scalar projected variance may match a marginal variance or selected option prices without defining the same full one-state pricing semigroup as the hidden-clock model.  This is not an impossibility result for Markovian projection.  It says only that coherent one-state pricing requires a common one-state mechanism.  If the hidden state is relevant, the state should be enlarged, for example to $(S,Z)$ or to a sufficient filter state $(S,\pi)$.
+\end{remark}
+
+\begin{remark}[Kernel notation]
+To distinguish the primitive operational transition kernel from the projected calendar-time state-price kernel we note that the kernel hierarchy is:
+\[
+K_{\Delta u}(S,\dd Y;u)
+ \;\longrightarrow\;
+K^{\Q}_{\Delta u}(S,\dd Y;u)
+ \;\longrightarrow\;
+{\mathcal K^U_{s,t}(S,\dd Y)} .
+\]
+Here $K_{\Delta u}$ is reserved for the local operational-time transitions, and $\mathcal K^U_{s,t}$ for the calendar-time projected, discounted or killed, state-price kernel used in the adjoint-consistency argument.
+\end{remark}
+
+In summary: the appendix proves the consistency condition underlying Proposition~1: a non-unique time projection is admissible as a one-state pricing representation only when valuation and state-price evolution are generated by the same discounted state-price kernel.  The result is a necessary condition, not a sufficiency theorem.  It supports the use of $\Ad(\mathfrak U)$ as an admissibility set, while leaving measure selection, empirical calibration, market completeness, and possible state enlargement as separate modelling choices.
+
+\end{document}
