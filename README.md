@@ -171,8 +171,6 @@ Suggested citation:
 
 Gebbie, Tim; Angstmann, Chris (2026). *Code: Reaction-boundary volatility surface reproducibility code for arXiv:2607.05011*. University of Cape Town. Software. https://doi.org/10.25375/uct.32936867
 
-Concrete placeholders for the public release are below. Replace the bracketed fields once the ZivaHub/Figshare DOI has been issued.
-
 | Item | Value |
 |---|---|
 | Associated paper | [arXiv:2607.05011](https://arxiv.org/abs/2607.05011) |
