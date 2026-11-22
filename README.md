@@ -1,10 +1,12 @@
 # Reaction-boundary volatility surface reproducibility bundle
 
-Version: v1.1.0 — Finite-cutoff reaction-boundary variance, accepted 22 November 2026
+**Current scientific checkpoint: v1.2.0.** The translating reaction boundary (W02) was accepted on 22 November 2026. W03 is in progress on prescribed causal liquidity feedback.
 
 **Repository:** [timgebbie/reaction-boundary-vol-surface-reproducibility](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility)
 
-**Accepted v1.1.0 commit:** [33332cfd7ce707079e6bac288b739aa28d6837bd](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/33332cfd7ce707079e6bac288b739aa28d6837bd)
+**Accepted W02 source:** [`b65bf06`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/b65bf066e28466faa6781548a1f21e1b994e780c)
+
+**Accepted W01 source:** [33332cfd7ce707079e6bac288b739aa28d6837bd](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/33332cfd7ce707079e6bac288b739aa28d6837bd)
 
 **Project type:** Quantitative-finance research reproducibility bundle
 
@@ -28,11 +30,11 @@ This repository is a quantitative-finance reproducibility bundle. Its purpose is
 
 The combined high-$z$ figure uses the profile definitions and the high-$z$ asymptote in the v1.0.0 structural-surface calculation. The sensitivity summary reports the numerical characteristics of all six surfaces. [Profile definitions](config/profile-definitions-v1.json) · [Sensitivity summary](outputs/stage09-sensitivity-summary-v1.csv) · [Figure register](figure-table-provenance-register.csv)
 
-## Current situation: v1.1.0 accepted, v1.2.0 under review
+## Current situation: v1.2.0 accepted
 
 The accepted v1.1.0 calculation returns the operational increment variance of the stationary frozen boundary at positive microscopic cutoff. Its independent time-domain evaluation gives a direct check on the spectral calculation in Appendix A of the paper. The original structural surfaces remain the published baseline.
 
-The v1.2.0 candidate asks what changes when the deposition profile follows the observed zero. In the auxiliary field the translated profile has a neutral tangent, while the shape sector retains the resilience gap. With forcing proportional to that tangent, the zero follows the translation coordinate exactly. An orthogonal shape perturbation can shift the zero even when its spectral phase vanishes. [Translating-front calculation and tests](docs/audits/translating-front-v1.2.0.md)
+The v1.2.0 calculation asks what changes when the deposition profile follows the observed zero. In the auxiliary field the translated profile has a neutral tangent, while the shape sector retains the resilience gap. With forcing proportional to that tangent, the zero follows the translation coordinate exactly. An orthogonal shape perturbation can shift the zero even when its spectral phase vanishes. [Translating-front calculation and tests](docs/audits/translating-front-v1.2.0.md)
 
 ### Historical structural-surface baseline: v1.0.0
 
@@ -56,7 +58,7 @@ This is a **simulation and interpretation bundle** for the supplementary materia
 | Structural surfaces | Three structural profiles in the low- and high-$z$ regimes | [Diagnostics](diagnostics/stage07-diagnostics-v1.csv) · [Sensitivity checks](diagnostics/stage09-sensitivity-checks-v1.csv) | 42 diagnostics and 19 sensitivity checks passed in the baseline replay. |
 | Frozen increment variance | Independent spectral and time-domain evaluations at finite cutoff | [48 comparisons](outputs/v2/frozen-variance-checks.csv) · [Audit](docs/audits/frozen-response-v1.1.0.md) | Maximum observed relative discrepancy $3.84\times10^{-11}$ on the stated grid. |
 | SV2-F01 | Cutoff dependence and the full zero-cutoff crossover | [Figure](figures/v2/response-crossover.svg) · [Figure data](outputs/v2/response-crossover.csv) | Reproduced on the recorded Linux environment. |
-| Translating-front candidate (W02) | Pinned and moving spectra, translated root, weak field residual across the zero | [Spectra](outputs/v2/translation-spectrum.csv) · [Root and residual](outputs/v2/aligned-root-checks.csv) · [Mode figure](figures/v2/translation-modes.svg) | Eight W02 tests. The field and the placement of forcing are specified by the auxiliary construction. |
+| Translating front (W02) | Pinned and moving spectra, translated root, weak field residual across the zero | [Spectra](outputs/v2/translation-spectrum.csv) · [Root and residual](outputs/v2/aligned-root-checks.csv) · [Mode figure](figures/v2/translation-modes.svg) | Eight W02 tests passed. The field and the placement of forcing are specified by the auxiliary construction. |
 
 ### Prior implementations and methodological antecedents
 
@@ -73,7 +75,7 @@ This is a **simulation and interpretation bundle** for the supplementary materia
 | Checkpoint | Scientific question or evidence |
 |---|---|
 | v1.0.1 and v1.1.0 (accepted) | Replay the released surfaces and verify the frozen, finite-cutoff boundary variance independently in frequency and time. |
-| v1.2.0 (candidate) | Resolve the translation mode and stable shape spectrum, and test the exact aligned moving root. |
+| v1.2.0 (accepted) | Resolve the translation mode and stable shape spectrum, and test the exact aligned moving root. |
 | v1.3.0 | Introduce prescribed liquidity feedback and quantify the response error from eliminating fast rates. |
 | v1.4.0 | Measure the integrated root propagator and input memory independently to test the Bouchaud balance. |
 | v1.5.0 | Measure actual-root variance on the same prespecified operational-time window, including off-match and finite-rate-floor controls. |
@@ -127,14 +129,14 @@ provenance/              Stage notes, audits, registers, source freeze, legacy s
 
 ## Installation
 
-The historical Windows author run used Python 3.13.9. The November replay and v1.1.0 comparisons used Linux, Python 3.12.14, NumPy 2.3.5, SciPy 1.17.0 and Matplotlib 3.11.0. The requirements files specify the supported installation constraints. The exact versions above identify the recorded run.
+The historical Windows author run used Python 3.13.9. The November replay and v1.1.0–v1.2.0 calculations used Linux, Python 3.12.14, NumPy 2.3.5, SciPy 1.17.0 and Matplotlib 3.11.0. The requirements files specify the supported installation constraints. The exact versions above identify the recorded run.
 
 ### Obtain the accepted scientific source
 
 ```bash
 git clone https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility.git
 cd reaction-boundary-vol-surface-reproducibility
-git checkout 33332cfd7ce707079e6bac288b739aa28d6837bd
+git checkout b65bf066e28466faa6781548a1f21e1b994e780c
 ```
 
 For the original published surfaces alone, use the same repository at tag `v1.0.0`.
@@ -214,7 +216,7 @@ Running the active route regenerates or checks:
 - sensitivity summaries in `outputs/`;
 - figure captions in `captions/`.
 
-### Finite-cutoff calculation and expected outputs
+### Finite-cutoff and translating-front calculations
 
 ```bash
 python -W error -m unittest discover -s tests -v
@@ -227,6 +229,7 @@ python -W error scripts/run_translating_front.py
 | Six structural surfaces and sensitivity summary | [Figures](figures) · [Summary](outputs/stage09-sensitivity-summary-v1.csv) | PNG, PDF, CSV | Baseline diagnostics and sensitivity checks, with rendering and rounding differences recorded. |
 | Finite-cutoff coefficient | [Comparisons](outputs/v2/frozen-variance-checks.csv) | CSV | Relative discrepancy and refinement changes below $10^{-6}$ for each of 48 cases. |
 | Crossover and its running slope | [Figure](figures/v2/response-crossover.svg) · [Data](outputs/v2/response-crossover.csv) | SVG, CSV | Low- and high-$z$ checks against Eq. (22), using the tolerances in the [tests](tests/test_frozen_response.py). |
+| Translating front | [Field and root tests](docs/audits/translating-front-v1.2.0.md) · [Root residuals](outputs/v2/aligned-root-checks.csv) | CSV, SVG | On the finest grid the aligned weak residual was $3.16\times10^{-5}$ and the displaced-forcing control gave 0.218. |
 
 ### Repeating the analysis in an already-used tree
 
@@ -237,7 +240,7 @@ The same commands regenerate the derived files in place. Use the reference check
 | Check category | Command or evidence record | Result |
 |---|---|---|
 | Environment and dependencies | [Baseline replay](docs/audits/baseline-v1.0.0.md) · [Finite-cutoff run](docs/audits/frozen-response-v1.1.0.md) | Recorded on 22 November 2026. |
-| Unit and scientific regression | Frozen-response tests at the v1.1.0 reference commit | Five test methods passed, including 48 cross-domain comparisons. |
+| Unit and scientific regression | Clean W02 replay | All 13 tests passed with warnings treated as errors. Five cover W01 and eight cover W02. |
 | Source integrity | [Source freeze](provenance/source-freeze/SOURCE-FREEZE.md) · [Inventory reconciliation](docs/audits/baseline-v1.0.0.md) | Frozen TeX and BibTeX verified. The staged inventory differs from the Git tree. |
 | Clean source reproduction | Independent checkout of the v1.1.0 tree | Both extension CSVs and the SVG regenerated byte-for-byte in the recorded environment. All 61 historical checks passed. |
 | Cross-platform evidence | [Original author and clean-clone report](TEST-REPORT-v1.0.md) | Windows evidence applies to the historical route. The extension was verified on Linux. |
@@ -273,7 +276,7 @@ Development proceeds on `main`. Accepted checkpoints can receive immutable versi
 | v1.0.0 | Original structural surfaces, diagnostics and v0.1 supplement | Published reproducibility baseline | [Tag and GitHub release](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/releases/tag/v1.0.0) · [`ee37d99`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/ee37d994b72b64395560de1126531bb259c1f794) |
 | v1.0.1 | Historical replay, source map and checksum reconciliation | Accepted preservation checkpoint · [audit](docs/audits/baseline-v1.0.0.md) | [`48aad39`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/48aad392734a228455df743d1c9a6453c4fecee8) · commit on GitHub |
 | v1.1.0 | Exact finite-cutoff cumulant, independent time-domain check and zero-cutoff crossover | Accepted scientific checkpoint · [audit](docs/audits/frozen-response-v1.1.0.md) | [`33332cf`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/33332cfd7ce707079e6bac288b739aa28d6837bd) · commit on GitHub |
-| v1.2.0 candidate | Translating profile, pinned control, stable shape band and measured root | [Computational audit](docs/audits/translating-front-v1.2.0.md) · author review pending | Candidate on the v1.1.0 source lineage |
+| v1.2.0 | Translating profile, pinned control, stable shape band and measured root | [Computational audit](docs/audits/translating-front-v1.2.0.md) · accepted scientific checkpoint | [`b65bf06`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/b65bf066e28466faa6781548a1f21e1b994e780c) |
 
 The public tag and hosted release at the 22 November audit were both v1.0.0. The v0.1 supplement, the paper revision, the EFT companion and the dated inputs and figure families each retain their own identifiers. The `v2/` output directories identify work towards the expanded supplement.
 
@@ -284,7 +287,8 @@ The public tag and hosted release at the 22 November audit were both v1.0.0. The
 | Archived software | [ZivaHub deposit](https://doi.org/10.25375/uct.32936867), `ReactionBoundaryVolSurface-Reproducibility-v1.0-stage5.zip` | Staged v1 software deposit. |
 | Released Git source | [v1.0.0](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/releases/tag/v1.0.0) · [Release notes](RELEASE-NOTES-v1.0.md) | Reduced public repository and historical supplement. |
 | Inventory | [Staged checksums](FILE-MANIFEST-SHA256.csv) · [Current source map](reproducibility-manifest.md) | Of 132 staged entries, 98 match tagged Git bytes, six match with CRLF conversion, 27 differ and one file is absent. |
-| Extension | [v1.1.0 source](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/tree/33332cfd7ce707079e6bac288b739aa28d6837bd) | Accepted mainline computation. The v1 deposit describes the staged historical archive. |
+| Frozen-response extension | [v1.1.0 source](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/tree/33332cfd7ce707079e6bac288b739aa28d6837bd) | Accepted mainline computation. The v1 deposit describes the staged historical archive. |
+| Translating-front extension | [`b65bf06`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/b65bf066e28466faa6781548a1f21e1b994e780c) | Accepted W02 source, including the integrated clean replay. |
 
 ## DOI, citation, and license
 
@@ -319,14 +323,14 @@ See also `CITATION.cff` and `DOI-CITATION-LICENSE.md`.
 
 ## Current decision and next gate
 
-The v1.1.0 checkpoint verifies the stationary frozen tangent variance on the operational clock. Independent spectral and time-domain calculations agree within $4\times10^{-11}$ across the 48 tested configurations. The v1.2.0 candidate now tests the neutral translation mode and stable shape spectrum. See the [scientific audit and reproduction commands](docs/audits/frozen-response-v1.1.0.md) and the [crossover figure](figures/v2/response-crossover.svg).
+The v1.1.0 checkpoint verifies the stationary frozen tangent variance on the operational clock. Independent spectral and time-domain calculations agree within $4\times10^{-11}$ across the 48 tested configurations. The accepted v1.2.0 checkpoint verifies the neutral translation mode and stable shape spectrum. See the [scientific audit and reproduction commands](docs/audits/frozen-response-v1.1.0.md) and the [crossover figure](figures/v2/response-crossover.svg).
 
 
 | Decision record | Current position |
 |---|---|
-| Current situation | v1.1.0 accepted. W02/v1.2.0 under review. Published software baseline v1.0.0. |
+| Current situation | W02/v1.2.0 accepted on `main`. Published software baseline v1.0.0. |
 | Future situation | Test the causal response of a prescribed distribution of liquidity-reassessment rates, then quantify error from eliminating fast rates. |
-| Accepted evidence | Historical surface replay and independent finite-cutoff variance comparison, at the commits in the version table. |
-| Unresolved issues | Remote checkpoint tags, qualified historical inventory and the derivation of effective liquidity feedback from physical kinetics. |
-| Decision required | Review the W02 spectrum, observed-root and weak-residual evidence. A GitHub release requires a separate major-milestone decision. |
-| Next gate | Following W02 acceptance, W03 tests prescribed causal feedback against independent time- and frequency-domain calculations. |
+| Accepted evidence | Historical surface replay, independent frozen-variance comparison, and W02 spectrum and aligned-root residual. See the version table. |
+| Unresolved issues | Historical archive reconciliation and the derivation of effective liquidity feedback from physical kinetics. |
+| Decision required | Review the W03/W04 evidence when the v1.3.0 candidate is ready. A GitHub release requires a separate major-milestone decision. |
+| Next gate | W03 tests prescribed causal feedback against independent time- and frequency-domain calculations. |

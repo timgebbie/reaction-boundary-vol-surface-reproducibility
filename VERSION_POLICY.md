@@ -13,3 +13,5 @@ An accepted, reproducible checkpoint may receive an immutable version tag after 
 For changes to numerical defaults, grids, units or response regimes, record the configuration and affected outputs using the existing [configuration policy](config/CONFIGURATION-POLICY.md). For a scientific milestone, identify the exact source revision, parameters, reproduction command, measured results and limitations. Record software, supplement and archive identifiers separately.
 
 At each gate, record the current state, verified evidence, open limitations, next gate and any approval needed. The [baseline audit](docs/audits/baseline-v1.0.0.md) records the first such checkpoint.
+
+When a checkpoint is accepted, update the public README header, source checkout, evidence and release tables, and decision footer as part of recording the decision on main. Verify the rendered source on GitHub against the accepted revision.

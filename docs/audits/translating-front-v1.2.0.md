@@ -1,6 +1,6 @@
 # v1.2.0 — translating reaction-boundary tangent and shape spectrum
 
-**Status:** W02 computational checkpoint, proposed for review; not a GitHub release or a new theorem for a generic order book. **Immutable source:** [Angstmann and Gebbie, arXiv:2607.05011v4](https://arxiv.org/abs/2607.05011v4). **Extension provenance:** the separate *Toward an Effective Field Theory of Market Microstructure* v1.0.0 companion, G3b and G3d. This checkpoint does not alter either reference.
+**Status:** W02 computational checkpoint, accepted on 22 November 2026; not a GitHub release or a new theorem for a generic order book. **Immutable source:** [Angstmann and Gebbie, arXiv:2607.05011v4](https://arxiv.org/abs/2607.05011v4). **Extension provenance:** the separate *Toward an Effective Field Theory of Market Microstructure* v1.0.0 companion, G3b and G3d. This checkpoint does not alter either reference.
 
 ## Scientific distinction from the frozen response
 
@@ -89,7 +89,7 @@ The [weak residual](../../outputs/v2/aligned-root-checks.csv) integrates the fie
 
 Eight W02 tests and five W01 tests pass with warnings treated as errors. The legacy workflow runs all 42 diagnostics and 19 sensitivity checks. Both W01 data tables and its figure reproduce byte-for-byte in this environment. The historical supplement PDF and TeX match the published v1.0.0 Git tree.
 
-**Current.** W02/v1.2.0 candidate for author review.
+**Current.** W02/v1.2.0 accepted at [`b65bf06`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/b65bf066e28466faa6781548a1f21e1b994e780c).
 
 **Verified evidence.** Neutral translation, the stable shape threshold, an independently located aligned root, and a transverse perturbation that separates observed root and phase.
 
@@ -97,4 +97,4 @@ Eight W02 tests and five W01 tests pass with warnings treated as errors. The leg
 
 **Next gate.** W03 introduces causal liquidity reassessment with prescribed rates. W04 compares the full and reduced rate spectra.
 
-**Approval needed.** Author acceptance of W02 as the v1.2.0 scientific checkpoint. Tags and hosted releases follow the repository version policy.
+**Approval needed.** W02 author acceptance is recorded in the linked commit. The next scientific decision concerns W03/W04.
