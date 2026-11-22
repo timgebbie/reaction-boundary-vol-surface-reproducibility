@@ -16,6 +16,4 @@ At each gate, record the current state, verified evidence, open limitations, nex
 
 When a checkpoint is accepted, update the public README header, source checkout, evidence and release tables, and decision footer as part of recording the decision on main. Verify the rendered source on GitHub against the accepted revision.
 
-At each scientific gate audit the full working supplement section by section against the cited equations, executable code, configuration, figure inputs and generated results. Record corrections, retained evidence and unresolved claims. Carry forward the complete scientific exposition, figures, limitations and disclosures. Rebuild and inspect the PDF. The private working supplement is the mathematical and computational configuration-control record for every gate. Record equations, conventions, parameters, cutoffs, grids, tolerances, software revisions, reproduction commands, observed results and acceptance decisions there. Reconcile the public implementation with that record at each gate. The public README records the accepted software result and its public evidence. Keep released supplement versions immutable.
-
 Use arXiv records for the paper trail. Record Git revisions, software deposits, supplement revisions and computation inputs separately as artifact provenance.

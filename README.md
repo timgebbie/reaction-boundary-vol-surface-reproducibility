@@ -1,20 +1,13 @@
 # Reaction-boundary volatility surface reproducibility bundle
 
-**Current scientific checkpoint: v1.2.0.** The translating reaction boundary (W02) was accepted on 22 November 2026. W03 is in progress on prescribed causal liquidity feedback.
+**Repository:** [timgebbie/reaction-boundary-vol-surface-reproducibility](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility)  
+**Version:** v1.2.0, translating reaction boundary  
+**Release status:** Scientific checkpoint accepted on 22 November 2026. The published software release is [v1.0.0](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/releases/tag/v1.0.0).  
+**Reference commit:** [b65bf066e28466faa6781548a1f21e1b994e780c](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/b65bf066e28466faa6781548a1f21e1b994e780c)  
+**Project type:** Quantitative-finance research reproducibility bundle  
+**Associated work:** Chris Angstmann and Tim Gebbie, “Reaction-boundary variance and adjoint-consistent local-volatility projection”, [arXiv:2607.05011v4](https://arxiv.org/abs/2607.05011v4).
 
-**Repository:** [timgebbie/reaction-boundary-vol-surface-reproducibility](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility)
-
-**Accepted W02 source:** [`b65bf06`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/b65bf066e28466faa6781548a1f21e1b994e780c)
-
-**Accepted W01 source:** [33332cfd7ce707079e6bac288b739aa28d6837bd](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/33332cfd7ce707079e6bac288b739aa28d6837bd)
-
-**Project type:** Quantitative-finance research reproducibility bundle
-
-Published baseline: [v1.0.0](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/releases/tag/v1.0.0). The v1.0.1 preservation checkpoint on `main` is recorded in the [baseline audit](docs/audits/baseline-v1.0.0.md).
-
-Supplementary code and materials for:
-
-> Chris Angstmann and Tim Gebbie, **"Reaction-boundary variance and adjoint-consistent local-volatility projection"**, [arXiv:2607.05011v4](https://arxiv.org/abs/2607.05011v4).
+The [baseline audit](docs/audits/baseline-v1.0.0.md) records the v1.0.1 preservation checkpoint. The [v1.1.0 frozen-response calculation](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/33332cfd7ce707079e6bac288b739aa28d6837bd) precedes the accepted v1.2.0 translating-front calculation.
 
 The supplementary-materials document is included here:
 
@@ -86,15 +79,13 @@ This is a **simulation and interpretation bundle** for the supplementary materia
 
 Can the separately evolving bid and ask densities, with depletion and delayed, displaced replenishment, supply the kinetics for an effective theory of the moving boundary? A first comparison would extract the zero of the simulated signed imbalance wherever it is unique and simple, and measure its displacement alongside the threshold-quote log midpoint and quoted spread on the same operational clock. The difference between the root and the midpoint would itself be an observable. Matched perturbations of replenishment placement or delay could then test whether a single boundary coordinate predicts the measured response, or whether spread or pending replenishment must remain explicit slow variables. A further question is whether the measured relaxation spectrum accounts for the feedback law currently prescribed in the auxiliary model. [Two-field spread paper](https://arxiv.org/abs/2610.07985) · [Simulated density paths, quotes and controls](https://github.com/timgebbie/two-field-spread-reproducibility)
 
-### Open questions beyond the current computational programme
+### Other possible extensions
 
-| Question | Evidence already available | Work still required |
-|---|---|---|
-| Can observed order flow explain the imposed liquidity, resilience and forcing profiles? | The six structural surfaces use declared synthetic profiles. The [sensitivity summary](outputs/stage09-sensitivity-summary-v1.csv) shows how the surface changes when these inputs vary. | Estimate the profiles from book and order-flow data. Test their predictive content on held-out observations. |
-| Are the low- and high-$z$ regimes observable in market data? | W01 resolves the frozen-response crossover in $z=\nu\Delta$ under controlled parameters. | Estimate resilience and the observation scale on a common operational clock and test whether the two regimes can be distinguished statistically. |
-| How do persistent order flow and replenishment affect the moving root? | W01 establishes the frozen variance. W02 separates translation and shape, and tests the aligned root. | W03–W09 address prescribed feedback, input memory, the collective propagator, actual-root variance and controls. A kinetic derivation from bid and ask liquidity remains the separate question above. |
-| Can the structural surface be compared quantitatively with option-implied local volatility? | The existing plots illustrate surface shape. The stationary high-$z$ coefficient has an unconditional interpretation. | Specify the pricing measure and state conditioning, map state and maturity coordinates, and quantify the effect of no-arbitrage projection or regularisation before making a calibration claim. |
-| How sensitive are the conclusions to the response law? | The historical workflow already includes 19 sensitivity checks. | W09 addresses alternative rate spectra, finite rate floors, and forcing alignment. Broader empirical kernel and profile comparisons remain open. |
+- **Can observed order flow explain the imposed liquidity, resilience and forcing profiles?** The six structural surfaces use declared synthetic profiles. The [sensitivity summary](outputs/stage09-sensitivity-summary-v1.csv) shows how the surface changes when these inputs vary. Estimate the profiles from book and order-flow data. Test their predictive content on held-out observations.
+- **Are the low- and high-$z$ regimes observable in market data?** W01 resolves the frozen-response crossover in $z=\nu\Delta$ under controlled parameters. Estimate resilience and the observation scale on a common operational clock and test whether the two regimes can be distinguished statistically.
+- **How do persistent order flow and replenishment affect the moving root?** W01 establishes the frozen variance. W02 separates translation and shape, and tests the aligned root. W03–W09 address prescribed feedback, input memory, the collective propagator, actual-root variance and controls. A kinetic derivation from bid and ask liquidity remains the separate question above.
+- **Can the structural surface be compared quantitatively with option-implied local volatility?** The existing plots illustrate surface shape. The stationary high-$z$ coefficient has an unconditional interpretation. Specify the pricing measure and state conditioning, map state and maturity coordinates, and quantify the effect of no-arbitrage projection or regularisation before making a calibration claim.
+- **How sensitive are the conclusions to the response law?** The historical workflow already includes 19 sensitivity checks. W09 addresses alternative rate spectra, finite rate floors, and forcing alignment. Broader empirical kernel and profile comparisons remain open.
 
 Packaging, command-line entry points, notebooks, continuous integration and a fully locked environment remain possible software improvements. The scientific checkpoints above use the documented script entry points and recorded replay environment.
 
