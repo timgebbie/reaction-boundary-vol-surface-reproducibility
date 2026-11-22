@@ -49,10 +49,11 @@ When the deposition profile follows the observed zero, the auxiliary field admit
 The proposed extension asks whether delayed liquidity reassessment can compensate persistent order flow over a common interval of operational lags. Write $`H(s)`$ for the transfer from signed input to root **velocity**. The impulse response of the **root displacement** has transform $`\widehat G_{\mathrm{eff}}(s)=H(s)/s`$. The response slope and the balance to be tested are
 
 ```math
-\begin{aligned}
-\beta_{\mathrm{eff}}(\Delta)&=-\frac{d\log |G_{\mathrm{eff}}(\Delta)|}{d\log\Delta},\\
-B(\Delta)&=2\beta_{\mathrm{eff}}(\Delta)+\gamma-1.
-\end{aligned}
+\beta_{\mathrm{eff}}(\Delta)=-\frac{d\log |G_{\mathrm{eff}}(\Delta)|}{d\log\Delta}
+```
+
+```math
+B(\Delta)=2\beta_{\mathrm{eff}}(\Delta)+\gamma-1.
 ```
 
 v1.3.0 targets the causal transfer and the error from eliminating fast reassessment rates. The later tests require an independent estimate of the input exponent $`\gamma`$, the actual-root increment variance $`V_y(\Delta)`$, and a positive, approximately constant $`V_y(\Delta)/\Delta`$ on the same prespecified interval. Off-match rates, a finite slow-rate floor and non-aligned forcing test the limits of the construction. If these observations disagree, that disagreement belongs in the v2.0.0 result. The accepted evidence currently ends at the aligned translating front.
