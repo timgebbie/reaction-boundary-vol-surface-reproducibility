@@ -1,17 +1,16 @@
 # Reaction-boundary volatility surface reproducibility bundle
 
-**Repository:** [timgebbie/reaction-boundary-vol-surface-reproducibility](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility)  
-**Version:** v1.2.0, translating reaction boundary  
-**Release status:** Scientific checkpoint accepted on 22 November 2026. The published software release is [v1.0.0](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/releases/tag/v1.0.0).  
-**Reference commit:** [b65bf066e28466faa6781548a1f21e1b994e780c](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/b65bf066e28466faa6781548a1f21e1b994e780c)  
-**Project type:** Quantitative-finance research reproducibility bundle  
-**Associated work:** Chris Angstmann and Tim Gebbie, “Reaction-boundary variance and adjoint-consistent local-volatility projection”, [arXiv:2607.05011v4](https://arxiv.org/abs/2607.05011v4).
+Version: v1.2.0 — Translating reaction boundary and aligned root, accepted 22 November 2026
 
-The [baseline audit](docs/audits/baseline-v1.0.0.md) records the v1.0.1 preservation checkpoint. The [v1.1.0 frozen-response calculation](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/33332cfd7ce707079e6bac288b739aa28d6837bd) precedes the accepted v1.2.0 translating-front calculation.
+Supplementary code and materials for:
 
-The supplementary-materials document is included here:
+> Chris Angstmann and Tim Gebbie, **“Reaction-boundary variance and adjoint-consistent local-volatility projection,”** [arXiv:2607.05011v4](https://arxiv.org/abs/2607.05011v4).
+
+The historical supplement accompanies the [published v1.0.0 software release](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/releases/tag/v1.0.0):
 
 > [ReactionBoundaryVolSurface-Supplement-v0.1.pdf](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v0.1.pdf)
+
+The [v1.2.0 source](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/b65bf066e28466faa6781548a1f21e1b994e780c) and its [computational audit](docs/audits/translating-front-v1.2.0.md) give the translating-front calculation. The [baseline audit](docs/audits/baseline-v1.0.0.md) and [finite-cutoff comparison](docs/audits/frozen-response-v1.1.0.md) document the two earlier checkpoints.
 
 This repository is a quantitative-finance reproducibility bundle. Its purpose is to show how the reaction-boundary variance construction generates projected local-volatility surface shapes from liquidity, resilience, and response terms. The code is included so that the figures, tables, diagnostics, and sensitivity checks can be regenerated from the same parameter profiles used in the supplementary materials. This is slightly over-engineered so that it can be easily extended for more sophisticated simulation and calibration work if required. 
 
@@ -178,7 +177,7 @@ python -m pip install -r requirements-response.txt
 | Input | Source / location | Version or fingerprint | Access conditions |
 |---|---|---|---|
 | Structural profiles and parameter ranges | [Profiles](config/profile-definitions-v1.json) · [Ranges](config/parameter-ranges-v1.csv) | Released v1.0.0 Git tree | Public synthetic inputs. |
-| Frozen-variance quadrature and parameter grid | [Calculation](functions/frozen_response.py) · [Experiment](scripts/run_frozen_response.py) | Accepted v1.1.0 commit above | Deterministic calculation. The grid and numerical tolerances are given in the audit. |
+| Frozen-variance quadrature and parameter grid | [Calculation](functions/frozen_response.py) · [Experiment](scripts/run_frozen_response.py) | v1.1.0 source in the version table | Deterministic calculation. The grid and numerical tolerances are given in the audit. |
 
 ### Reproducing the active outputs
 
