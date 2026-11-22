@@ -35,4 +35,4 @@ The registered software DOI is `10.25375/uct.32936867`. ZivaHub version 1 lists 
 
 **Next gate.** At v1.1.0, compare the exact finite-cutoff coefficient in v4 Appendix A, Eq. (47), with an independent time-domain calculation. Evaluate the zero-cutoff crossover and its two asymptotes separately. Keep the structural-surface entry point available.
 
-**Approval needed.** The preservation checkpoint was accepted for mainline implementation. Tagging and publication require explicit approval at a designated major milestone.
+**Approval needed.** The preservation checkpoint was accepted for mainline implementation. Accepted checkpoints are eligible for version tags. GitHub releases are reserved for explicitly approved major milestones.

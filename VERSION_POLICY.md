@@ -6,7 +6,7 @@ The public v1.0.0 tag identifies the July 2026 structural-surface workflow. Its 
 
 Work proceeds on `main`. Record each checkpoint by its scope, commit and evidence. A patch checkpoint covers preservation or corrections. A minor checkpoint introduces a verified extension. A major version identifies a substantial change in scientific scope or compatibility.
 
-Only a major **milestone** designated by the authors is eligible for a tag and a GitHub release. The semantic version number alone does not designate a milestone. Intermediate gates, including the v1.0.1 preservation checkpoint, are recorded by commit. Before publication, present the proposed claims, actual tests and remaining limitations for explicit approval. Preserve published tags and release assets.
+An accepted, reproducible checkpoint may receive an immutable version tag after the authors review its tests, claims and limitations. Reserve GitHub releases for explicitly approved major scientific or reproducibility milestones. A major milestone may occur within a semantic minor version. Record the commit, remote tag and GitHub release as separate facts.
 
 ## Evidence and configuration
 

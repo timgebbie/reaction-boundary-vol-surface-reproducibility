@@ -152,7 +152,7 @@ Running the figure-generation script may cause Git to mark generated PDF figures
 
 ## Version-control policy
 
-Development proceeds on `main`. Only author-designated major scientific or reproducibility milestones receive a tag and GitHub release after explicit approval. Intermediate version numbers identify work checkpoints. See the [version policy](VERSION_POLICY.md).
+Development proceeds on `main`. Accepted checkpoints can receive immutable version tags. GitHub releases require a separately approved major scientific or reproducibility milestone. See the [version policy](VERSION_POLICY.md).
 
 ## DOI, citation, and license
 
@@ -187,4 +187,4 @@ See also `CITATION.cff` and `DOI-CITATION-LICENSE.md`.
 
 ## Current decision and next gate
 
-The v1.0.1 checkpoint records the baseline replay and its limits. The next scientific checkpoint (v1.1.0) compares the exact finite-cutoff spectral coefficient in Appendix A, Eq. (47), with the full zero-cutoff crossover function and its low- and high-$z$ limits. The collective root response and variance tests are later work.
+The v1.1.0 checkpoint verifies the stationary frozen tangent variance on the operational clock. Independent spectral and time-domain calculations agree within $4\times10^{-11}$ across the 48 tested configurations. The next checkpoint tests the neutral translation mode and stable shape spectrum. See the [scientific audit and reproduction commands](docs/audits/frozen-response-v1.1.0.md) and the [crossover figure](figures/v2/response-crossover.svg).
