@@ -1,6 +1,6 @@
 # v1.2.0 — translating reaction-boundary tangent and shape spectrum
 
-**Status:** W02 computational checkpoint, accepted on 22 November 2026; not a GitHub release or a new theorem for a generic order book. **Immutable source:** [Angstmann and Gebbie, arXiv:2607.05011v4](https://arxiv.org/abs/2607.05011v4). **Extension provenance:** the separate *Toward an Effective Field Theory of Market Microstructure* v1.0.0 companion, G3b and G3d. This checkpoint does not alter either reference.
+**Status:** W02 computational checkpoint, accepted on 22 November 2026; not a GitHub release or a new theorem for a generic order book. **Immutable source:** [Angstmann and Gebbie, arXiv:2607.05011v4](https://arxiv.org/abs/2607.05011v4). The equations below define the auxiliary extension tested at this checkpoint.
 
 ## Scientific distinction from the frozen response
 
@@ -65,7 +65,7 @@ and approaches zero from below at order \(\Delta x^2\). The program compares the
 | 0.08 | -0.00159490 | -1.06763169 | 0.00053323 | 0.00041255 |
 | 0.04 | -0.00039968 | -1.06808365 | 0.00013344 | 0.00011627 |
 
-The results are dimensionless with \(D=\nu=\lambda_{\rm dep}=1\). The neutral eigenvalue converges towards zero; the reported first shape eigenvalue lies strictly below \(-\nu\). The numbers are *numerical evidence on finite grids*, not proof of the continuum point spectrum, which comes from the separate analytical model.
+The results are dimensionless with \(D=\nu=\lambda_{\rm dep}=1\). The neutral eigenvalue converges towards zero; the reported first shape eigenvalue lies strictly below \(-\nu\). The numbers are *numerical evidence on finite grids*, not proof of the continuum point spectrum, which follows from the point-interaction operator above.
 
 ## Reproduction and claim boundary
 

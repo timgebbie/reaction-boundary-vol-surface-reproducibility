@@ -14,7 +14,7 @@ In separate clean checkouts of those two commits, run `python scripts/run_all.py
 | Comparison with tagged CSVs | All parsed diagnostic and parameter-table entries matched. Five floating-point cells in the sensitivity summary differed, with maximum absolute difference of 4.45 × 10⁻¹⁶ (rounded up). |
 | Comparison with tagged PNGs | Eleven matched in RGB. The resilience/response-only low-z surface differed at 428 of 1,618,408 pixels. |
 | Supplement v0.1 | Two LaTeX passes with the tagged figure assets produced nine pages. The SHA-256 of layout-extracted text agreed with the tagged PDF. |
-| Frozen TeX and bibliography | Both SHA-256 values matched the historical source-freeze record. Its TeX source is FMF v1.8. The extension uses arXiv:2607.05011v4. |
+| Frozen TeX and bibliography | Both SHA-256 values matched the historical source-freeze record. The extension uses arXiv:2607.05011v4. |
 
 To rebuild the supplement with a configured pdfLaTeX installation, start at the repository root in a fresh checkout of the tag. The nested working directory resolves the figure paths in the archived TeX.
 

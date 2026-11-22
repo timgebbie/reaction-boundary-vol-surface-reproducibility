@@ -40,6 +40,5 @@ Supplementary text, captions, figures, tables, and documentation are released
 under the Creative Commons Attribution 4.0 International License (CC BY 4.0),
 unless otherwise stated.
 
-The associated paper remains governed by its own arXiv/submission copyright
-terms and is not relicensed by this repository.
+The associated paper retains the licence recorded on arXiv.
 ```
