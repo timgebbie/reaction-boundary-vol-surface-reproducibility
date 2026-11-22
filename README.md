@@ -177,7 +177,7 @@ The historical Windows author run used Python 3.13.9. The November replay and v1
 ```bash
 git clone https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility.git
 cd reaction-boundary-vol-surface-reproducibility
-git checkout main
+git checkout 3ea466ecb17673b7d695efde696bab26a591479a
 ```
 
 For the original published surfaces alone, use the same repository at tag `v1.0.0`.
@@ -257,7 +257,7 @@ Running the active route regenerates or checks:
 - sensitivity summaries in `outputs/`;
 - figure captions in `captions/`.
 
-### Frozen variance, translating front and causal feedback
+### Frozen variance, translating front, response and moving-zero variance
 
 ```bash
 python -W error -m unittest discover -s tests -v
@@ -275,6 +275,8 @@ python -W error scripts/run_root_variance.py
 | Crossover and its running slope | [Figure](figures/v2/response-crossover.svg) · [Data](outputs/v2/response-crossover.csv) | SVG, CSV | Low- and high-<i>z</i> checks against Eq. (22), using the tolerances in the [tests](tests/test_frozen_response.py). |
 | Translating front | [Field and root tests](docs/audits/translating-front-v1.2.0.md) · [Root residuals](outputs/v2/aligned-root-checks.csv) | CSV, SVG | On the finest grid the aligned weak residual was $`3.16\times10^{-5}`$ and the displaced-forcing control gave 0.218. |
 | Causal feedback | [Frequency](outputs/v2/feedback-frequency.csv) · [Time](outputs/v2/feedback-time.csv) · [Shell](outputs/v2/feedback-shell.csv) | CSV, SVG | At cutoff 2 the first-derivative memory has maximum relative transfer error 0.0002532 on the retained band. |
+| Matched and offset response | [Window estimates](outputs/v2/balance-window.csv) | CSV | Two prescribed matches pass the response criterion. |
+| Aligned moving zero | [Per-design variances](outputs/v2/root-variance-designs.csv) · [Joint lag table](outputs/v2/root-variance-window.csv) | CSV, SVG | Both matched root-variance intervals pass on the accepted common window. |
 
 ### Repeating the analysis in an already-used tree
 
@@ -324,7 +326,7 @@ Development proceeds on `main`. Accepted checkpoints can receive immutable versi
 | v1.2.0 | Translating profile, pinned control, stable shape band and measured root | [Computational audit](docs/audits/translating-front-v1.2.0.md) · accepted scientific checkpoint | [`b65bf06`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/b65bf066e28466faa6781548a1f21e1b994e780c) |
 | v1.3.0 | Causal root response and fast-rate memory | [Finite-rate and shell audit](docs/audits/liquidity-feedback-v1.3.0.md) · accepted scientific checkpoint | [`fcc1f40`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/fcc1f40cb7b401c2408f13a324ed06e0e97261ef) |
 | v1.4.0 | Independent response balance on a fixed operational window | [Measurements and controls](docs/audits/response-balance-v1.4.0.md) · accepted scientific checkpoint | [`1052471`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/10524718cda8aa53bc605a3f8bce49f79f99c03f) |
-| v1.5.0 | Independent moving-zero variance | [Variance and spectral checks](docs/audits/actual-root-variance-v1.5.0.md) · accepted scientific checkpoint | [Source](scripts/run_root_variance.py) |
+| v1.5.0 | Independent moving-zero variance | [Variance and spectral checks](docs/audits/actual-root-variance-v1.5.0.md) · accepted scientific checkpoint | [`3ea466e`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/3ea466ecb17673b7d695efde696bab26a591479a) |
 
 The public tag and hosted release at the 22 November audit were both v1.0.0. The v0.1 supplement, the paper revision and the dated inputs and figure families each retain their own identifiers. The `v2/` output directories identify work towards the expanded supplement.
 
@@ -339,6 +341,7 @@ The public tag and hosted release at the 22 November audit were both v1.0.0. The
 | Translating-front extension | [`b65bf06`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/b65bf066e28466faa6781548a1f21e1b994e780c) | Accepted W02 source, including the integrated clean replay. |
 | Causal liquidity reassessment | [`fcc1f40`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/fcc1f40cb7b401c2408f13a324ed06e0e97261ef) | Accepted transfer, time-response and shell-reduction source and consolidated supplement. |
 | Independent response balance | [`1052471`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/10524718cda8aa53bc605a3f8bce49f79f99c03f) | Input path estimates, collective response, all controls and consolidated supplement. |
+| Moving-zero variance | [`3ea466e`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/3ea466ecb17673b7d695efde696bab26a591479a) | Accepted common-window root variance, controls and consolidated supplement. |
 
 ## DOI, citation, and license
 
@@ -384,7 +387,7 @@ The v1.1.0 checkpoint verifies the stationary frozen tangent variance on the ope
 |---|---|
 | Current situation | W06/v1.5.0 accepted on `main`. Published software baseline v1.0.0. |
 | Future situation | Measure the separate phase and shape increments and their signed covariance on the same operational window. |
-| Accepted evidence | Historical surface replay, independent frozen-variance comparison, translating spectrum and aligned-root residual, and independent causal-response and shell-reduction checks, the matched and offset balance measurements, and the independent moving-zero variance. See the version table. |
+| Accepted evidence | Historical surface replay, independent frozen-variance comparison, translating spectrum and aligned-root residual, independent causal-response and shell-reduction checks, the matched and offset balance measurements, and the independent moving-zero variance. See the version table. |
 | Unresolved issues | Historical archive reconciliation and the derivation of effective liquidity feedback from physical kinetics. |
 | Decision required | Review v1.6.0 phase–shape accounting. Three response and four primary offset variance classifications remain inconclusive. A GitHub release requires a separate major-milestone decision. |
 | Next gate | W07 tests independent and jointly driven phase and shape at the accepted 17 lags from 32 to 320. |
