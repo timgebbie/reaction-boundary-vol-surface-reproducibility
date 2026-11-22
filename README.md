@@ -6,6 +6,10 @@ Supplementary code and materials for:
 
 > Chris Angstmann and Tim Gebbie, **“Reaction-boundary variance and adjoint-consistent local-volatility projection,”** [arXiv:2607.05011v4](https://arxiv.org/abs/2607.05011v4).
 
+The mathematical and computational supplement for the current checkpoint is **v1.2.0**. It includes the finite-cutoff calculation, the translating-front spectrum and the algorithm used to locate and test the moving zero.
+
+> [Supplement v1.2.0 (PDF)](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.2.0.pdf) · [Consolidated LaTeX source](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.2.0.tex)
+
 The historical supplement accompanies the [published v1.0.0 software release](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/releases/tag/v1.0.0):
 
 > [ReactionBoundaryVolSurface-Supplement-v0.1.pdf](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v0.1.pdf)
@@ -320,7 +324,8 @@ Gebbie, Tim and Angstmann, Chris (2026). *Reaction-boundary volatility surface r
 | Item | Value |
 |---|---|
 | Associated paper | [arXiv:2607.05011v4](https://arxiv.org/abs/2607.05011v4) |
-| Supplementary PDF | [ReactionBoundaryVolSurface-Supplement-v0.1.pdf](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v0.1.pdf) |
+| Historical supplement v0.1 | [ReactionBoundaryVolSurface-Supplement-v0.1.pdf](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v0.1.pdf) |
+| Current supplement v1.2.0 | [PDF](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.2.0.pdf) · [TeX](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.2.0.tex) |
 | GitHub repository | `https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility` |
 | GitHub release | `https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/releases/tag/v1.0.0` |
 | ZivaHub/Figshare DOI | [`10.25375/uct.32936867`](https://doi.org/10.25375/uct.32936867) |

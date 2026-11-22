@@ -1,6 +1,6 @@
 # Version and release policy
 
-The public v1.0.0 tag identifies the July 2026 structural-surface workflow. Its accompanying supplement is v0.1. The November 2026 scientific reference is arXiv:2607.05011v4. The working supplement has its own version history.
+The public v1.0.0 tag identifies the July 2026 structural-surface workflow. Its accompanying supplement is v0.1. The November 2026 scientific reference is arXiv:2607.05011v4. The public supplement uses the major and minor numbers of the computational checkpoint it covers. The final component records supplement revisions within that scope. For example, supplement v1.2.1 can extend a proof or algorithm for computational v1.2.0. The historical v0.1 edition retains its original identifier.
 
 ## Mainline checkpoints and major milestones
 
