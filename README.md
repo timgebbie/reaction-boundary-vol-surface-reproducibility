@@ -38,7 +38,9 @@ The first calculation asks how liquidity slope, forcing intensity and resilience
 \mathcal F_\gamma(\nu\Delta).
 ```
 
-The low-<i>z</i> power law requires $`\tau_0\ll\Delta\ll\nu^{-1}`$. At large lag the unconditional increment variance saturates at twice the level variance. A state-conditioned local-pricing coefficient requires additional information even when the stationary variance is known. The accepted W01 calculation checks the finite-cutoff result in both time and frequency. [Variance comparison and crossover](docs/audits/frozen-response-v1.1.0.md)
+The dimensionless lag $`z=\nu\Delta`$ compares the observation interval $`\Delta`$ with the liquidity replenishment time $`\nu^{-1}`$. On the ultraviolet (short-time) side of this crossover, $`\tau_0\ll\Delta\ll\nu^{-1}`$. The boundary responds to persistent signed order flow before liquidity has time to replenish, giving $`V_\Delta\propto\Delta^{1-\gamma}`$. Resilience therefore drops out of the leading variance law, and the microscopic cutoff $`\tau_0`$ sets the lower limit of this scaling window. On the infrared (long-time) side, $`z\gg1`$, replenishment limits the displacement of the frozen boundary. Its increment variance approaches twice the stationary level variance, so the variance per unit operational time falls as $`1/\Delta`$. This distinction motivates the proposed renormalisation-group calculation for the translating boundary: when fast liquidity-reassessment modes are integrated out, which memory terms must be retained to reproduce the root response at lower frequencies?
+
+A state-conditioned local-pricing coefficient requires additional information even when the stationary variance is known. The accepted W01 calculation checks the finite-cutoff result in both time and frequency. [Variance comparison and crossover](docs/audits/frozen-response-v1.1.0.md)
 
 ### From a frozen zero to a translating root (v1.2.0)
 
