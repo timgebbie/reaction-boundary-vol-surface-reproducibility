@@ -22,6 +22,35 @@ This repository is a quantitative-finance reproducibility bundle. Its purpose is
 
 The combined high-$z$ figure uses the profile definitions and the high-$z$ asymptote in the v1.0.0 structural-surface calculation. The sensitivity summary reports the numerical characteristics of all six surfaces. [Profile definitions](config/profile-definitions-v1.json) · [Sensitivity summary](outputs/stage09-sensitivity-summary-v1.csv) · [Figure register](figure-table-provenance-register.csv)
 
+## The physics
+
+### From the structural surfaces to the frozen variance (v1.0.0–v1.1.0)
+
+The first calculation asks how liquidity slope, forcing intensity and resilience shape the projected surface. For the stationary frozen boundary let $V_\Delta$ be the variance of a log-price increment over an operational lag $\Delta$. The variance per unit operational time has the separated-scale form
+
+$$
+\frac{V_\Delta}{\Delta}\simeq
+\frac{\mathcal A_{\mathrm{eff}}}{\mathcal L^2}\,\Delta^{-\gamma}
+\mathcal F_\gamma(\nu\Delta).
+$$
+
+The low-$z$ power law requires $\tau_0\ll\Delta\ll\nu^{-1}$. At large lag the unconditional increment variance saturates at twice the level variance. A state-conditioned local-pricing coefficient requires additional information even when the stationary variance is known. The accepted W01 calculation checks the finite-cutoff result in both time and frequency. [Variance comparison and crossover](docs/audits/frozen-response-v1.1.0.md)
+
+### From a frozen zero to a translating root (v1.2.0)
+
+When the deposition profile follows the observed zero, the auxiliary field admits translated profiles $\Phi_*(x-q)$. Their tangent $\psi=-\Phi_*'$ is a neutral mode. The transverse spectrum lies at or below $-\nu$. For initial data on this family and forcing aligned with $\psi$, the observed root is exactly $y=q$. A shape perturbation with zero spectral phase can still move the observed zero. This distinction determines which coordinate must be measured in later variance tests. [Profile, spectrum and measured root](docs/audits/translating-front-v1.2.0.md)
+
+### What would carry the result to v2.0.0?
+
+The proposed extension asks whether delayed liquidity reassessment can compensate persistent order flow over a common interval of operational lags. Write $H(s)$ for the transfer from signed input to root **velocity**. The impulse response of the **root displacement** has transform $\widehat G_{\mathrm{eff}}(s)=H(s)/s$. The response slope and the balance to be tested are
+
+$$
+\beta_{\mathrm{eff}}(\Delta)=-\frac{d\log |G_{\mathrm{eff}}(\Delta)|}{d\log\Delta},
+\qquad B(\Delta)=2\beta_{\mathrm{eff}}(\Delta)+\gamma-1 .
+$$
+
+v1.3.0 targets the causal transfer and the error from eliminating fast reassessment rates. The later tests require an independent estimate of the input exponent $\gamma$, the actual-root increment variance $V_y(\Delta)$, and a positive, approximately constant $V_y(\Delta)/\Delta$ on the same prespecified interval. Off-match rates, a finite slow-rate floor and non-aligned forcing test the limits of the construction. If these observations disagree, that disagreement belongs in the v2.0.0 result. The accepted evidence currently ends at the aligned translating front.
+
 ## Current situation: v1.2.0 accepted
 
 The accepted v1.1.0 calculation returns the operational increment variance of the stationary frozen boundary at positive microscopic cutoff. Its independent time-domain evaluation gives a direct check on the spectral calculation in Appendix A of the paper. The original structural surfaces remain the published baseline.
