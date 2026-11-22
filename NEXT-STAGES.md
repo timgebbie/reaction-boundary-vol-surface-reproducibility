@@ -1,5 +1,7 @@
 # Next stages after private GitHub clean-clone gate
 
+> Historical July 2026 preparation record. The public v1.0.0 release and the subsequent preservation checkpoint are documented in the [baseline audit](docs/audits/baseline-v1.0.0.md).
+
 The private GitHub clean-clone test has passed. The project can now move toward the public v1.0.0 release and the ZivaHub/Figshare DOI deposit.
 
 ## Stage 5: Public-facing release preparation

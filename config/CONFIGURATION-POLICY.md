@@ -1,5 +1,7 @@
 # Configuration Policy
 
+> The following Stage 2 note records the original configuration decisions. The released workflow uses [profile-definitions-v1.json](profile-definitions-v1.json) and [parameter-ranges-v1.csv](parameter-ranges-v1.csv). The change-control rule below applies to future changes.
+
 Artefact status: Stage 2 configuration-control note
 
 No numerical parameter defaults have been accepted yet.

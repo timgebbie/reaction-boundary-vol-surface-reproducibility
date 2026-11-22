@@ -1,5 +1,7 @@
 # Reproducibility status
 
+> Historical July 2026 preparation record. The public v1.0.0 release and the subsequent preservation checkpoint are documented in the [baseline audit](docs/audits/baseline-v1.0.0.md).
+
 Version: v1.0 / planned public tag `v1.0.0`
 Date prepared: 2026-07-08
 

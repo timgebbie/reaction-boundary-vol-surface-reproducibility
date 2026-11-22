@@ -1,14 +1,16 @@
 # Reproducibility Manifest
 
-Artefact status: Stage 10 reproducibility manifest
+Current source map for the released v1.0.0 workflow. The [baseline audit](docs/audits/baseline-v1.0.0.md) explains the relationship between the staged checksum inventory and the tagged Git files.
 
 ## Active Source
 
 | Item | Path |
 |---|---|
-| Theory source | `source/CATG-BSMFromAdjointProjection-FMF-v1.8-source-v0.tex` |
-| BibTeX source | `source/BSMFromAdjointProjection-FMF-v1.8-references-v0.bib` |
-| Source freeze record | `source/SOURCE-FREEZE.md` |
+| Historical FMF v1.8 TeX | `provenance/source-freeze/CATG-BSMFromAdjointProjection-FMF-v1.8-source-v0.tex` |
+| BibTeX source | `provenance/source-freeze/BSMFromAdjointProjection-FMF-v1.8-references-v0.bib` |
+| Source freeze record | `provenance/source-freeze/SOURCE-FREEZE.md` |
+
+The frozen files identify the source used during development. The scientific reference for the extension is [arXiv:2607.05011v4](https://arxiv.org/abs/2607.05011v4).
 
 ## Active Configuration
 

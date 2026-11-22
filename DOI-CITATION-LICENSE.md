@@ -1,8 +1,8 @@
 # DOI, citation, and license information
 
-Version: v1.0 / planned public tag `v1.0.0`
+Published baseline: `v1.0.0`
 
-This file records concrete public-release metadata and the remaining placeholders that must be filled once the ZivaHub/Figshare record exists.
+ZivaHub records the staged software archive. The GitHub tag identifies the released repository tree.
 
 ## Links
 
@@ -12,17 +12,15 @@ This file records concrete public-release metadata and the remaining placeholder
 | Supplementary PDF | supplementary-materials/ReactionBoundaryVolSurface-Supplement-v0.1.pdf |
 | GitHub repository | https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility |
 | GitHub release | https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/releases/tag/v1.0.0 |
-| ZivaHub/Figshare DOI | [TO BE ADDED: 10.xxxx/xxxxx] |
-| ZivaHub/Figshare landing page | [TO BE ADDED: https://...] |
+| ZivaHub/Figshare DOI | https://doi.org/10.25375/uct.32936867 |
+| ZivaHub/Figshare landing page | https://zivahub.uct.ac.za/articles/software/Reaction-boundary_volatility_surface_reproducibility_code_for_arXiv_2607_05011/32936867 |
 
-## Repository citation placeholder
-
-Use this after the DOI is assigned:
+## Repository citation
 
 ```text
 Angstmann, C., & Gebbie, T. (2026). Reaction-boundary volatility surface
 reproducibility bundle (Version 1.0.0) [Software and supplementary materials].
-ZivaHub/Figshare. https://doi.org/[TO-BE-ADDED]
+ZivaHub/Figshare. https://doi.org/10.25375/uct.32936867
 ```
 
 ## Associated paper citation
@@ -35,8 +33,6 @@ https://arxiv.org/abs/2607.05011
 
 ## License statement for public release
 
-Recommended public-release wording:
-
 ```text
 Code in this repository is released under the MIT License.
 
@@ -47,15 +43,3 @@ unless otherwise stated.
 The associated paper remains governed by its own arXiv/submission copyright
 terms and is not relicensed by this repository.
 ```
-
-Before the public release, confirm this dual-license structure with all authors.
-
-## Fields to update after DOI assignment
-
-Update these files once the ZivaHub/Figshare DOI is live:
-
-- `README.md`
-- `CITATION.cff`
-- `DOI-CITATION-LICENSE.md`
-- `RELEASE-NOTES-v1.0.md`, if the DOI is assigned before the public tag
-- arXiv code/data availability statement

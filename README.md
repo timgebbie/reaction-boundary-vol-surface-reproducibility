@@ -1,10 +1,10 @@
 # Reaction-boundary volatility surface reproducibility bundle
 
-Version: v1.0.0
+Published baseline: [v1.0.0](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/releases/tag/v1.0.0). The v1.0.1 preservation checkpoint on `main` is recorded in the [baseline audit](docs/audits/baseline-v1.0.0.md).
 
 Supplementary code and materials for:
 
-> Chris Angstmann and Tim Gebbie, **"Reaction-boundary variance and adjoint-consistent local-volatility projection"**, [arXiv:2607.05011](https://arxiv.org/abs/2607.05011).
+> Chris Angstmann and Tim Gebbie, **"Reaction-boundary variance and adjoint-consistent local-volatility projection"**, [arXiv:2607.05011v4](https://arxiv.org/abs/2607.05011v4).
 
 The supplementary-materials document is included here:
 
@@ -49,6 +49,8 @@ Possible software improvements include: formal packaging, command-line entry poi
 ## Scientific boundary
 
 The code simulates projected structural volatility surfaces from the reaction-boundary variance construction. It does not estimate a calibrated Dupire local-volatility surface from market option data. The local-volatility comparison in the supplement is qualitative and phenomenological.
+
+The high-$z$ figures illustrate the unconditional stationary variance response. Using that response as a state-conditioned pricing coefficient requires separate justification.
 
 ## Repository structure
 
@@ -150,20 +152,11 @@ Running the figure-generation script may cause Git to mark generated PDF figures
 
 ## Version-control policy
 
-This repository starts at v1.0 because the simulation workflow, generated outputs, and supplementary-materials PDF were already completed in the staged workspace before reduction. Future releases should increment from this public reproducibility baseline.
-
-Recommended tags:
-
-```text
-v1.0.0        first public reproducibility release
-v1.0.1        documentation-only corrections
-v1.1.0        minor reproducibility or interpretation enhancements without changing the scientific boundary
-v2.0.0        major restructure, formal packaging, empirical calibration, or expanded scientific scope
-```
+Development proceeds on `main`. Only author-designated major scientific or reproducibility milestones receive a tag and GitHub release after explicit approval. Intermediate version numbers identify work checkpoints. See the [version policy](VERSION_POLICY.md).
 
 ## DOI, citation, and license
 
-Reserved ZivaHub/Figshare DOI:
+Registered ZivaHub/Figshare DOI:
 
 https://doi.org/10.25375/uct.32936867
 
@@ -173,12 +166,12 @@ Angstmann, Chris; Gebbie, Tim (2026). *Code: Reaction-boundary volatility surfac
 
 | Item | Value |
 |---|---|
-| Associated paper | [arXiv:2607.05011](https://arxiv.org/abs/2607.05011) |
+| Associated paper | [arXiv:2607.05011v4](https://arxiv.org/abs/2607.05011v4) |
 | Supplementary PDF | [ReactionBoundaryVolSurface-Supplement-v0.1.pdf](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v0.1.pdf) |
 | GitHub repository | `https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility` |
 | GitHub release | `https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/releases/tag/v1.0.0` |
 | ZivaHub/Figshare DOI | [`10.25375/uct.32936867`](https://doi.org/10.25375/uct.32936867) |
-| ZivaHub/Figshare landing page | [`Code: Reaction-boundary volatility surface reproducibility code for arXiv:2607.05011`](https://zivahub.uct.ac.za/account/articles/32936867?file=66436139) |
+| ZivaHub/Figshare landing page | [`Code: Reaction-boundary volatility surface reproducibility code for arXiv:2607.05011`](https://zivahub.uct.ac.za/articles/software/Reaction-boundary_volatility_surface_reproducibility_code_for_arXiv_2607_05011/32936867) |
 | Code license | MIT License |
 | Supplement/text/figures license | `[CC BY 4.0]` |
 
@@ -191,3 +184,7 @@ Supplementary text, captions, figures, tables, and documentation are released un
 The associated paper remains governed by its own arXiv/submission terms and is not relicensed by this repository.
 
 See also `CITATION.cff` and `DOI-CITATION-LICENSE.md`.
+
+## Current decision and next gate
+
+The v1.0.1 checkpoint records the baseline replay and its limits. The next scientific checkpoint (v1.1.0) compares the exact finite-cutoff spectral coefficient in Appendix A, Eq. (47), with the full zero-cutoff crossover function and its low- and high-$z$ limits. The collective root response and variance tests are later work.
