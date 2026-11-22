@@ -43,3 +43,5 @@ python -W error scripts/run_frozen_response.py
 **Next gate.** v1.2.0 tests a positive-slope simple root, a neutral translation mode and a gap in the stable shape spectrum.
 
 **Approval needed.** Review the checkpoint evidence before tagging v1.1.0. GitHub releases are reserved for approved major milestones.
+
+**Author decision, 22 November 2026.** Accepted as v1.1.0 at `33332cfd7ce707079e6bac288b739aa28d6837bd`. The GitHub version table records the public reference.

@@ -18,8 +18,8 @@ ZivaHub records the staged software archive. The GitHub tag identifies the relea
 ## Repository citation
 
 ```text
-Angstmann, C., & Gebbie, T. (2026). Reaction-boundary volatility surface
-reproducibility bundle (Version 1.0.0) [Software and supplementary materials].
+Gebbie, T., & Angstmann, C. (2026). Reaction-boundary volatility surface
+reproducibility code for arXiv:2607.05011 [Software].
 ZivaHub/Figshare. https://doi.org/10.25375/uct.32936867
 ```
 
