@@ -22,38 +22,40 @@ This repository is a quantitative-finance reproducibility bundle. Its purpose is
 
 ![Combined structural high-z surface and contour pair](figures/readme-combined-structural-high-z-pair-v1.png)
 
-**Figure. Combined structural reaction-boundary volatility surface under the high- $z$ response regime.** Panel A gives the boxed surface view of the projected local volatility $\sigma_{\mathrm{loc}}$ over log-moneyness $m=\ln(x/x_0)$ and maturity $T$. Panel B gives the corresponding black-line contour projection of the same surface. This is the key pair in the supplement because it shows the point of the exercise: the model is not fitting an option-implied surface, but generating a structurally interpretable local-volatility shape from reaction-boundary ingredients. The high- $z$ case emphasises the response-sensitive regime in which liquidity, resilience, and the structural response profile combine to produce a persistent skew-like surface over maturity. The contour view is included because it is easier to compare shape, monotonicity, and curvature across regimes without the visual distortion of a 3D perspective plot.
+**Figure. Combined structural reaction-boundary volatility surface under the high-<i>z</i> response regime.** Panel A gives the boxed surface view of the projected local volatility $`\sigma_{\mathrm{loc}}`$ over log-moneyness $`m=\ln(x/x_0)`$ and maturity $`T`$. Panel B gives the corresponding black-line contour projection of the same surface. This is the key pair in the supplement because it shows the point of the exercise: the model is not fitting an option-implied surface, but generating a structurally interpretable local-volatility shape from reaction-boundary ingredients. The high-<i>z</i> case emphasises the response-sensitive regime in which liquidity, resilience, and the structural response profile combine to produce a persistent skew-like surface over maturity. The contour view is included because it is easier to compare shape, monotonicity, and curvature across regimes without the visual distortion of a 3D perspective plot.
 
-The combined high-$z$ figure uses the profile definitions and the high-$z$ asymptote in the v1.0.0 structural-surface calculation. The sensitivity summary reports the numerical characteristics of all six surfaces. [Profile definitions](config/profile-definitions-v1.json) · [Sensitivity summary](outputs/stage09-sensitivity-summary-v1.csv) · [Figure register](figure-table-provenance-register.csv)
+The combined high-<i>z</i> figure uses the profile definitions and the high-<i>z</i> asymptote in the v1.0.0 structural-surface calculation. The sensitivity summary reports the numerical characteristics of all six surfaces. [Profile definitions](config/profile-definitions-v1.json) · [Sensitivity summary](outputs/stage09-sensitivity-summary-v1.csv) · [Figure register](figure-table-provenance-register.csv)
 
 ## The physics
 
 ### From the structural surfaces to the frozen variance (v1.0.0–v1.1.0)
 
-The first calculation asks how liquidity slope, forcing intensity and resilience shape the projected surface. For the stationary frozen boundary let $V_\Delta$ be the variance of a log-price increment over an operational lag $\Delta$. The variance per unit operational time has the separated-scale form
+The first calculation asks how liquidity slope, forcing intensity and resilience shape the projected surface. For the stationary frozen boundary let $`V_\Delta`$ be the variance of a log-price increment over an operational lag $`\Delta`$. The variance per unit operational time has the separated-scale form
 
-$$
+```math
 \frac{V_\Delta}{\Delta}\simeq
-\frac{\mathcal A_{\mathrm{eff}}}{\mathcal L^2}\,\Delta^{-\gamma}
+\frac{\mathcal A_{\mathrm{eff}}}{\mathcal L^2}\cdot\Delta^{-\gamma}
 \mathcal F_\gamma(\nu\Delta).
-$$
+```
 
-The low-$z$ power law requires $\tau_0\ll\Delta\ll\nu^{-1}$. At large lag the unconditional increment variance saturates at twice the level variance. A state-conditioned local-pricing coefficient requires additional information even when the stationary variance is known. The accepted W01 calculation checks the finite-cutoff result in both time and frequency. [Variance comparison and crossover](docs/audits/frozen-response-v1.1.0.md)
+The low-<i>z</i> power law requires $`\tau_0\ll\Delta\ll\nu^{-1}`$. At large lag the unconditional increment variance saturates at twice the level variance. A state-conditioned local-pricing coefficient requires additional information even when the stationary variance is known. The accepted W01 calculation checks the finite-cutoff result in both time and frequency. [Variance comparison and crossover](docs/audits/frozen-response-v1.1.0.md)
 
 ### From a frozen zero to a translating root (v1.2.0)
 
-When the deposition profile follows the observed zero, the auxiliary field admits translated profiles $\Phi_*(x-q)$. Their tangent $\psi=-\Phi_*'$ is a neutral mode. The transverse spectrum lies at or below $-\nu$. For initial data on this family and forcing aligned with $\psi$, the observed root is exactly $y=q$. A shape perturbation with zero spectral phase can still move the observed zero. This distinction determines which coordinate must be measured in later variance tests. [Profile, spectrum and measured root](docs/audits/translating-front-v1.2.0.md)
+When the deposition profile follows the observed zero, the auxiliary field admits translated profiles $`\Phi_{\ast}(x-q)`$. Their tangent $`\psi=-\Phi_{\ast}'`$ is a neutral mode. The transverse spectrum lies at or below $`-\nu`$. For initial data on this family and forcing aligned with $`\psi`$, the observed root is exactly $`y=q`$. A shape perturbation with zero spectral phase can still move the observed zero. This distinction determines which coordinate must be measured in later variance tests. [Profile, spectrum and measured root](docs/audits/translating-front-v1.2.0.md)
 
 ### What would carry the result to v2.0.0?
 
-The proposed extension asks whether delayed liquidity reassessment can compensate persistent order flow over a common interval of operational lags. Write $H(s)$ for the transfer from signed input to root **velocity**. The impulse response of the **root displacement** has transform $\widehat G_{\mathrm{eff}}(s)=H(s)/s$. The response slope and the balance to be tested are
+The proposed extension asks whether delayed liquidity reassessment can compensate persistent order flow over a common interval of operational lags. Write $`H(s)`$ for the transfer from signed input to root **velocity**. The impulse response of the **root displacement** has transform $`\widehat G_{\mathrm{eff}}(s)=H(s)/s`$. The response slope and the balance to be tested are
 
-$$
-\beta_{\mathrm{eff}}(\Delta)=-\frac{d\log |G_{\mathrm{eff}}(\Delta)|}{d\log\Delta},
-\qquad B(\Delta)=2\beta_{\mathrm{eff}}(\Delta)+\gamma-1 .
-$$
+```math
+\begin{aligned}
+\beta_{\mathrm{eff}}(\Delta)&=-\frac{d\log |G_{\mathrm{eff}}(\Delta)|}{d\log\Delta},\\
+B(\Delta)&=2\beta_{\mathrm{eff}}(\Delta)+\gamma-1.
+\end{aligned}
+```
 
-v1.3.0 targets the causal transfer and the error from eliminating fast reassessment rates. The later tests require an independent estimate of the input exponent $\gamma$, the actual-root increment variance $V_y(\Delta)$, and a positive, approximately constant $V_y(\Delta)/\Delta$ on the same prespecified interval. Off-match rates, a finite slow-rate floor and non-aligned forcing test the limits of the construction. If these observations disagree, that disagreement belongs in the v2.0.0 result. The accepted evidence currently ends at the aligned translating front.
+v1.3.0 targets the causal transfer and the error from eliminating fast reassessment rates. The later tests require an independent estimate of the input exponent $`\gamma`$, the actual-root increment variance $`V_y(\Delta)`$, and a positive, approximately constant $`V_y(\Delta)/\Delta`$ on the same prespecified interval. Off-match rates, a finite slow-rate floor and non-aligned forcing test the limits of the construction. If these observations disagree, that disagreement belongs in the v2.0.0 result. The accepted evidence currently ends at the aligned translating front.
 
 ## Current situation: v1.2.0 accepted
 
@@ -68,7 +70,7 @@ The current v1.0 bundle supports the claim that a reaction-boundary variance clo
 In this current situation:
 
 - reproducible simulations for the liquidity-only, resilience/response-only, and combined structural regimes;
-- low-\(z\) and high-\(z\) response cases;
+- low-<i>z</i> and high-<i>z</i> response cases;
 - surface and contour representations of the projected local-volatility surfaces;
 - parameter tables linking the mathematical construction to the numerical profiles;
 - diagnostics and sensitivity checks used to verify the active simulation route;
@@ -80,8 +82,8 @@ This is a **simulation and interpretation bundle** for the supplementary materia
 
 | Identifier | Claim, experiment, or feature | Evidence artifact | Verification status |
 |---|---|---|---|
-| Structural surfaces | Three structural profiles in the low- and high-$z$ regimes | [Diagnostics](diagnostics/stage07-diagnostics-v1.csv) · [Sensitivity checks](diagnostics/stage09-sensitivity-checks-v1.csv) | 42 diagnostics and 19 sensitivity checks passed in the baseline replay. |
-| Frozen increment variance | Independent spectral and time-domain evaluations at finite cutoff | [48 comparisons](outputs/v2/frozen-variance-checks.csv) · [Audit](docs/audits/frozen-response-v1.1.0.md) | Maximum observed relative discrepancy $3.84\times10^{-11}$ on the stated grid. |
+| Structural surfaces | Three structural profiles in the low- and high-<i>z</i> regimes | [Diagnostics](diagnostics/stage07-diagnostics-v1.csv) · [Sensitivity checks](diagnostics/stage09-sensitivity-checks-v1.csv) | 42 diagnostics and 19 sensitivity checks passed in the baseline replay. |
+| Frozen increment variance | Independent spectral and time-domain evaluations at finite cutoff | [48 comparisons](outputs/v2/frozen-variance-checks.csv) · [Audit](docs/audits/frozen-response-v1.1.0.md) | Maximum observed relative discrepancy $`3.84\times10^{-11}`$ on the stated grid. |
 | SV2-F01 | Cutoff dependence and the full zero-cutoff crossover | [Figure](figures/v2/response-crossover.svg) · [Figure data](outputs/v2/response-crossover.csv) | Reproduced on the recorded Linux environment. |
 | Translating front (W02) | Pinned and moving spectra, translated root, weak field residual across the zero | [Spectra](outputs/v2/translation-spectrum.csv) · [Root and residual](outputs/v2/aligned-root-checks.csv) · [Mode figure](figures/v2/translation-modes.svg) | Eight W02 tests passed. The field and the placement of forcing are specified by the auxiliary construction. |
 
@@ -114,9 +116,9 @@ Can the separately evolving bid and ask densities, with depletion and delayed, d
 ### Other possible extensions
 
 - **Can observed order flow explain the imposed liquidity, resilience and forcing profiles?** The six structural surfaces use declared synthetic profiles. The [sensitivity summary](outputs/stage09-sensitivity-summary-v1.csv) shows how the surface changes when these inputs vary. Estimate the profiles from book and order-flow data. Test their predictive content on held-out observations.
-- **Are the low- and high-$z$ regimes observable in market data?** W01 resolves the frozen-response crossover in $z=\nu\Delta$ under controlled parameters. Estimate resilience and the observation scale on a common operational clock and test whether the two regimes can be distinguished statistically.
+- **Are the low- and high-<i>z</i> regimes observable in market data?** W01 resolves the frozen-response crossover in $`z=\nu\Delta`$ under controlled parameters. Estimate resilience and the observation scale on a common operational clock and test whether the two regimes can be distinguished statistically.
 - **How do persistent order flow and replenishment affect the moving root?** W01 establishes the frozen variance. W02 separates translation and shape, and tests the aligned root. W03–W09 address prescribed feedback, input memory, the collective propagator, actual-root variance and controls. A kinetic derivation from bid and ask liquidity remains the separate question above.
-- **Can the structural surface be compared quantitatively with option-implied local volatility?** The existing plots illustrate surface shape. The stationary high-$z$ coefficient has an unconditional interpretation. Specify the pricing measure and state conditioning, map state and maturity coordinates, and quantify the effect of no-arbitrage projection or regularisation before making a calibration claim.
+- **Can the structural surface be compared quantitatively with option-implied local volatility?** The existing plots illustrate surface shape. The stationary high-<i>z</i> coefficient has an unconditional interpretation. Specify the pricing measure and state conditioning, map state and maturity coordinates, and quantify the effect of no-arbitrage projection or regularisation before making a calibration claim.
 - **How sensitive are the conclusions to the response law?** The historical workflow already includes 19 sensitivity checks. W09 addresses alternative rate spectra, finite rate floors, and forcing alignment. Broader empirical kernel and profile comparisons remain open.
 
 Packaging, command-line entry points, notebooks, continuous integration and a fully locked environment remain possible software improvements. The scientific checkpoints above use the documented script entry points and recorded replay environment.
@@ -125,7 +127,7 @@ Packaging, command-line entry points, notebooks, continuous integration and a fu
 
 The code simulates projected structural volatility surfaces from the reaction-boundary variance construction. It does not estimate a calibrated Dupire local-volatility surface from market option data. The local-volatility comparison in the supplement is qualitative and phenomenological.
 
-The high-$z$ figures illustrate the unconditional stationary variance response. Using that response as a state-conditioned pricing coefficient requires separate justification.
+The high-<i>z</i> figures illustrate the unconditional stationary variance response. Using that response as a state-conditioned pricing coefficient requires separate justification.
 
 ## Repository structure
 
@@ -248,9 +250,9 @@ python -W error scripts/run_translating_front.py
 | Output | Location | Format | Acceptance criterion |
 |---|---|---|---|
 | Six structural surfaces and sensitivity summary | [Figures](figures) · [Summary](outputs/stage09-sensitivity-summary-v1.csv) | PNG, PDF, CSV | Baseline diagnostics and sensitivity checks, with rendering and rounding differences recorded. |
-| Finite-cutoff coefficient | [Comparisons](outputs/v2/frozen-variance-checks.csv) | CSV | Relative discrepancy and refinement changes below $10^{-6}$ for each of 48 cases. |
-| Crossover and its running slope | [Figure](figures/v2/response-crossover.svg) · [Data](outputs/v2/response-crossover.csv) | SVG, CSV | Low- and high-$z$ checks against Eq. (22), using the tolerances in the [tests](tests/test_frozen_response.py). |
-| Translating front | [Field and root tests](docs/audits/translating-front-v1.2.0.md) · [Root residuals](outputs/v2/aligned-root-checks.csv) | CSV, SVG | On the finest grid the aligned weak residual was $3.16\times10^{-5}$ and the displaced-forcing control gave 0.218. |
+| Finite-cutoff coefficient | [Comparisons](outputs/v2/frozen-variance-checks.csv) | CSV | Relative discrepancy and refinement changes below $`10^{-6}`$ for each of 48 cases. |
+| Crossover and its running slope | [Figure](figures/v2/response-crossover.svg) · [Data](outputs/v2/response-crossover.csv) | SVG, CSV | Low- and high-<i>z</i> checks against Eq. (22), using the tolerances in the [tests](tests/test_frozen_response.py). |
+| Translating front | [Field and root tests](docs/audits/translating-front-v1.2.0.md) · [Root residuals](outputs/v2/aligned-root-checks.csv) | CSV, SVG | On the finest grid the aligned weak residual was $`3.16\times10^{-5}`$ and the displaced-forcing control gave 0.218. |
 
 ### Repeating the analysis in an already-used tree
 
@@ -345,7 +347,7 @@ See also `CITATION.cff` and `DOI-CITATION-LICENSE.md`.
 
 ## Current decision and next gate
 
-The v1.1.0 checkpoint verifies the stationary frozen tangent variance on the operational clock. Independent spectral and time-domain calculations agree within $4\times10^{-11}$ across the 48 tested configurations. The accepted v1.2.0 checkpoint verifies the neutral translation mode and stable shape spectrum. See the [scientific audit and reproduction commands](docs/audits/frozen-response-v1.1.0.md) and the [crossover figure](figures/v2/response-crossover.svg).
+The v1.1.0 checkpoint verifies the stationary frozen tangent variance on the operational clock. Independent spectral and time-domain calculations agree within $`4\times10^{-11}`$ across the 48 tested configurations. The accepted v1.2.0 checkpoint verifies the neutral translation mode and stable shape spectrum. See the [scientific audit and reproduction commands](docs/audits/frozen-response-v1.1.0.md) and the [crossover figure](figures/v2/response-crossover.svg).
 
 
 | Decision record | Current position |
