@@ -1,14 +1,14 @@
 # Reaction-boundary volatility surface reproducibility bundle
 
-Version: v1.4.0 — Independent forcing memory and integrated root response
+Version: v1.5.0 — Variance of the moving zero on the aligned translating family
 
 Supplementary code and materials for:
 
 > Chris Angstmann and Tim Gebbie, **“Reaction-boundary variance and adjoint-consistent local-volatility projection,”** [arXiv:2607.05011v4](https://arxiv.org/abs/2607.05011v4).
 
-The mathematical and computational supplement for the current checkpoint is **v1.4.0**. It includes the finite-cutoff variance, the translating-front spectrum, the algorithm for the moving zero and the causal response induced by fast and slow liquidity reassessment. It now also derives the forcing and response estimators and reports the matched and offset tests on a common lag window.
+The mathematical and computational supplement for the current checkpoint is **v1.5.0**. It includes the finite-cutoff variance, the translating-front spectrum, the algorithm for the moving zero and the causal response induced by fast and slow liquidity reassessment. It now also derives the forcing and response estimators and reports the matched and offset tests on a common lag window. The same window now carries an independent variance measurement of the moving zero.
 
-> [Supplement v1.4.0 (PDF)](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.4.0.pdf) · [Consolidated LaTeX source](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.4.0.tex)
+> [Supplement v1.5.0 (PDF)](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.5.0.pdf) · [Consolidated LaTeX source](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.5.0.tex)
 
 The historical supplement accompanies the [published v1.0.0 software release](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/releases/tag/v1.0.0):
 
@@ -58,9 +58,9 @@ The proposed extension asks whether delayed liquidity reassessment can compensat
 B(\Delta)=2\beta_{\mathrm{eff}}(\Delta)+\gamma-1.
 ```
 
-v1.3.0 measures the causal transfer and the error from eliminating fast reassessment rates. v1.4.0 independently estimates the input exponent $`\gamma`$. The next test measures the actual-root increment variance $`V_y(\Delta)`$, and a positive, approximately constant $`V_y(\Delta)/\Delta`$ on the same prespecified interval. Off-match rates, a finite slow-rate floor and non-aligned forcing test the limits of the construction. If these observations disagree, that disagreement belongs in the v2.0.0 result. The feedback spectrum is prescribed in this construction. Its physical origin and the variance of the driven root remain open.
+v1.3.0 measures the causal transfer and the error from eliminating fast reassessment rates. v1.4.0 independently estimates the input exponent $`\gamma`$. v1.5.0 measures the aligned actual-root increment variance $`V_y(\Delta)`$, and a positive, approximately constant $`V_y(\Delta)/\Delta`$ on the same prespecified interval. Off-match rates, a finite slow-rate floor and non-aligned forcing test the limits of the construction. If these observations disagree, that disagreement belongs in the v2.0.0 result. The feedback spectrum is prescribed in this construction. Its physical origin and the variance contribution from transverse deformation remain open.
 
-## Current situation: v1.4.0 accepted
+## Current situation: v1.5.0 accepted
 
 The accepted v1.1.0 calculation returns the operational increment variance of the stationary frozen boundary at positive microscopic cutoff. Its independent time-domain evaluation gives a direct check on the spectral calculation in Appendix A of the paper. The original structural surfaces remain the published baseline.
 
@@ -72,7 +72,11 @@ The calculation gives the causal response of the aligned root to a distribution 
 
 ### Independent response balance (v1.4.0)
 
-The input memory is measured from forcing paths and the response exponent from a separate displacement experiment. Both prescribed matches satisfy the fixed tolerance at all 17 sampled lags from 32 to 320. Of four primary offset controls, one clears the separation threshold over the full window. The other three remain inconclusive under that rule. The actual-root variance on this window is the next independent observable. [All cases and reproduction commands](docs/audits/response-balance-v1.4.0.md) · [Consolidated supplement](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.4.0.pdf)
+The input memory is measured from forcing paths and the response exponent from a separate displacement experiment. Both prescribed matches satisfy the fixed tolerance at all 17 sampled lags from 32 to 320. Of four primary offset controls, one clears the separation threshold over the full window. The other three remain inconclusive under that rule. The independent variance measurement on this window follows below. [All cases and reproduction commands](docs/audits/response-balance-v1.4.0.md) · [Consolidated supplement](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.4.0.pdf)
+
+### Variance of the moving zero (v1.5.0)
+
+The two matched constructions also pass the independent root-variance test on the 17 operational lags used to measure response. On newly generated paths the measured variance-slope envelopes are 0.937–1.073 and 0.927–1.068. The variance per unit lag stays positive and within the predeclared relative-rate tolerance. Removing feedback or raising the slow-rate floor gives superlinear variance across the tested decade. The primary offset variance comparisons remain inconclusive under the whole-window separation rule. [Actual-root calculation and evidence](docs/audits/actual-root-variance-v1.5.0.md) · [Consolidated supplement](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.5.0.pdf)
 
 ### Historical structural-surface baseline: v1.0.0
 
@@ -99,6 +103,7 @@ This is a **simulation and interpretation bundle** for the supplementary materia
 | Translating front (W02) | Pinned and moving spectra, translated root, weak field residual across the zero | [Spectra](outputs/v2/translation-spectrum.csv) · [Root and residual](outputs/v2/aligned-root-checks.csv) · [Mode figure](figures/v2/translation-modes.svg) | Eight W02 tests passed. The field and the placement of forcing are specified by the auxiliary construction. |
 | Causal reassessment and fast-rate elimination | Finite transfer, time response and effective memory on the retained band | [Evidence and commands](docs/audits/liquidity-feedback-v1.3.0.md) · [Response and error figure](figures/v2/liquidity-feedback.svg) | 408 frequency comparisons, 25 time points and 75 shell comparisons. |
 | Response balance | Independent forcing and response exponents | [612 lag measurements](outputs/v2/balance-window.csv) · [Figure](figures/v2/response-balance.svg) | Two prescribed matches satisfy the tolerance. One of four primary offsets separates across the full grid. |
+| Aligned moving zero | Independent increment variance on the response window | [All lag comparisons](outputs/v2/root-variance-window.csv) · [Slope figure](figures/v2/root-variance.svg) | Two joint matches, with superlinear variance under feedback-off and raised-floor controls. |
 
 ### Prior implementations and methodological antecedents
 
@@ -117,7 +122,7 @@ This is a **simulation and interpretation bundle** for the supplementary materia
 | v1.2.0 (accepted) | Resolve the translation mode and stable shape spectrum, and test the exact aligned moving root. |
 | v1.3.0 (accepted) | Introduce prescribed liquidity feedback and quantify the response error from eliminating fast rates. |
 | v1.4.0 (accepted) | Measure the integrated root propagator and input memory independently to test the Bouchaud balance. |
-| v1.5.0 | Measure actual-root variance on the same prespecified operational-time window, including off-match and finite-rate-floor controls. |
+| v1.5.0 (accepted) | Measure actual-root variance on the same prespecified operational-time window, including off-match and finite-rate-floor controls. |
 | v1.6.0 and v1.7.0 | Measure phase–shape covariance, then test root preservation and convergence for a nonlinear, non-aligned front. |
 | v1.8.0 and v1.9.x | Compare mechanisms and controls, then audit claims and reproduce the expanded supplement from a clean checkout. |
 | v2.0.0 | Assemble the verified results and their limits in a citable code and supplement milestone, subject to approval. |
@@ -130,7 +135,7 @@ Can the separately evolving bid and ask densities, with depletion and delayed, d
 
 - **Can observed order flow explain the imposed liquidity, resilience and forcing profiles?** The six structural surfaces use declared synthetic profiles. The [sensitivity summary](outputs/stage09-sensitivity-summary-v1.csv) shows how the surface changes when these inputs vary. Estimate the profiles from book and order-flow data. Test their predictive content on held-out observations.
 - **Are the low- and high-<i>z</i> regimes observable in market data?** W01 resolves the frozen-response crossover in $`z=\nu\Delta`$ under controlled parameters. Estimate resilience and the observation scale on a common operational clock and test whether the two regimes can be distinguished statistically.
-- **How do persistent order flow and replenishment affect the moving root?** W01 establishes the frozen variance. W02 separates translation and shape, and tests the aligned root. W03–W04 establish the response of the aligned construction to prescribed feedback. W05 tests the input and response slopes independently. W06–W09 address observed-root variance, phase, shape and forcing placement. A kinetic derivation from bid and ask liquidity remains the separate question above.
+- **How do persistent order flow and replenishment affect the moving root?** W01 establishes the frozen variance. W02 separates translation and shape, and tests the aligned root. W03–W04 establish the response of the aligned construction to prescribed feedback. W05 tests the input and response slopes independently. W06 measures the moving-zero variance. W07–W09 address the covariance of phase and shape and the placement of forcing. A kinetic derivation from bid and ask liquidity remains the separate question above.
 - **Can the structural surface be compared quantitatively with option-implied local volatility?** The existing plots illustrate surface shape. The stationary high-<i>z</i> coefficient has an unconditional interpretation. Specify the pricing measure and state conditioning, map state and maturity coordinates, and quantify the effect of no-arbitrage projection or regularisation before making a calibration claim.
 - **How sensitive are the conclusions to the response law?** The historical workflow already includes 19 sensitivity checks. W09 addresses alternative rate spectra, finite rate floors, and forcing alignment. Broader empirical kernel and profile comparisons remain open.
 
@@ -165,14 +170,14 @@ provenance/              Stage notes, audits, registers, source freeze, legacy s
 
 ## Installation
 
-The historical Windows author run used Python 3.13.9. The November replay and v1.1.0–v1.4.0 calculations used Linux, Python 3.12.14, NumPy 2.3.5, SciPy 1.17.0 and Matplotlib 3.11.0. The requirements files specify the supported installation constraints. The exact versions above identify the recorded run.
+The historical Windows author run used Python 3.13.9. The November replay and v1.1.0–v1.5.0 calculations used Linux, Python 3.12.14, NumPy 2.3.5, SciPy 1.17.0 and Matplotlib 3.11.0. The requirements files specify the supported installation constraints. The exact versions above identify the recorded run.
 
 ### Obtain the accepted scientific source
 
 ```bash
 git clone https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility.git
 cd reaction-boundary-vol-surface-reproducibility
-git checkout 10524718cda8aa53bc605a3f8bce49f79f99c03f
+git checkout main
 ```
 
 For the original published surfaces alone, use the same repository at tag `v1.0.0`.
@@ -260,6 +265,7 @@ python -W error scripts/run_frozen_response.py
 python -W error scripts/run_translating_front.py
 python -W error scripts/run_liquidity_feedback.py
 python -W error scripts/run_response_balance.py
+python -W error scripts/run_root_variance.py
 ```
 
 | Output | Location | Format | Acceptance criterion |
@@ -279,9 +285,9 @@ The same commands regenerate the derived files in place. Use the reference check
 | Check category | Command or evidence record | Result |
 |---|---|---|
 | Environment and dependencies | [Baseline replay](docs/audits/baseline-v1.0.0.md) · [Finite-cutoff run](docs/audits/frozen-response-v1.1.0.md) | Recorded on 22 November 2026. |
-| Unit and scientific regression | Clean v1.4.0 replay | All 20 tests passed with warnings treated as errors, including three tests of response estimation and inversion. |
+| Unit and scientific regression | Clean v1.5.0 replay | All 23 tests passed with warnings treated as errors, including checks of root interpolation, fractional lag increments and spectral normalisation. |
 | Source integrity | [Archived file and checksum reconciliation](docs/audits/baseline-v1.0.0.md) | Frozen TeX and BibTeX verified. The staged inventory differs from the Git tree. |
-| Clean source reproduction | Independent checkout of the v1.4.0 source | The response-balance CSVs and SVG reproduced byte-for-byte with single-threaded BLAS. Changing BLAS threading moved two earlier time-response columns by at most 1.12 × 10⁻¹⁶. All 61 historical checks passed. |
+| Clean source reproduction | Independent checkout of the v1.5.0 source | The response and root-variance CSVs and SVGs reproduced byte-for-byte with single-threaded BLAS. Changing BLAS threading moved two earlier time-response columns by at most 1.12 × 10⁻¹⁶. All 61 historical checks passed. |
 | Cross-platform evidence | [Original author and clean-clone report](TEST-REPORT-v1.0.md) | Windows evidence applies to the historical route. The extension was verified on Linux. |
 
 ### Execution gates passed
@@ -318,6 +324,7 @@ Development proceeds on `main`. Accepted checkpoints can receive immutable versi
 | v1.2.0 | Translating profile, pinned control, stable shape band and measured root | [Computational audit](docs/audits/translating-front-v1.2.0.md) · accepted scientific checkpoint | [`b65bf06`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/b65bf066e28466faa6781548a1f21e1b994e780c) |
 | v1.3.0 | Causal root response and fast-rate memory | [Finite-rate and shell audit](docs/audits/liquidity-feedback-v1.3.0.md) · accepted scientific checkpoint | [`fcc1f40`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/fcc1f40cb7b401c2408f13a324ed06e0e97261ef) |
 | v1.4.0 | Independent response balance on a fixed operational window | [Measurements and controls](docs/audits/response-balance-v1.4.0.md) · accepted scientific checkpoint | [`1052471`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/10524718cda8aa53bc605a3f8bce49f79f99c03f) |
+| v1.5.0 | Independent moving-zero variance | [Variance and spectral checks](docs/audits/actual-root-variance-v1.5.0.md) · accepted scientific checkpoint | [Source](scripts/run_root_variance.py) |
 
 The public tag and hosted release at the 22 November audit were both v1.0.0. The v0.1 supplement, the paper revision and the dated inputs and figure families each retain their own identifiers. The `v2/` output directories identify work towards the expanded supplement.
 
@@ -349,7 +356,8 @@ Gebbie, Tim and Angstmann, Chris (2026). *Reaction-boundary volatility surface r
 | Historical supplement v0.1 | [ReactionBoundaryVolSurface-Supplement-v0.1.pdf](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v0.1.pdf) |
 | Translating-front supplement v1.2.0 | [PDF](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.2.0.pdf) · [TeX](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.2.0.tex) |
 | Causal reassessment supplement v1.3.0 | [PDF](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.3.0.pdf) · [TeX](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.3.0.tex) |
-| Current supplement v1.4.0 | [PDF](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.4.0.pdf) · [TeX](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.4.0.tex) |
+| Response-balance supplement v1.4.0 | [PDF](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.4.0.pdf) · [TeX](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.4.0.tex) |
+| Current supplement v1.5.0 | [PDF](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.5.0.pdf) · [TeX](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.5.0.tex) |
 | GitHub repository | `https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility` |
 | GitHub release | `https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/releases/tag/v1.0.0` |
 | ZivaHub/Figshare DOI | [`10.25375/uct.32936867`](https://doi.org/10.25375/uct.32936867) |
@@ -374,9 +382,9 @@ The v1.1.0 checkpoint verifies the stationary frozen tangent variance on the ope
 
 | Decision record | Current position |
 |---|---|
-| Current situation | W05/v1.4.0 accepted on `main`. Published software baseline v1.0.0. |
-| Future situation | Measure the increment variance and variance per unit lag of the observed moving zero on the same operational window. |
-| Accepted evidence | Historical surface replay, independent frozen-variance comparison, translating spectrum and aligned-root residual, and independent causal-response and shell-reduction checks, and the matched and offset balance measurements. See the version table. |
+| Current situation | W06/v1.5.0 accepted on `main`. Published software baseline v1.0.0. |
+| Future situation | Measure the separate phase and shape increments and their signed covariance on the same operational window. |
+| Accepted evidence | Historical surface replay, independent frozen-variance comparison, translating spectrum and aligned-root residual, and independent causal-response and shell-reduction checks, the matched and offset balance measurements, and the independent moving-zero variance. See the version table. |
 | Unresolved issues | Historical archive reconciliation and the derivation of effective liquidity feedback from physical kinetics. |
-| Decision required | Review the v1.5.0 root-variance evidence, retaining the three inconclusive v1.4.0 controls for later resolution. A GitHub release requires a separate major-milestone decision. |
-| Next gate | W06 measures actual-root variance independently at the same 17 lags from 32 to 320. |
+| Decision required | Review v1.6.0 phase–shape accounting. Three response and four primary offset variance classifications remain inconclusive. A GitHub release requires a separate major-milestone decision. |
+| Next gate | W07 tests independent and jointly driven phase and shape at the accepted 17 lags from 32 to 320. |

@@ -53,11 +53,14 @@ The scientific paper is [Angstmann and Gebbie, arXiv:2607.05011v4](https://arxiv
 | W02, v1.2.0 | `python -W error scripts/run_translating_front.py` | [Lattice pole and smooth residual](outputs/v2/translation-spectrum-checks.csv), [pinned and moving box spectra](outputs/v2/translation-spectrum.csv), [weak residual and displaced-forcing control](outputs/v2/aligned-root-checks.csv), [figure](figures/v2/translation-modes.svg) and [accepted audit](docs/audits/translating-front-v1.2.0.md) |
 | W03–W04, v1.3.0 | `python -W error scripts/run_liquidity_feedback.py` | [Complex frequency response](outputs/v2/feedback-frequency.csv), [step response](outputs/v2/feedback-time.csv), [shell errors](outputs/v2/feedback-shell.csv) and [audit](docs/audits/liquidity-feedback-v1.3.0.md) |
 | W05, v1.4.0 | `python -W error scripts/run_response_balance.py` | [Forcing estimates](outputs/v2/balance-forcing-estimates.csv), [all balance measurements](outputs/v2/balance-window.csv), [figure](figures/v2/response-balance.svg) and [independent-estimator audit](docs/audits/response-balance-v1.4.0.md) |
+| W06, v1.5.0 | `python -W error scripts/run_root_variance.py` | [Joint lag table](outputs/v2/root-variance-window.csv), [root checks](outputs/v2/root-variance-roots.csv), [figure](figures/v2/root-variance.svg) and [computational audit](docs/audits/actual-root-variance-v1.5.0.md) |
 
-Install `requirements-response.txt`. Run the scientific tests with `python -W error -m unittest discover -s tests -v`. See the [README checkpoint table](README.md#planned-checkpoints-through-v200) for W06–W11 and the [version policy](VERSION_POLICY.md) for acceptance.
+Install `requirements-response.txt`. Run the scientific tests with `python -W error -m unittest discover -s tests -v`. See the [README checkpoint table](README.md#planned-checkpoints-through-v200) for W07–W11 and the [version policy](VERSION_POLICY.md) for acceptance.
 
 The [v1.2.0 mathematical supplement](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.2.0.tex) accompanies the accepted W01/W02 software. From the repository root run `latexmk -pdf -outdir=supplementary-materials supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.2.0.tex`. The two vector figure PDFs in `figures/v2/` render the W01 and W02 SVG outputs for pdfLaTeX. The historical v0.1 source and figures retain their original identities.
 
 The [consolidated v1.3.0 source](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.3.0.tex) and [PDF](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.3.0.pdf) include the feedback derivation and the vector figure in `figures/v2/liquidity-feedback.pdf`. Build with the same command, substituting `v1.3.0` in the filename.
 
 The [v1.4.0 consolidated supplement](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.4.0.tex) includes the new response measurement. Substitute `v1.4.0` in the build command above.
+
+The current [v1.5.0 consolidated supplement](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.5.0.tex) adds independent moving-root variance and the finite-rate-floor bound. Use `v1.5.0` in the build command above.
