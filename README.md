@@ -188,7 +188,7 @@ The historical Windows author run used Python 3.13.9. The November replay and v1
 ```bash
 git clone https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility.git
 cd reaction-boundary-vol-surface-reproducibility
-git checkout main
+git checkout f83f8690c45505b5f73cbc9a2a707dc88d0faf32
 ```
 
 For the original published surfaces alone, use the same repository at tag `v1.0.0`.
@@ -344,7 +344,7 @@ Development proceeds on `main`. Accepted checkpoints can receive immutable versi
 | v1.4.0 | Independent response balance on a fixed operational window | [Measurements and controls](docs/audits/response-balance-v1.4.0.md) · accepted scientific checkpoint | [`1052471`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/10524718cda8aa53bc605a3f8bce49f79f99c03f) |
 | v1.5.0 | Independent moving-zero variance | [Variance and spectral checks](docs/audits/actual-root-variance-v1.5.0.md) · accepted scientific checkpoint | [`3ea466e`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/3ea466ecb17673b7d695efde696bab26a591479a) |
 | v1.6.0 | Signed phase–shape covariance | [Decomposition and numerical checks](docs/audits/phase-shape-v1.6.0.md) · accepted scientific checkpoint | [`018d011`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/018d01162f09d2986c937c286297ec966d437bda) |
-| v1.7.0 | Nonlinear field, measured root and travelling speed | [Convergence and controls](docs/audits/nonlinear-field-v1.7.0.md) · accepted scientific checkpoint | [Source](scripts/run_nonlinear_field.py) |
+| v1.7.0 | Nonlinear field, measured root and travelling speed | [Convergence and controls](docs/audits/nonlinear-field-v1.7.0.md) · accepted scientific checkpoint | [`f83f869`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/f83f8690c45505b5f73cbc9a2a707dc88d0faf32) |
 
 The public tag and hosted release at the 22 November audit were both v1.0.0. The v0.1 supplement, the paper revision and the dated inputs and figure families each retain their own identifiers. The `v2/` output directories identify work towards the expanded supplement.
 
@@ -361,6 +361,7 @@ The public tag and hosted release at the 22 November audit were both v1.0.0. The
 | Independent response balance | [`1052471`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/10524718cda8aa53bc605a3f8bce49f79f99c03f) | Input path estimates, collective response, all controls and consolidated supplement. |
 | Moving-zero variance | [`3ea466e`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/3ea466ecb17673b7d695efde696bab26a591479a) | Accepted common-window root variance, controls and consolidated supplement. |
 | Signed phase–shape covariance | [`018d011`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/018d01162f09d2986c937c286297ec966d437bda) | Common-input and independent benchmarks, projected field and consolidated supplement. |
+| Nonlinear moving boundary | [`f83f869`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/f83f8690c45505b5f73cbc9a2a707dc88d0faf32) | Accepted unique-root evidence, matched pathwise resolution, speed benchmark and consolidated supplement. |
 
 ## DOI, citation, and license
 
