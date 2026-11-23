@@ -64,6 +64,8 @@ The [consolidated v1.3.0 source](supplementary-materials/ReactionBoundaryVolSurf
 
 The [v1.4.0 consolidated supplement](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.4.0.tex) includes the new response measurement. Substitute `v1.4.0` in the build command above.
 
-The current [v1.5.0 consolidated supplement](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.5.0.tex) adds independent moving-root variance and the finite-rate-floor bound. Use `v1.5.0` in the build command above.
+The [v1.5.0 consolidated supplement](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.5.0.tex) adds independent moving-root variance and the finite-rate-floor bound. Use `v1.5.0` in the build command above.
 
 The [v1.6.0 consolidated supplement](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.6.0.tex) derives the signed phase–shape covariance. Substitute `v1.6.0` in the build command.
+
+The [v1.7.0 consolidated supplement](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.7.0.tex) adds the evolving-field equations, measured-zero algorithm, independent speed benchmark and pathwise refinement results. Substitute `v1.7.0` in the build command above. The [field calculation](docs/audits/nonlinear-field-v1.7.0.md) links the complete numerical evidence.
