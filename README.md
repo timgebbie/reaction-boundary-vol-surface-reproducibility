@@ -183,7 +183,7 @@ The historical Windows author run used Python 3.13.9. The November replay and v1
 ```bash
 git clone https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility.git
 cd reaction-boundary-vol-surface-reproducibility
-git checkout main
+git checkout 018d01162f09d2986c937c286297ec966d437bda
 ```
 
 For the original published surfaces alone, use the same repository at tag `v1.0.0`.
@@ -284,6 +284,7 @@ python -W error scripts/run_phase_shape.py
 | Causal feedback | [Frequency](outputs/v2/feedback-frequency.csv) · [Time](outputs/v2/feedback-time.csv) · [Shell](outputs/v2/feedback-shell.csv) | CSV, SVG | At cutoff 2 the first-derivative memory has maximum relative transfer error 0.0002532 on the retained band. |
 | Matched and offset response | [Window estimates](outputs/v2/balance-window.csv) | CSV | Two prescribed matches pass the response criterion. |
 | Aligned moving zero | [Per-design variances](outputs/v2/root-variance-designs.csv) · [Joint lag table](outputs/v2/root-variance-window.csv) | CSV, SVG | Both matched root-variance intervals pass on the accepted common window. |
+| Phase and shape | [Per-design comparisons](outputs/v2/phase-shape-designs.csv) · [Whole-window outcomes](outputs/v2/phase-shape-window.csv) | CSV, SVG | All 612 expected cross terms lie inside the corresponding design intervals. Two additive configurations meet both scaling criteria. |
 
 ### Repeating the analysis in an already-used tree
 
@@ -334,7 +335,7 @@ Development proceeds on `main`. Accepted checkpoints can receive immutable versi
 | v1.3.0 | Causal root response and fast-rate memory | [Finite-rate and shell audit](docs/audits/liquidity-feedback-v1.3.0.md) · accepted scientific checkpoint | [`fcc1f40`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/fcc1f40cb7b401c2408f13a324ed06e0e97261ef) |
 | v1.4.0 | Independent response balance on a fixed operational window | [Measurements and controls](docs/audits/response-balance-v1.4.0.md) · accepted scientific checkpoint | [`1052471`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/10524718cda8aa53bc605a3f8bce49f79f99c03f) |
 | v1.5.0 | Independent moving-zero variance | [Variance and spectral checks](docs/audits/actual-root-variance-v1.5.0.md) · accepted scientific checkpoint | [`3ea466e`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/3ea466ecb17673b7d695efde696bab26a591479a) |
-| v1.6.0 | Signed phase–shape covariance | [Decomposition and numerical checks](docs/audits/phase-shape-v1.6.0.md) · accepted scientific checkpoint | [Source](scripts/run_phase_shape.py) |
+| v1.6.0 | Signed phase–shape covariance | [Decomposition and numerical checks](docs/audits/phase-shape-v1.6.0.md) · accepted scientific checkpoint | [`018d011`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/018d01162f09d2986c937c286297ec966d437bda) |
 
 The public tag and hosted release at the 22 November audit were both v1.0.0. The v0.1 supplement, the paper revision and the dated inputs and figure families each retain their own identifiers. The `v2/` output directories identify work towards the expanded supplement.
 
@@ -350,6 +351,7 @@ The public tag and hosted release at the 22 November audit were both v1.0.0. The
 | Causal liquidity reassessment | [`fcc1f40`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/fcc1f40cb7b401c2408f13a324ed06e0e97261ef) | Accepted transfer, time-response and shell-reduction source and consolidated supplement. |
 | Independent response balance | [`1052471`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/10524718cda8aa53bc605a3f8bce49f79f99c03f) | Input path estimates, collective response, all controls and consolidated supplement. |
 | Moving-zero variance | [`3ea466e`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/3ea466ecb17673b7d695efde696bab26a591479a) | Accepted common-window root variance, controls and consolidated supplement. |
+| Signed phase–shape covariance | [`018d011`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/018d01162f09d2986c937c286297ec966d437bda) | Common-input and independent benchmarks, projected field and consolidated supplement. |
 
 ## DOI, citation, and license
 
@@ -396,7 +398,7 @@ The v1.1.0 checkpoint verifies the stationary frozen tangent variance on the ope
 |---|---|
 | Current situation | W07/v1.6.0 accepted on `main`. Published software baseline v1.0.0. |
 | Future situation | Evolve the nonlinear imbalance field and test the observed zero under non-aligned forcing. |
-| Accepted evidence | Historical surface replay, independent frozen-variance comparison, translating spectrum and aligned-root residual, independent causal-response and shell-reduction checks, the matched and offset balance measurements, and the independent moving-zero variance. See the version table. |
+| Accepted evidence | Historical surface replay, independent frozen-variance comparison, translating spectrum and aligned-root residual, independent causal-response and shell-reduction checks, the matched and offset balance measurements, and the independent moving-zero variance. The signed phase–shape decomposition agrees with the cross-spectral comparison. See the version table. |
 | Unresolved issues | Historical archive reconciliation and the derivation of effective liquidity feedback from physical kinetics. |
 | Decision required | Review nonlinear root preservation, convergence and failures at v1.7.0. Three response and four primary offset variance classifications remain inconclusive. A GitHub release requires a separate major-milestone decision. |
 | Next gate | W08 tests the nonlinear evolving interface with discretised feedback and non-aligned forcing. |
