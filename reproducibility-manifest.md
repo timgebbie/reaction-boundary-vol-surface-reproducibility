@@ -54,8 +54,9 @@ The scientific paper is [Angstmann and Gebbie, arXiv:2607.05011v4](https://arxiv
 | W03–W04, v1.3.0 | `python -W error scripts/run_liquidity_feedback.py` | [Complex frequency response](outputs/v2/feedback-frequency.csv), [step response](outputs/v2/feedback-time.csv), [shell errors](outputs/v2/feedback-shell.csv) and [audit](docs/audits/liquidity-feedback-v1.3.0.md) |
 | W05, v1.4.0 | `python -W error scripts/run_response_balance.py` | [Forcing estimates](outputs/v2/balance-forcing-estimates.csv), [all balance measurements](outputs/v2/balance-window.csv), [figure](figures/v2/response-balance.svg) and [independent-estimator audit](docs/audits/response-balance-v1.4.0.md) |
 | W06, v1.5.0 | `python -W error scripts/run_root_variance.py` | [Joint lag table](outputs/v2/root-variance-window.csv), [root checks](outputs/v2/root-variance-roots.csv), [figure](figures/v2/root-variance.svg) and [computational audit](docs/audits/actual-root-variance-v1.5.0.md) |
+| W07, v1.6.0 | `python -W error scripts/run_phase_shape.py` | [Full window](outputs/v2/phase-shape-window.csv), [design and spectrum](outputs/v2/phase-shape-designs.csv) and [audit](docs/audits/phase-shape-v1.6.0.md) |
 
-Install `requirements-response.txt`. Run the scientific tests with `python -W error -m unittest discover -s tests -v`. See the [README checkpoint table](README.md#planned-checkpoints-through-v200) for W07–W11 and the [version policy](VERSION_POLICY.md) for acceptance.
+Install `requirements-response.txt`. Run the scientific tests with `python -W error -m unittest discover -s tests -v`. See the [README checkpoint table](README.md#planned-checkpoints-through-v200) for W08–W11 and the [version policy](VERSION_POLICY.md) for acceptance.
 
 The [v1.2.0 mathematical supplement](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.2.0.tex) accompanies the accepted W01/W02 software. From the repository root run `latexmk -pdf -outdir=supplementary-materials supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.2.0.tex`. The two vector figure PDFs in `figures/v2/` render the W01 and W02 SVG outputs for pdfLaTeX. The historical v0.1 source and figures retain their original identities.
 
@@ -64,3 +65,5 @@ The [consolidated v1.3.0 source](supplementary-materials/ReactionBoundaryVolSurf
 The [v1.4.0 consolidated supplement](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.4.0.tex) includes the new response measurement. Substitute `v1.4.0` in the build command above.
 
 The current [v1.5.0 consolidated supplement](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.5.0.tex) adds independent moving-root variance and the finite-rate-floor bound. Use `v1.5.0` in the build command above.
+
+The [v1.6.0 consolidated supplement](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.6.0.tex) derives the signed phase–shape covariance. Substitute `v1.6.0` in the build command.

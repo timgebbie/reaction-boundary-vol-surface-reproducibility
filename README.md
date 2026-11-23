@@ -1,14 +1,14 @@
 # Reaction-boundary volatility surface reproducibility bundle
 
-Version: v1.5.0 — Variance of the moving zero on the aligned translating family
+Version: v1.6.0 — Signed covariance of phase and shape
 
 Supplementary code and materials for:
 
 > Chris Angstmann and Tim Gebbie, **“Reaction-boundary variance and adjoint-consistent local-volatility projection,”** [arXiv:2607.05011v4](https://arxiv.org/abs/2607.05011v4).
 
-The mathematical and computational supplement for the current checkpoint is **v1.5.0**. It includes the finite-cutoff variance, the translating-front spectrum, the algorithm for the moving zero and the causal response induced by fast and slow liquidity reassessment. It now also derives the forcing and response estimators and reports the matched and offset tests on a common lag window. The same window now carries an independent variance measurement of the moving zero.
+The mathematical and computational supplement for the current checkpoint is **v1.6.0**. It includes the finite-cutoff variance, the translating-front spectrum, the algorithm for the moving zero and the causal response induced by fast and slow liquidity reassessment. It now also derives the forcing and response estimators and reports the matched and offset tests on a common lag window. The same window now carries an independent variance measurement of the moving zero. The phase–shape calculation traces the signed covariance from common forcing to total variance.
 
-> [Supplement v1.5.0 (PDF)](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.5.0.pdf) · [Consolidated LaTeX source](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.5.0.tex)
+> [Supplement v1.6.0 (PDF)](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.6.0.pdf) · [Consolidated LaTeX source](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.6.0.tex)
 
 The historical supplement accompanies the [published v1.0.0 software release](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/releases/tag/v1.0.0):
 
@@ -58,9 +58,9 @@ The proposed extension asks whether delayed liquidity reassessment can compensat
 B(\Delta)=2\beta_{\mathrm{eff}}(\Delta)+\gamma-1.
 ```
 
-v1.3.0 measures the causal transfer and the error from eliminating fast reassessment rates. v1.4.0 independently estimates the input exponent $`\gamma`$. v1.5.0 measures the aligned actual-root increment variance $`V_y(\Delta)`$, and a positive, approximately constant $`V_y(\Delta)/\Delta`$ on the same prespecified interval. Off-match rates, a finite slow-rate floor and non-aligned forcing test the limits of the construction. If these observations disagree, that disagreement belongs in the v2.0.0 result. The feedback spectrum is prescribed in this construction. Its physical origin and the variance contribution from transverse deformation remain open.
+v1.3.0 measures the causal transfer and the error from eliminating fast reassessment rates. v1.4.0 independently estimates the input exponent $`\gamma`$. v1.5.0 measures the aligned actual-root increment variance $`V_y(\Delta)`$, and a positive, approximately constant $`V_y(\Delta)/\Delta`$ on the same prespecified interval. Off-match rates, a finite slow-rate floor and non-aligned forcing test the limits of the construction. If these observations disagree, that disagreement belongs in the v2.0.0 result. The feedback spectrum is prescribed in this construction. v1.6.0 measures the transverse contribution in a specified linearised field. Its nonlinear counterpart and the origin of the feedback spectrum remain open.
 
-## Current situation: v1.5.0 accepted
+## Current situation: v1.6.0 accepted
 
 The accepted v1.1.0 calculation returns the operational increment variance of the stationary frozen boundary at positive microscopic cutoff. Its independent time-domain evaluation gives a direct check on the spectral calculation in Appendix A of the paper. The original structural surfaces remain the published baseline.
 
@@ -77,6 +77,10 @@ The input memory is measured from forcing paths and the response exponent from a
 ### Variance of the moving zero (v1.5.0)
 
 The two matched constructions also pass the independent root-variance test on the 17 operational lags used to measure response. On newly generated paths the measured variance-slope envelopes are 0.937–1.073 and 0.927–1.068. The variance per unit lag stays positive and within the predeclared relative-rate tolerance. Removing feedback or raising the slow-rate floor gives superlinear variance across the tested decade. The primary offset variance comparisons remain inconclusive under the whole-window separation rule. [Actual-root calculation and evidence](docs/audits/actual-root-variance-v1.5.0.md) · [Consolidated supplement](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.5.0.pdf)
+
+### How does shape enter the observed variance? (v1.6.0)
+
+The observed displacement is the sum of the phase and a shape contribution. Their increment covariance changes sign when forcing placement is reversed. In the linearised moving field its magnitude contributes less than 0.059% of total variance over the tested decade. Two additive benchmarks meet both the shape and total scaling criteria. No projected-field case does so. The fresh aligned control at input exponent 0.6 also misses the lower total-slope threshold. [Signed covariance and controls](docs/audits/phase-shape-v1.6.0.md) · [All lag outcomes](outputs/v2/phase-shape-window.csv)
 
 ### Historical structural-surface baseline: v1.0.0
 
@@ -104,6 +108,7 @@ This is a **simulation and interpretation bundle** for the supplementary materia
 | Causal reassessment and fast-rate elimination | Finite transfer, time response and effective memory on the retained band | [Evidence and commands](docs/audits/liquidity-feedback-v1.3.0.md) · [Response and error figure](figures/v2/liquidity-feedback.svg) | 408 frequency comparisons, 25 time points and 75 shell comparisons. |
 | Response balance | Independent forcing and response exponents | [612 lag measurements](outputs/v2/balance-window.csv) · [Figure](figures/v2/response-balance.svg) | Two prescribed matches satisfy the tolerance. One of four primary offsets separates across the full grid. |
 | Aligned moving zero | Independent increment variance on the response window | [All lag comparisons](outputs/v2/root-variance-window.csv) · [Slope figure](figures/v2/root-variance.svg) | Two joint matches, with superlinear variance under feedback-off and raised-floor controls. |
+| Phase and shape | Independent and jointly forced components | [Spectral and path comparison](outputs/v2/phase-shape-designs.csv) · [Figure](figures/v2/phase-shape.svg) | Signed covariance checked for all 612 design and lag entries. |
 
 ### Prior implementations and methodological antecedents
 
@@ -123,7 +128,8 @@ This is a **simulation and interpretation bundle** for the supplementary materia
 | v1.3.0 (accepted) | Introduce prescribed liquidity feedback and quantify the response error from eliminating fast rates. |
 | v1.4.0 (accepted) | Measure the integrated root propagator and input memory independently to test the Bouchaud balance. |
 | v1.5.0 (accepted) | Measure actual-root variance on the same prespecified operational-time window, including off-match and finite-rate-floor controls. |
-| v1.6.0 and v1.7.0 | Measure phase–shape covariance, then test root preservation and convergence for a nonlinear, non-aligned front. |
+| v1.6.0 (accepted) | Measure signed phase–shape covariance under independent and common driving. |
+| v1.7.0 | Test root preservation and convergence for the nonlinear, non-aligned field. |
 | v1.8.0 and v1.9.x | Compare mechanisms and controls, then audit claims and reproduce the expanded supplement from a clean checkout. |
 | v2.0.0 | Assemble the verified results and their limits in a citable code and supplement milestone, subject to approval. |
 
@@ -170,14 +176,14 @@ provenance/              Stage notes, audits, registers, source freeze, legacy s
 
 ## Installation
 
-The historical Windows author run used Python 3.13.9. The November replay and v1.1.0–v1.5.0 calculations used Linux, Python 3.12.14, NumPy 2.3.5, SciPy 1.17.0 and Matplotlib 3.11.0. The requirements files specify the supported installation constraints. The exact versions above identify the recorded run.
+The historical Windows author run used Python 3.13.9. The November replay and v1.1.0–v1.6.0 calculations used Linux, Python 3.12.14, NumPy 2.3.5, SciPy 1.17.0 and Matplotlib 3.11.0. The requirements files specify the supported installation constraints. The exact versions above identify the recorded run.
 
 ### Obtain the accepted scientific source
 
 ```bash
 git clone https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility.git
 cd reaction-boundary-vol-surface-reproducibility
-git checkout 3ea466ecb17673b7d695efde696bab26a591479a
+git checkout main
 ```
 
 For the original published surfaces alone, use the same repository at tag `v1.0.0`.
@@ -266,6 +272,7 @@ python -W error scripts/run_translating_front.py
 python -W error scripts/run_liquidity_feedback.py
 python -W error scripts/run_response_balance.py
 python -W error scripts/run_root_variance.py
+python -W error scripts/run_phase_shape.py
 ```
 
 | Output | Location | Format | Acceptance criterion |
@@ -287,7 +294,7 @@ The same commands regenerate the derived files in place. Use the reference check
 | Check category | Command or evidence record | Result |
 |---|---|---|
 | Environment and dependencies | [Baseline replay](docs/audits/baseline-v1.0.0.md) · [Finite-cutoff run](docs/audits/frozen-response-v1.1.0.md) | Recorded on 22 November 2026. |
-| Unit and scientific regression | Clean v1.5.0 replay | All 23 tests passed with warnings treated as errors, including checks of root interpolation, fractional lag increments and spectral normalisation. |
+| Unit and scientific regression | v1.6.0 scientific suite | All 26 tests passed with warnings treated as errors, including checks of root interpolation, fractional lag increments and spectral normalisation. |
 | Source integrity | [Archived file and checksum reconciliation](docs/audits/baseline-v1.0.0.md) | Frozen TeX and BibTeX verified. The staged inventory differs from the Git tree. |
 | Clean source reproduction | Independent checkout of the v1.5.0 source | The response and root-variance CSVs and SVGs reproduced byte-for-byte with single-threaded BLAS. Changing BLAS threading moved two earlier time-response columns by at most 1.12 × 10⁻¹⁶. All 61 historical checks passed. |
 | Cross-platform evidence | [Original author and clean-clone report](TEST-REPORT-v1.0.md) | Windows evidence applies to the historical route. The extension was verified on Linux. |
@@ -327,6 +334,7 @@ Development proceeds on `main`. Accepted checkpoints can receive immutable versi
 | v1.3.0 | Causal root response and fast-rate memory | [Finite-rate and shell audit](docs/audits/liquidity-feedback-v1.3.0.md) · accepted scientific checkpoint | [`fcc1f40`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/fcc1f40cb7b401c2408f13a324ed06e0e97261ef) |
 | v1.4.0 | Independent response balance on a fixed operational window | [Measurements and controls](docs/audits/response-balance-v1.4.0.md) · accepted scientific checkpoint | [`1052471`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/10524718cda8aa53bc605a3f8bce49f79f99c03f) |
 | v1.5.0 | Independent moving-zero variance | [Variance and spectral checks](docs/audits/actual-root-variance-v1.5.0.md) · accepted scientific checkpoint | [`3ea466e`](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/3ea466ecb17673b7d695efde696bab26a591479a) |
+| v1.6.0 | Signed phase–shape covariance | [Decomposition and numerical checks](docs/audits/phase-shape-v1.6.0.md) · accepted scientific checkpoint | [Source](scripts/run_phase_shape.py) |
 
 The public tag and hosted release at the 22 November audit were both v1.0.0. The v0.1 supplement, the paper revision and the dated inputs and figure families each retain their own identifiers. The `v2/` output directories identify work towards the expanded supplement.
 
@@ -360,7 +368,8 @@ Gebbie, Tim and Angstmann, Chris (2026). *Reaction-boundary volatility surface r
 | Translating-front supplement v1.2.0 | [PDF](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.2.0.pdf) · [TeX](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.2.0.tex) |
 | Causal reassessment supplement v1.3.0 | [PDF](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.3.0.pdf) · [TeX](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.3.0.tex) |
 | Response-balance supplement v1.4.0 | [PDF](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.4.0.pdf) · [TeX](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.4.0.tex) |
-| Current supplement v1.5.0 | [PDF](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.5.0.pdf) · [TeX](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.5.0.tex) |
+| Moving-zero supplement v1.5.0 | [PDF](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.5.0.pdf) · [TeX](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.5.0.tex) |
+| Current supplement v1.6.0 | [PDF](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.6.0.pdf) · [TeX](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.6.0.tex) |
 | GitHub repository | `https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility` |
 | GitHub release | `https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/releases/tag/v1.0.0` |
 | ZivaHub/Figshare DOI | [`10.25375/uct.32936867`](https://doi.org/10.25375/uct.32936867) |
@@ -385,9 +394,9 @@ The v1.1.0 checkpoint verifies the stationary frozen tangent variance on the ope
 
 | Decision record | Current position |
 |---|---|
-| Current situation | W06/v1.5.0 accepted on `main`. Published software baseline v1.0.0. |
-| Future situation | Measure the separate phase and shape increments and their signed covariance on the same operational window. |
+| Current situation | W07/v1.6.0 accepted on `main`. Published software baseline v1.0.0. |
+| Future situation | Evolve the nonlinear imbalance field and test the observed zero under non-aligned forcing. |
 | Accepted evidence | Historical surface replay, independent frozen-variance comparison, translating spectrum and aligned-root residual, independent causal-response and shell-reduction checks, the matched and offset balance measurements, and the independent moving-zero variance. See the version table. |
 | Unresolved issues | Historical archive reconciliation and the derivation of effective liquidity feedback from physical kinetics. |
-| Decision required | Review v1.6.0 phase–shape accounting. Three response and four primary offset variance classifications remain inconclusive. A GitHub release requires a separate major-milestone decision. |
-| Next gate | W07 tests independent and jointly driven phase and shape at the accepted 17 lags from 32 to 320. |
+| Decision required | Review nonlinear root preservation, convergence and failures at v1.7.0. Three response and four primary offset variance classifications remain inconclusive. A GitHub release requires a separate major-milestone decision. |
+| Next gate | W08 tests the nonlinear evolving interface with discretised feedback and non-aligned forcing. |
