@@ -74,7 +74,7 @@ The [v1.8.0 consolidated supplement](supplementary-materials/ReactionBoundaryVol
 
 The [v1.8.1 companion](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.8.1.tex) adds the log-price density, boundary term and spot-coordinate form of the pricing operator to the accepted v1.8.0 calculation. Use the same build command with v1.8.1.
 
-## Figure sources for the v1.9.0-dev companion
+## Figure sources for the accepted v1.9.0 companion
 
 The twelve structural panels in §8 use the three named profiles, each evaluated on both response branches. The [figure register](figure-table-provenance-register.csv) identifies each PDF individually. The grid, profile functions and two multipliers are evaluated by [the v3 figure script](scripts/05_generate_matplotlib_figures_v3.py) from [the baseline configuration](config/profile-definitions-v1.json). Both views of each surface use the same volatility array. The historical high-<i>z</i> README pair supplies the layout. Run `python scripts/compose_readme_low_z.py` to assemble the low-<i>z</i> pair from its released PNG panels.
 
@@ -89,4 +89,4 @@ The twelve structural panels in §8 use the three named profiles, each evaluated
 | [nonlinear-field](figures/v2/nonlinear-field.pdf) | [run_nonlinear_field.py](scripts/run_nonlinear_field.py) | [nonlinear-field-variance](outputs/v2/nonlinear-field-variance.csv) · [nonlinear-field-audit](outputs/v2/nonlinear-field-audit.csv) |
 | [scale-window](figures/v2/scale-window.pdf) | [run_scale_window.py](scripts/run_scale_window.py) | [response-surface](outputs/v2/response-surface.csv) · [root-variance-window](outputs/v2/root-variance-window.csv) · [conditional-history](outputs/v2/conditional-history.csv) |
 
-The first seven extension scripts emit SVG. Their corresponding PDFs are the vector inputs for pdfLaTeX. The regime-map script writes PDF and PNG directly. From the repository root, build the [development companion](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.9.0-dev.tex) with `latexmk -pdf -outdir=supplementary-materials supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.9.0-dev.tex`.
+The first seven extension scripts emit SVG. Their corresponding PDFs are the vector inputs for pdfLaTeX. The regime-map script writes PDF and PNG directly. From the repository root, build the [accepted companion](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.9.0.tex) with `latexmk -pdf -outdir=supplementary-materials supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.9.0.tex`.

@@ -1,0 +1,1668 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=0.82in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{placeins}
+\usepackage{float}
+\floatstyle{ruled}
+\newfloat{algorithm}{htbp}{loa}
+\floatname{algorithm}{Algorithm}
+
+\usepackage{xcolor}
+\usepackage{microtype}
+\usepackage{hyperref}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55em}
+
+\hypersetup{colorlinks=true,linkcolor=blue!55!black,urlcolor=blue!55!black,citecolor=blue!55!black}
+
+\IfFileExists{figures/mpl-surface3d-liquidity-only-low-z-v3.pdf}
+  {\newcommand{\FigDir}{figures}}
+  {\IfFileExists{../figures/mpl-surface3d-liquidity-only-low-z-v3.pdf}
+    {\newcommand{\FigDir}{../figures}}{\newcommand{\FigDir}{../../figures}}}
+\newcommand{\Aeff}{\mathcal A_{\mathrm{eff}}}
+\newcommand{\Liq}{\mathcal L}
+\newcommand{\Fresp}{\mathcal F}
+\newcommand{\sigloc}{\sigma_{\mathrm{loc}}}
+
+\title{Computational Supplement:\\Reaction-Boundary Volatility Surface Simulations}
+\author{Chris Angstmann \and Tim Gebbie}
+\date{Supplement v1.9.0 --- Boundary response across operational scales\\26 November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Persistent signed order flow drives different price responses at a frozen boundary and at a translating zero. For the frozen boundary, finite resolution, liquidity slope and resilience determine the structural volatility surfaces. For the translating boundary, a prescribed distribution of liquidity reassessment rates produces a causal response. We quantify the error from eliminating fast rates and recover positive zero-frequency mobility at finite slow-rate cutoff. Over one decade of operational lags, two prescribed rate laws satisfy the response balance and an independent test of approximately linear aligned-root variance. Removing feedback or raising the slow-rate floor gives superlinear variance on that decade. In a projected field, changing forcing placement reverses the phase--shape covariance; coexistence of subdiffusive shape and approximately linear total variance remains unresolved. The nonlinear field retains a unique descending zero. Matched spatial and temporal refinements bring its displacement within the stated tolerances, although every nonlinear case has lags outside the diffusion-slope band. On the aligned Gaussian family, three-time conditional correlations distinguish the intermediate window from the raised-floor control.
+\end{abstract}
+\tableofcontents
+
+\section{Scientific scope and background}
+
+This supplementary note describes a simulation study of volatility surfaces
+generated from the reaction-boundary closure. The purpose is not calibration.
+Instead, the figures show how structural order-book channels can produce
+stock-price and maturity dependence in a projected local-volatility surface.
+The simulations are intended as a visual bridge between the theoretical
+closure and the kinds of surfaces one would later compare with calibrated
+local-volatility data.
+
+The reference for the frozen response is Angstmann and Gebbie,
+\href{https://arxiv.org/abs/2607.05011v4}{arXiv:2607.05011v4}.
+The translating field and distributed reassessment below are auxiliary
+extensions. Throughout the response calculations \(u\) is operational
+time. In the surface plots \(m\) denotes log-moneyness. We use \(m_u\)
+for the signed input to the moving boundary and \(r\) for a reassessment
+rate in inverse operational time.
+
+The lag \(\Delta\) is measured in units of \(u\), while \(T\) in the
+structural plots is a calendar maturity in years. Both \(\nu\) and
+\(r_{\min}\) have units of inverse operational time. Consequently
+\(z=\nu\Delta\), \(r_{\min}/\nu\) and \(r_{\min}\Delta\) are
+dimensionless. The operational variance rate has units of squared log
+displacement per unit \(u\); multiplication by \(U'(t)\) converts it to
+a calendar variance rate for the specified deterministic clock.
+The resilience \(\nu\) fixes the frozen relaxation scale and the gap of
+the translating field. The slowest reassessment rate \(r_{\min}\)
+bounds the memory spectrum of the translating field.
+
+\subsection{Theory-to-computation map}
+\begin{center}
+\small
+\begin{tabular}{p{.23\linewidth}p{.31\linewidth}p{.36\linewidth}}
+\toprule
+Object & Observable & Independent comparison \\
+\midrule
+Frozen imbalance zero & Increment variance at fixed cutoff & Spectral and time-domain quadratures at identical parameters \\
+Translating profile & Root, neutral eigenmode and shape band & Lattice pole, observed zero and weak field residual \\
+Prescribed reassessment & Velocity transfer and integrated root response & Truncated integral, mode evolution and continuum relaxation \\
+Fast reassessment rates & Response on the retained frequency band & Full memory and successive local approximations \\
+Response balance & Input spectrum and integrated root response & Independent path estimates, inversion refinements and offset controls \\
+Aligned moving zero & Increment variance, slope and variance rate & Field-root interpolation, ensemble measurements and expected velocity-spectrum sum \\
+Phase and shape & Signed increment covariance & Full root mobility and cross-spectral sum \\
+Nonlinear field & Measured zero, phase and displacement error & Travelling speed, compact weak test and common-input refinements \\
+Operational scales & Response exponent and conditional increments & Local derivative, matched grids and held-out predictions \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Reaction-Boundary Volatility Closure}
+
+The operational variance closure used in the simulation is
+\begin{equation}
+ a_u^{(\Delta)}(S,u)
+ \simeq
+ \left[
+ \frac{\Aeff(S,u)}
+      {\Liq(S,u)^2}
+ \right]
+ \Delta^{-\gamma(S,u)}
+ \Fresp_{\gamma(S,u)}\!\left(\nu(S,u)\Delta\right).
+ \label{eq:operational-closure}
+\end{equation}
+Here \(S\) denotes the stock-price coordinate, \(u\) is operational time,
+\(\Aeff\) is an effective signed-forcing scale, \(\Liq\) is the local
+liquidity slope, \(\Delta\) is the operational coarse-graining scale,
+\(\gamma\) is the long-memory exponent, and
+\(z=\nu(S,u)\Delta\) is the dimensionless resilience-response argument.
+
+Under a deterministic activity clock, the projected local variance is written
+as
+\begin{equation}
+ \sigloc^2(S,t)
+ =
+ \alpha(t)\,
+ \Xi(S,U(t);\Delta),
+ \label{eq:projected-local-variance}
+\end{equation}
+where \(\alpha(t)=U'(t)\) maps operational-time variance into calendar time. In the
+simulations, \(\Xi\) is evaluated using the right-hand side of
+Eq.~\eqref{eq:operational-closure}. The plotted quantity is projected local
+volatility,
+\begin{equation}
+ \sigloc(m,T)=\sqrt{\sigloc^2(m,T)},
+ \label{eq:plotted-volatility}
+\end{equation}
+on a grid in log-moneyness \(m=\ln(S/S_0)\) and maturity \(T\).
+
+For a centred stationary frozen root \(Y\), write
+\(V_\Delta=\mathrm{Var}[Y(u+\Delta)-Y(u)]\) and \(V_Y=\mathrm{Var}[Y(u)]\).
+The unconditional variance rate is \(V_\Delta/\Delta\). In the normalisation
+of the frozen field, \(\Aeff=\mathcal A_m/D\), where \(D\) is liquidity
+diffusivity and \(\mathcal A_m\) sets the forcing covariance. Under Gaussian
+stationarity the conditional increment second moment is
+\[
+ V_\Delta+\frac{V_\Delta^2}{4V_Y}\left(\frac{y^2}{V_Y}-1\right)
+ \quad\text{at }Y(u)=y .
+\]
+The conditional increment mean is \(-y V_\Delta/(2V_Y)\) and the
+conditional variance is \(V_\Delta-V_\Delta^2/(4V_Y)\) for \(V_Y>0\).
+Adding the squared conditional mean gives the displayed second moment.
+This follows by Gaussian regression using
+\(\mathrm{Cov}(Y(u+\Delta)-Y(u),Y(u))=-V_\Delta/2\).
+When \(V_\Delta\to2V_Y\), the conditional moment tends to \(V_Y+y^2\).
+A pricing interpretation of Eq.~\eqref{eq:projected-local-variance}
+requires state conditioning and a choice of operational parameters under
+the pricing measure.
+
+\section{Response-Regime Approximations}
+
+For the regularised causal kernel
+\(g^{(\tau_0)}(h)=e^{-\nu(h+\tau_0)}/\sqrt{4\pi D(h+\tau_0)}\)
+on \(h\ge0\), take \(C_m(h)=\mathcal A_m(|h|+\tau_0)^{-\gamma}\).
+At fixed \(\tau_0>0\) the stationary filter is mean-square differentiable
+and \(V_h=O(h^2)\) as \(h\downarrow0\). The low-\(z\) scaling interval
+requires \(\tau_0\ll\Delta\ll\nu^{-1}\). The zero-cutoff high-\(z\)
+prefactor also requires \(\nu\tau_0\ll1\). In 48 finite-cutoff cases,
+direct covariance and spectral quadratures gave a maximum relative
+discrepancy of \(3.84\times10^{-11}\).
+
+Both asymptotic response regimes are simulated. The low-\(z\) branch uses
+\begin{equation}
+ \Fresp_\gamma(z)
+ \sim
+ \frac{\tan(\pi\gamma/2)}{2(1-\gamma)},
+ \qquad z\ll1,
+ \label{eq:low-z-response}
+\end{equation}
+which removes the leading-order dependence on \(z\) when \(\gamma\) is held
+fixed. The high-\(z\) branch uses
+\begin{equation}
+ \Fresp_\gamma(z)
+ \sim
+ K_\gamma^{(0)}z^{\gamma-1},
+ \qquad z\gg1,
+ \label{eq:high-z-response}
+\end{equation}
+where
+\begin{equation}
+ K_\gamma^{(0)}
+ =
+ \frac{
+ \Gamma(1-\gamma)\sin(\pi\gamma/2)
+ \Gamma(\gamma/2)\Gamma((1-\gamma)/2)
+ }{2\pi^{3/2}}.
+ \label{eq:k-gamma}
+\end{equation}
+Because \(0<\gamma<1\), the exponent \(\gamma-1\) is negative in the
+high-\(z\) branch. Smaller \(z\), corresponding here to weaker or slower
+resilience at fixed \(\Delta\), therefore raises the response multiplier in
+that branch.
+
+\begin{table}[ht]
+\centering
+\small
+\caption{Response-function regimes used in the simulations.}
+\label{tab:response-regimes}
+\begin{tabular}{p{0.19\linewidth}p{0.23\linewidth}p{0.37\linewidth}p{0.11\linewidth}}
+\toprule
+Regime & Condition & Approximation & Depends on \(z\) \\
+\midrule
+Low \(z\) & \(z=\nu\Delta\ll1\) &
+\(\tan(\pi\gamma/2)/(2(1-\gamma))\) & No \\
+High \(z\) & \(z=\nu\Delta\gg1\) &
+\(K_\gamma^{(0)}z^{\gamma-1}\) & Yes \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Independent evaluations at finite cutoff}
+With two-sided angular-frequency convention
+\(C_m(h)=(2\pi)^{-1}\int_{\mathbb R}e^{i\omega h}S_m(\omega)\,d\omega\),
+the causal frozen filter gives
+\[
+ V_\Delta=\frac{1}{2\pi\Liq^2}\int_{\mathbb R}
+ 2[1-\cos(\omega\Delta)]\,|\widehat g^{(\tau_0)}(\omega)|^2
+ S_m(\omega)\,d\omega .
+\]
+For \(s=\nu+i\omega\), its Fourier transform is
+\(e^{-\nu\tau_0}\operatorname{erfcx}(\sqrt{s\tau_0})/(2\sqrt{Ds})\),
+using the square root with positive real part. Independently define
+\(W(h)=\int_0^\infty g^{(\tau_0)}(r)g^{(\tau_0)}(r+h)\,dr\) for \(h\ge0\).
+Integrating the increment covariance directly gives
+\[
+ V_\Delta=\frac{2}{\Liq^2}\int_0^\infty W(h)
+ [2C_m(h)-C_m(|h-\Delta|)-C_m(h+\Delta)]\,dh .
+\]
+At fixed cutoff it is numerically important to resolve both the lag cusp
+and the cancellation of the symmetric covariance difference. On the
+\(\gamma=1/2\) comparisons, the measured variance slopes were 1.999812
+for \(10^{-5}\le\Delta\le10^{-4}\), \(\tau_0=0.1\); 0.500374 for
+\(10^{-4}\le\Delta\le10^{-2}\), \(\tau_0=10^{-12}\); and 0.001321 for
+\(10^4\le\Delta\le10^6\), \(\tau_0=0.1\), all at unit resilience.
+\begin{algorithm}[htbp]
+\caption{Stationary frozen increment variance at finite resolution}
+\small\textbf{Input:} \(\gamma,\nu,\tau_0,\Delta,D,\Liq,\mathcal A_m\), quadrature tolerance.\\
+\textbf{Output:} Independent values of \(V_\Delta\), the level variance and refinement error.
+\begin{enumerate}\setlength{\itemsep}{0.1em}
+\item Evaluate the spectral transfer with the scaled complementary error function. Resolve the increment filter near the origin using \(1-\cos x=2\sin^2(x/2)\), and integrate the oscillatory tail separately.
+\item In time, integrate the kernel autocorrelation. Split at \(h=\Delta\), resolve the \(\tau_0\)-scale cusp and use a symmetric expansion where the covariance difference loses precision.
+\item Integrate the level covariance separately, tighten both tolerances, and compare the two increment estimates before using the conditional-moment formula.
+\end{enumerate}
+\end{algorithm}
+\FloatBarrier
+
+\section{Structural Simulation Profiles}
+
+The stock-price coordinate is represented by log-moneyness,
+\begin{equation}
+ m=\ln(S/S_0).
+\end{equation}
+Stock dependence can enter the closure through \(\Liq(S)\), \(\Aeff(S)\),
+\(\nu(S)\), \(\gamma(S)\), and possibly the activity clock. The first
+simulation holds \(\gamma\) constant and uses a simple maturity-dependent
+activity profile,
+\begin{equation}
+ \alpha(T)
+ =
+ \alpha_0\left(1+a_{\mathrm{short}}\exp(-T/\tau_\alpha)\right).
+ \label{eq:activity-profile}
+\end{equation}
+This keeps the source of \(m\)-dependence visible in each profile.
+
+\begin{table}[ht]
+\centering
+\small
+\caption{Structural profiles used to generate stock dependence in the simulated surfaces.}
+\label{tab:profile-definitions}
+\begin{tabular}{p{0.22\linewidth}p{0.26\linewidth}p{0.22\linewidth}p{0.20\linewidth}}
+\toprule
+Profile & Varies with \(m\) & Fixed across stock states & Purpose \\
+\midrule
+Liquidity-only & \(\Liq(m)\) &
+\(\Aeff,z,\gamma,\alpha\) &
+Isolates the inverse-square liquidity channel. \\
+Resilience-response-only & \(z(m)=\nu(m)\Delta\) &
+\(\Aeff,\Liq,\gamma,\alpha\) &
+Isolates the response channel. \\
+Combined structural & \(\Liq(m),z(m),\Aeff(m)\) &
+\(\gamma\), simple \(\alpha(T)\) &
+Combines stylised liquidity, resilience, and stress channels. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The common functional forms are
+\begin{align}
+ \Liq(m)
+ &=
+ L_0\max\!\left(L_{\mathrm{floor}},
+ 1+L_{\mathrm{skew}}m+L_{\mathrm{smile}}m^2\right),
+ \label{eq:liquidity-profile}\\
+ z(m)
+ &=
+ z_{\mathrm{regime}}\exp(\nu_{\mathrm{skew}}m),
+ \label{eq:z-profile}\\
+ \Aeff(m)
+ &=
+ A_{\mathrm{eff},0}\exp(-A_{\mathrm{stress}}m).
+ \label{eq:forcing-profile}
+\end{align}
+Positive \(L_{\mathrm{skew}}\) lowers liquidity for negative \(m\), while
+positive \(L_{\mathrm{smile}}\) changes liquidity away from the money.
+Positive \(\nu_{\mathrm{skew}}\) makes \(z(m)\) smaller on the downside.
+In the combined profile, \(A_{\mathrm{stress}}\) raises the effective forcing
+scale for negative \(m\). These choices are phenomenological simulation
+controls, not fitted estimates.
+
+\section{Numerical Implementation}
+
+The grid contains 121 log-moneyness values from \(-0.30\) to \(0.30\) and 96 calendar maturities from \(1/12\) to 2 years. The surfaces are evaluated on a rectangular grid in \((m,T)\). For each grid
+point, the selected structural profile determines \(\Liq(m)\), \(z(m)\), and
+\(\Aeff(m)\); the selected response branch determines \(\Fresp_\gamma(z)\);
+and Eqs.~\eqref{eq:operational-closure}--\eqref{eq:plotted-volatility}
+determine the plotted volatility. The figures were generated with Python,
+NumPy, and Matplotlib. Surface figures use boxed three-dimensional axes, and
+the paired contour figures show black contour lines of the same surface.
+
+\section{Relation To Calibrated Local Volatility}
+
+The plotted object is best interpreted as a projected structural volatility
+surface. It is local-volatility-like because it assigns a volatility level to
+a state coordinate and maturity, but it is not a calibrated Dupire local
+volatility surface. A calibrated local-volatility surface is usually inferred
+from option prices under a risk-neutral pricing measure and must be consistent
+with the absence of static arbitrage in the associated option surface. The
+present construction instead starts from order-book structural quantities and
+projects them into a surface morphology.
+
+This distinction matters for interpretation. The simulation is designed to
+ask whether plausible order-book channels can generate volatility-surface
+shapes that resemble known market phenomenology, especially equity-like
+downside skew. It does not claim that the resulting surface is directly
+tradeable, arbitrage-free, or equivalent to a market-calibrated local
+volatility input.
+
+For comparison with option-calibrated surfaces, the state coordinate \(m\)
+should be read as a log-moneyness coordinate. In a later empirical comparison,
+one would normally align this with log-strike or log-forward moneyness, for
+example \(m=\ln(K/S_0)\) or \(m=\ln(K/F_0(T))\), depending on the calibration
+convention. The current notation \(m=\ln(S/S_0)\) keeps the connection to the
+structural stock-price coordinate visible, while the plotted surface should
+be compared only qualitatively with calibrated local volatility.
+
+Within that qualitative interpretation, the combined structural high-\(z\)
+case is the most market-like of the first simulations. It combines thinner
+downside liquidity, weaker downside resilience through \(z(m)=\nu(m)\Delta\),
+and stronger downside forcing. The low-\(z\) resilience-response-only case is
+mainly diagnostic: at fixed \(\gamma\), the leading low-\(z\) approximation
+does not depend on \(z\), so varying \(z(m)\) alone cannot generate leading
+stock dependence in that branch.
+
+\subsection{From the variance rate to the pricing operator}
+The surface plots use \(S>0\) for spot and \(m=\log(S/S_0)\).
+For comparison with the log-price generator in
+\href{https://arxiv.org/abs/2607.05011v4}{Angstmann and Gebbie},
+write \(x\) for spot and \(\ell=\log(x/x_0)\) for log price relative
+to a fixed reference. A density per unit log price and a density per unit
+spot are related by \(p_\ell(\ell,t)=x p_x(x,t)\), since
+\(d\ell=dx/x\). This distinction matters when comparing forward operators.
+
+Suppose a one-state risk-neutral diffusion has been specified under a
+pricing measure \(\mathbb Q\), with a deterministic absolutely continuous
+activity clock \(U\). Let
+\(a(\ell,t)=U'(t)\,\Xi^{\mathbb Q}(\ell,U(t);\Delta)\) be its
+log-price variance rate per unit calendar time. The operational coefficient
+must be specified under the same measure. For short rate \(r\) and
+dividend yield \(q\), the log-price drift is \(b=r-q-a/2\). At fixed
+\(t\), the discounted backward operator on a test claim \(f\) and its
+forward operator on the state-price density \(p=p_\ell\) are
+\begin{align}
+ \mathcal B f &= b\,\partial_\ell f
+       +\tfrac12 a\,\partial_{\ell\ell} f-rf,\nonumber\\
+ \mathcal B^\dagger p &= -\partial_\ell(bp)
+       +\tfrac12\partial_{\ell\ell}(ap)-rp .
+ \label{eq:log-price-adjoint}
+\end{align}
+Integration twice by parts yields the boundary contribution
+\begin{equation}
+ \int_I \bigl(p\,\mathcal B f-f\,\mathcal B^\dagger p\bigr)\,d\ell
+ =\left[bpf+\tfrac12 ap\,\partial_\ell f
+                -\tfrac12 f\,\partial_\ell(ap)\right]_{\partial I},
+ \label{eq:log-price-boundary}
+\end{equation}
+where the bracket denotes its right endpoint value minus its left
+endpoint value. Compact support in the interior, or compatible forward
+and backward boundary conditions, makes this term vanish. The common
+killing rate multiplies the claim and the state-price density alike.
+In spot coordinates the drift and second-order coefficient of the
+backward operator are \((r-q)x\) and \(a x^2/2\), respectively.
+
+This calculation supplies a consistency condition for the two actions
+of a common pricing kernel. The finite-window variance of the observed
+zero and the three-time conditional correlations in
+Sec.~\ref{sec:window-map} are operational-time observables. Identifying
+a one-state pricing kernel also requires a choice of measure, an activity
+clock and a transition law on the chosen state space.
+
+\section{Parameter Choices}
+
+The baseline values are dimensionless simulation controls. They set a
+reasonable scale for visual comparison across profiles and regimes, but they
+should not be read as empirical estimates.
+
+\begin{table}[ht]
+\centering
+\small
+\caption{Dimensionless baseline values and simulation ranges.}
+\label{tab:parameter-ranges}
+\begin{tabular}{p{0.18\linewidth}p{0.13\linewidth}p{0.13\linewidth}p{0.13\linewidth}p{0.30\linewidth}}
+\toprule
+Parameter & Baseline & Minimum & Maximum & Role \\
+\midrule
+\(\gamma\) & 0.55 & 0.30 & 0.80 & Long-memory exponent; avoids endpoints 0 and 1. \\
+\(\Delta\) & 1.0 & 0.5 & 2.0 & Operational coarse-graining scale. \\
+\(A_{\mathrm{eff},0}\) & 1.0 & 0.5 & 2.0 & Effective signed-forcing intensity scale. \\
+\(L_0\) & 1.0 & 0.75 & 1.5 & Baseline liquidity slope. \\
+\(z_{\mathrm{low}}\) & 0.05 & 0.01 & 0.10 & Low-\(z\) response-regime marker. \\
+\(z_{\mathrm{high},0}\) & 10.0 & 5.0 & 25.0 & High-\(z\) response-regime marker. \\
+\(\alpha_0\) & 1.0 & 0.5 & 2.0 & Baseline deterministic activity. \\
+\(a_{\mathrm{short}}\) & 0.25 & 0.0 & 0.75 & Short-maturity activity lift. \\
+\(\tau_\alpha\) & 0.50 & 0.25 & 1.0 & Activity decay scale in years. \\
+\(L_{\mathrm{skew}}\) & 0.80 & 0.0 & 1.5 & Lower downside liquidity when positive. \\
+\(L_{\mathrm{smile}}\) & 1.50 & 0.0 & 3.0 & Liquidity variation away from the center. \\
+\(\nu_{\mathrm{skew}}\) & 1.00 & 0.0 & 2.0 & Weaker downside resilience when positive. \\
+\(A_{\mathrm{stress}}\) & 0.75 & 0.0 & 1.5 & Stronger downside forcing in the combined profile. \\
+\(L_{\mathrm{floor}}\) & 0.20 & 0.10 & 0.50 & Positive floor for the liquidity profile. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\FloatBarrier
+
+\section{Simulated Surfaces}
+
+Each figure pair has the same interpretation. The left panel is the boxed
+surface view of projected local volatility \(\sigloc(m,T)\). The right panel
+is the black contour-line projection of the same surface. The horizontal
+state coordinate is \(m=\ln(S/S_0)\), the maturity coordinate is \(T\) in
+years, and the vertical surface coordinate is projected local volatility in
+dimensionless simulation units.
+
+\subsection{Liquidity-Only Profile}
+
+\begin{figure}[ht]
+ \centering
+ \begin{subfigure}{0.48\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{\FigDir/mpl-surface3d-liquidity-only-low-z-v3.pdf}
+  \caption{Boxed surface view.}
+ \end{subfigure}
+ \hfill
+ \begin{subfigure}{0.48\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{\FigDir/mpl-contour-lines-liquidity-only-low-z-v3.pdf}
+  \caption{Black contour-line projection.}
+ \end{subfigure}
+ \caption{Liquidity-only simulation in the low-\(z\) response regime. The only structural source of stock dependence is the liquidity profile \(\Liq(m)\), which enters the closure through the inverse-square factor \(1/\Liq(m)^2\). Since the low-\(z\) response approximation is independent of \(z\) at fixed \(\gamma\), the response channel does not contribute leading-order stock dependence in this panel.}
+ \label{fig:liquidity-low-z}
+\end{figure}
+
+\begin{figure}[ht]
+ \centering
+ \begin{subfigure}{0.48\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{\FigDir/mpl-surface3d-liquidity-only-high-z-v3.pdf}
+  \caption{Boxed surface view.}
+ \end{subfigure}
+ \hfill
+ \begin{subfigure}{0.48\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{\FigDir/mpl-contour-lines-liquidity-only-high-z-v3.pdf}
+  \caption{Black contour-line projection.}
+ \end{subfigure}
+ \caption{Liquidity-only simulation in the high-\(z\) response regime. The liquidity profile remains the only source of stock dependence because \(z\) is held constant in this profile. The comparison with Fig.~\ref{fig:liquidity-low-z} isolates the change in response-regime scale while preserving the same liquidity-driven surface shape.}
+ \label{fig:liquidity-high-z}
+\end{figure}
+
+\FloatBarrier
+
+\subsection{Resilience-Response-Only Profile}
+
+\begin{figure}[ht]
+ \centering
+ \begin{subfigure}{0.48\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{\FigDir/mpl-surface3d-resilience-response-only-low-z-v3.pdf}
+  \caption{Boxed surface view.}
+ \end{subfigure}
+ \hfill
+ \begin{subfigure}{0.48\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{\FigDir/mpl-contour-lines-resilience-response-only-low-z-v3.pdf}
+  \caption{Black contour-line projection.}
+ \end{subfigure}
+ \caption{Resilience-response-only simulation in the low-\(z\) response regime. The profile varies \(z(m)=\nu(m)\Delta\), but the leading low-\(z\) response approximation in Eq.~\eqref{eq:low-z-response} does not depend on \(z\) at fixed \(\gamma\). The figure is therefore a diagnostic check: it shows the maturity activity effect without an additional leading-order response-driven stock dependence.}
+ \label{fig:resilience-low-z}
+\end{figure}
+
+\begin{figure}[ht]
+ \centering
+ \begin{subfigure}{0.48\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{\FigDir/mpl-surface3d-resilience-response-only-high-z-v3.pdf}
+  \caption{Boxed surface view.}
+ \end{subfigure}
+ \hfill
+ \begin{subfigure}{0.48\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{\FigDir/mpl-contour-lines-resilience-response-only-high-z-v3.pdf}
+  \caption{Black contour-line projection.}
+ \end{subfigure}
+ \caption{Resilience-response-only simulation in the high-\(z\) response regime. Here \(z(m)\) enters directly through \(K_\gamma^{(0)}z^{\gamma-1}\). With \(\gamma<1\), lower downside \(z(m)\) increases the response multiplier, producing stock dependence even though liquidity and forcing are held fixed.}
+ \label{fig:resilience-high-z}
+\end{figure}
+
+\FloatBarrier
+
+\subsection{Combined Structural Profile}
+
+\begin{figure}[ht]
+ \centering
+ \begin{subfigure}{0.48\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{\FigDir/mpl-surface3d-combined-structural-low-z-v3.pdf}
+  \caption{Boxed surface view.}
+ \end{subfigure}
+ \hfill
+ \begin{subfigure}{0.48\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{\FigDir/mpl-contour-lines-combined-structural-low-z-v3.pdf}
+  \caption{Black contour-line projection.}
+ \end{subfigure}
+ \caption{Combined structural simulation in the low-\(z\) response regime. The surface combines liquidity variation and downside forcing while the leading response approximation remains independent of \(z\) at fixed \(\gamma\). The resulting shape should be interpreted as a stylised liquidity-and-forcing effect rather than as a calibrated volatility surface.}
+ \label{fig:combined-low-z}
+\end{figure}
+
+\begin{figure}[ht]
+ \centering
+ \begin{subfigure}{0.48\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{\FigDir/mpl-surface3d-combined-structural-high-z-v3.pdf}
+  \caption{Boxed surface view.}
+ \end{subfigure}
+ \hfill
+ \begin{subfigure}{0.48\linewidth}
+  \centering
+  \includegraphics[width=\linewidth]{\FigDir/mpl-contour-lines-combined-structural-high-z-v3.pdf}
+  \caption{Black contour-line projection.}
+ \end{subfigure}
+ \caption{Combined structural simulation in the high-\(z\) response regime. This profile combines the inverse-square liquidity channel, the response multiplier \(K_\gamma^{(0)}z^{\gamma-1}\), and a stylised downside forcing profile. The figure is the closest of the six simulations to the intended phenomenological comparison with a calibrated volatility surface, while remaining a mechanism simulation rather than an empirical fit.}
+ \label{fig:combined-high-z}
+\end{figure}
+
+\paragraph{Comparing the two combined surfaces.}
+The same liquidity, forcing and activity profiles enter both figures.
+At fixed \(m,T,\Delta,\gamma\), their volatility ratio therefore isolates
+the asymptotic response multipliers,
+\begin{equation}
+ \frac{\sigma_{\rm high}(m,T)}{\sigma_{\rm low}(m,T)}
+ =
+ \left[\frac{K_\gamma^{(0)}z_{\rm high}(m)^{\gamma-1}}
+ {\tan(\pi\gamma/2)/[2(1-\gamma)]}\right]^{1/2}.
+ \label{eq:combined-regime-ratio}
+\end{equation}
+This is a comparison of the two implemented branches. Each uses its
+own regime marker. The ratio is independent of maturity because the
+prescribed activity cancels. Its log slope in \(m\) is
+\((\gamma-1)\nu_{\rm skew}/2=-0.225\) at the baseline parameters.
+The sensitivity experiment that varies \(\Delta\) holds the prescribed
+\(z(m)\) profile fixed. A lag sweep at fixed physical \(\nu\) also moves
+\(z\) and therefore asks a different question. The regime map in
+Sec.~\ref{sec:window-map} varies operational lag and the slow reassessment
+floor for the translating zero; its measured response exponent is distinct
+from either frozen surface multiplier.
+
+\FloatBarrier
+
+\section{Robustness Checks}
+
+The numerical checks verify that the simulated surfaces are finite and
+positive on the grid, that the liquidity floor prevents invalid liquidity
+values, and that the response-regime cases behave consistently with their
+asymptotic formulas. The checks also verify the qualitative distinction
+between the low-\(z\) and high-\(z\) response channels: when only \(z(m)\)
+varies, the low-\(z\) branch has no leading-order \(m\)-dependence at fixed
+\(\gamma\), while the high-\(z\) branch does.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=.70\linewidth]{\FigDir/v2/response-crossover.pdf}
+\caption{\textbf{Frozen variance crossover.} The scaled increment variance and running rate slope use \(\gamma=1/2\). At fixed finite cutoff the microscopic, intermediate and saturated regimes have different lag dependence. Each plotted response uses its stated cutoff.}
+\end{figure}
+\FloatBarrier
+
+For the resilience-only profile, the maximum stock-state spread at fixed
+maturity is zero in the low-\(z\) branch and 0.11837 in the high-\(z\)
+branch. In the combined high-\(z\) case the corresponding spread is
+0.63977. These are spreads of the plotted volatility on the finite grid.
+In the sensitivity sweep over \(\Delta\), the code holds the assigned
+\(z(m)\) profile fixed. The sweep therefore tests the explicit
+\(\Delta^{-\gamma}\) factor at fixed \(z\); a sweep at fixed \(\nu\)
+would also move along the response curve.
+
+\section{A translating liquidity profile}
+Write \(x\) for log price and let \(y(u)\) be the observed zero of the
+imbalance field. For \(D,\nu,\lambda_{\rm dep}>0\), take
+\begin{equation}
+ \partial_u\Phi=D\Phi_{xx}-\nu\Phi-
+ \lambda_{\rm dep}\operatorname{sgn}(x-y)+b(u)h(x-y),\qquad \Phi(y,u)=0 .
+ \label{eq:auxiliary-field}
+\end{equation}
+Set \(a=\sqrt{\nu/D}\) and \(\Liq=\lambda_{\rm dep}/\sqrt{D\nu}\).
+In the absence of forcing there is a family of steady profiles
+\[
+ \Phi_*(\xi)=-\frac{\lambda_{\rm dep}}{\nu}\operatorname{sgn}(\xi)
+       (1-e^{-a|\xi|}),\qquad
+ \psi(\xi)=-\Phi_*'(\xi)=\Liq e^{-a|\xi|},\qquad \xi=x-q .
+\]
+The observed-root variation generated by a field perturbation \(f\) is
+\(p=f(0)/\Liq\). Differentiating the sign source therefore adds
+\(2\lambda_{\rm dep}f(0)\delta_0/\Liq\) to the pinned operator.
+An even bound mode \(e^{-k|x|}\) has derivative jump \(-2k\).
+Continuity and the jump condition give \(Dk=\lambda_{\rm dep}/\Liq\),
+so \(k=a\) and its eigenvalue is \(Dk^2-\nu=0\). There is only one
+decaying solution of that jump equation. The free half-line modes give
+the shape continuum \(( -\infty,-\nu]\). The gap concerns the transverse
+spatial spectrum. The time spectrum of a driven root also depends on its forcing.
+
+The translation coordinate obtained by orthogonal projection, \(\langle\psi,f\rangle/\|\psi\|^2\), and \(p\) are
+distinct observables. For \(f=e^{-2a|x|}-(2/3)e^{-a|x|}\) the phase
+vanishes while \(p=1/(3\Liq)\). For aligned placement
+\(h_*=\kappa_*\psi\), \(\kappa_*=a/(2\Liq)\), substitution in
+Eq.~\eqref{eq:auxiliary-field} instead gives an exact invariant family
+\(\Phi(x,u)=\Phi_*(x-q(u))\), with \(y=q\) and \(\dot q=\kappa_* b\)
+for initial data on that family. At unit parameters the finest cross-root
+weak residual was \(3.16\times10^{-5}\); shifting the placement by 0.4
+raised it to 0.218 for the same trial profile. The shifted-profile check
+tests the equation for a translate, rather than measuring the trajectory
+of a perturbed solution.
+
+\begin{algorithm}[htbp]
+\caption{Recovering the observed zero and testing the translating field}
+\small
+\textbf{Input:} Increasing spatial grid, translated profile samples at three operational times, spatial forcing profile and test function.\\
+\textbf{Output:} Observed zero, local slope and weak field residual.
+\begin{enumerate}\setlength{\itemsep}{0.1em}
+\item Count all crossings. Require one interior positive-to-negative crossing and reject ambiguous or reversed crossings.
+\item Recover the zero by linear interpolation and estimate the slope from the bracketing samples. Record the error against the imposed translation separately.
+\item Split the spatial quadrature at the recovered zero. Difference the field in time and integrate the diffusion term against the second derivative of the compact test function.
+\item Repeat after displacing the forcing profile at fixed trial trajectory. Compare the two residuals at the same space and time steps.
+\end{enumerate}
+\end{algorithm}
+\FloatBarrier
+\begin{figure}[ht]
+\centering
+\includegraphics[width=.91\linewidth]{\FigDir/v2/translation-modes.pdf}
+\caption{\textbf{Translation tangent and moving zero.} The normalised principal lattice mode is compared with the analytic tangent (left). On the invariant family the imposed forcing displaces the full profile and its zero together (right). The independent cross-root residual tests this identity in the field equation.}
+\end{figure}
+\FloatBarrier
+
+\subsection{Implementation and resolution}
+The finite-difference operator uses a central defect of strength
+\(2\lambda_{\rm dep}/(\Liq\,\delta x)\), with Dirichlet walls one cell
+beyond the outermost grid points. At \(D=\nu=\lambda_{\rm dep}=1\)
+the largest eigenvalues on successively refined grids with
+\(\delta x=0.16,0.08,0.04\) are \(-0.00631937,-0.00159490,-0.00039968\).
+The infinite-lattice prediction is
+\[
+ -\nu\frac{(a\,\delta x)^2}{(1+\sqrt{1+(a\,\delta x)^2})^2}.
+\]
+The shape threshold and the translation eigenvalue are also tested on
+boxes of half-width 6, 12 and 24. For the aligned weak-field comparison
+we use three compact test functions and four operational times.
+Refining \((\delta x,\delta u)\) from \((0.08,0.04)\) to \((0.01,0.005)\)
+reduces the maximum weak residual from 0.00249 to 0.0000316. On the
+fine grid the observed-root interpolation error is below 0.0000048.
+
+\section{Causal liquidity reassessment}
+Let \(v=\dot y\) on the aligned family and prescribe
+\[
+ \dot z_r=-rz_r+v,\qquad v=\kappa_*m_u-g\int_0^\infty \rho_\theta(r)z_r\,dr,
+ \qquad \rho_\theta(r)=\frac{\sin(\pi\theta)}{\pi}r^{-\theta},
+ \quad 0<\theta<\tfrac12 .
+\]
+Here \(g\ge0\) is the feedback strength. The causal response is measured
+from zero memory. The Euler integral gives
+\(K(s)=\int\rho_\theta(r)/(s+r)\,dr=s^{-\theta}\) for \(\Re s>0\).
+Consequently the velocity transfer and the root impulse response obey
+\begin{equation}
+ H(s)=\frac{\kappa_*}{1+gK(s)},\qquad
+ \widehat G(s)=\frac{H(s)}{s},\qquad
+ G(u)=\kappa_* E_\theta(-gu^\theta),\quad u\ge0 .
+ \label{eq:feedback}
+\end{equation}
+The factor \(1/s\) integrates the velocity once. Thus velocity under a
+unit step also measures the root response to a unit impulse. We evaluate
+the continuum function independently from its positive relaxation density;
+see \href{https://arxiv.org/abs/1305.0161}{arXiv:1305.0161}.
+
+For rates between \(r_-\) and \(r_+\), take midpoint nodes in \(\log r\)
+with weights \(w_j=\rho_\theta(r_j)r_j\,\delta\log r\).
+Replacing \(K\) by \(K_N(s)=\sum_jw_j/(s+r_j)\) gives
+\(H_N(0)=\kappa_* /(1+g\sum_j w_j/r_j)>0\) for \(\kappa_*>0\).
+The finite model therefore retains a zero-frequency response. The matrix
+of decay rates is similar to \(\operatorname{diag}(r_j)+g dd^\top\),
+where \(d_j=\sqrt{w_j}\); all its eigenvalues are positive.
+The stability check and the value at zero frequency concern different
+properties of the finite system.
+
+For \(D=\nu=\lambda_{\rm dep}=g=1\), \(\kappa_*=1/2\). We used
+\(\theta\in\{1/4,1/3,2/5\}\), independently varied \(r_-\in\{10^{-4},10^{-7}\}\),
+\(r_+\in\{10^3,10^6\}\), and used 48 or 96 nodes and 17 logarithmic
+frequencies from 0.01 to 1. At 96 nodes the maximum relative error against
+adaptive quadrature at the same endpoints was \(2.46\times10^{-5}\).
+Even on the widest rate interval the discrepancy from the infinite-rate
+continuum reached 1.48\%. For the time comparison we used 64 nodes from
+\(10^{-6}\) to \(10^5\), \(\theta=1/3\) and 25 logarithmic lags from
+0.1 to 10. Implicit time integration and independent finite-pole inversion
+differed by at most \(4.02\times10^{-9}\) in absolute response. The
+finite-rate response differed from the continuum by up to 0.00370.
+
+\subsection{Eliminating fast reassessment rates}
+For a cutoff \(\Lambda\), retain all rates below it. Integrating the fast
+states with zero initial history gives the exact causal memory
+\(k_>(u)=\sum_{r_j\ge\Lambda} w_j e^{-r_ju}\) acting on the past velocity.
+For \(\Re s\ge0\) the expansion and its remainder obey
+\[
+ K_>(s)=M_0-sM_1+R(s),\quad
+ M_n=\sum_{r_j\ge\Lambda}w_j/r_j^{n+1},\quad |R(s)|\le |s|^2 M_2 .
+\]
+The estimate follows by expanding each resolvent with exact remainder
+\(s^2/[r_j^2(r_j+s)]\). The reduced denominator is
+\(1+g[K_<(s)+M_0-sM_1]\), so the relative transfer error is bounded by
+\(g|s|^2 M_2/|1+g(K_<+M_0-sM_1)|\) wherever the denominator is nonzero.
+The unit of operational time and the physical values of \(g,\kappa_*\)
+are fixed; the expansion parameter is \(|s|/\Lambda\).
+The derivative approximation applies only on its retained band.
+
+\begin{table}[ht]
+\centering\small
+\caption{Maximum relative velocity-transfer error on 25 logarithmic frequencies
+from 0.001 to 0.2. The three approximations use the same 64 rates and gain.}
+\begin{tabular}{rrrr}
+\toprule
+\(\Lambda\) & Omit shell & Retain \(M_0\) & Retain \(M_0-sM_1\) \\
+\midrule
+2  & 0.2990 & 0.005200 & 0.0002532 \\
+5  & 0.2135 & 0.001811 & 0.0000400 \\
+20 & 0.1321 & 0.000372 & 0.00000251 \\
+\bottomrule
+\end{tabular}
+\end{table}
+\begin{algorithm}[htbp]
+\caption{Causal root response and fast-rate elimination}
+\small
+\textbf{Input:} Rate endpoints, number of nodes, \(\theta,g,\kappa_*\), cutoff \(\Lambda\), operational lags and frequencies.\\
+\textbf{Output:} \(G(u)\), complex \(H(i\omega)\), and errors for each shell approximation.
+\begin{enumerate}\setlength{\itemsep}{0.1em}
+\item Construct positive midpoint weights in log rate. Evaluate the complex transfer from the weighted resolvent and compare it with adaptive quadrature over the same endpoints.
+\item Starting from zero memory, integrate the mode equations under a unit step using implicit Radau time stepping. Reconstruct the same response independently from the symmetric decay matrix. Use scalar quadrature of the continuum relaxation spectrum as a third comparison.
+\item Split at \(r_j\ge\Lambda\). Accumulate \(M_0,M_1,M_2\) only over the fast modes. Keep the slow memory exact and use the original physical units.
+\item At each retained frequency compare the full transfer with the exact shell, omission, static memory and first derivative. Record the complex relative error and its analytic bound.
+\end{enumerate}
+\end{algorithm}
+\FloatBarrier
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{\FigDir/v2/liquidity-feedback.pdf}
+\caption{Left: the root displacement after a unit impulse in signed input, equivalently the velocity under a unit step, at 25 operational lags. The circles use 64 finite rates at \(\theta=1/3\) and the line is the continuum relaxation. Right: relative error in the complex velocity transfer after eliminating rates \(r_j\ge5\), over the retained frequency band. The static and first-derivative approximations use the same fast modes as the omission control.}
+\label{fig:feedback}
+\end{figure}
+Restoring the exact shell memory reproduces the full transfer to within
+\(4.50\times10^{-16}\) on the test grid. For input spectrum
+\(S_m(\omega)\sim A|\omega|^{\gamma-1}\) the ideal continuum predicts
+\(S_v(\omega)\sim A(\kappa_*/g)^2|\omega|^{2\theta+\gamma-1}\) for
+\(g>0\). Setting \(2\theta+\gamma=1\) is a choice of the prescribed
+rate density. Testing an intermediate diffusive regime requires an
+independent estimate of forcing memory, the slope of the integrated
+response and the variance of the observed root over the same lags. A
+finite rate floor changes the asymptote. A physical selection principle
+for the feedback spectrum and transverse stability of a stochastic moving
+front remain open questions.
+
+\section{Response balance on an operational-lag window}
+\label{sec:response-balance}
+
+Let \(m_u\) denote the signed input, \(v\) the velocity of the aligned zero and
+\(G(u)\) its displacement following a unit impulse in that input. Integrating
+the velocity gives \(\widehat G(s)=H(s)/s\). Under zero prehistory this is
+also the transform of the velocity following a unit step. For a stationary
+input with \(S_m(\omega)\propto |\omega|^{\gamma-1}\), linear filtering
+gives \(S_v=|H(i\omega)|^2 S_m\). In the ideal continuum, if
+\(G(u)\sim c u^{-\beta}\) with \(0<\beta<1\) and regular variation,
+then \(H(s)\sim c\Gamma(1-\beta)s^\beta\) on the positive Laplace axis.
+For the causal continuum law derived above its explicit transform gives the
+same power on the frequency axis. The corresponding velocity-spectrum
+exponent is \(2\beta+\gamma-1\). On a finite window we measure
+\[
+ \beta_{\rm eff}(\Delta)=-\frac{d\log G(\Delta)}{d\log\Delta},
+ \qquad B(\Delta)=2\beta_{\rm eff}(\Delta)+\gamma-1 .
+\]
+These local measurements compare two separately observed slopes. Even a
+small residual over a decade does not determine the increment variance of
+the observed zero. With a finite slow-rate floor the velocity transfer
+ultimately approaches a positive constant.
+
+\subsection{Forcing paths and the response measurement}
+On a periodic grid of duration \(T_u=262144\), with operational spacing
+\(h=1\) or \(1/2\), the positive-frequency coefficients of real Gaussian
+white noise are multiplied by
+\( |2\sin(\omega h/2)/h|^{(\gamma-1)/2}\).
+The zero coefficient is set to zero. A real inverse Fourier transform
+produces a stationary periodic sample with its sample mean fixed. There is
+no start-up transient in this construction. On each of 32 independent
+paths per exponent and spacing we regress its realised log periodogram on
+\(\log\omega\), add one to the fitted slope, and repeat using every second
+bin of the same band. The angular frequencies are \([1/320,1/32]\):
+the convention here is reciprocal lag, rather than cycles per lag. On the
+finer grid using all bins, the mean estimates are 0.39762 and 0.62319 for
+prescribed inputs 0.4 and 0.6. Independent paths determine sampling
+uncertainty; Fourier bins from a single path do not count as replicates.
+
+The response experiment uses the finite transfer and its causal inverse
+rather than fitting a price-variance slope. The primary parameters are
+\(g=4,\ \kappa_*=1/2\), rate endpoints \(10^{-7},100\), and 128
+logarithmic midpoint cells. For each input law, the prescribed rate
+exponents are \((1-\gamma)/2\) and that value shifted by \(\pm0.08\).
+At 17 log-spaced centres from 32 to 320 we regress \(\log G\) on log lag
+over \([\Delta/\sqrt2,\sqrt2\Delta]\). Thus the centre interval and the
+extended support used by its endpoint regressions are distinct. Samples
+must be positive over the entire regression support.
+
+\subsection{A change in the placement of signed forcing}
+For the linearised shape comparison use \(D=\nu=\mathcal L=1\).
+Write \(k=\sqrt{1+s}\), taking the branch with positive real part.
+For \(h_\epsilon(x)=[(1-\epsilon)e^{-|x|}+\epsilon e^{-2|x|}]/2\)
+the forcing at the origin stays fixed. The point-interaction resolvent at
+the origin is \(\int e^{-k|x|}h_\epsilon(x)\,dx/[2(k-1)]\).
+The root first variation divides the field perturbation by
+\(\mathcal L\); multiplication by \(s=(k-1)(k+1)\) gives the velocity
+mobility
+\[
+ M_\epsilon(s)=\kappa_* A_\epsilon(s),\quad
+ A_\epsilon(s)=1-\epsilon/(k+2),\qquad
+ H_\epsilon(s)=\frac{\kappa_* A_\epsilon(s)}
+ {1+g A_\epsilon(s)K_N(s)} .
+\]
+Here the feedback gain is held fixed as the profile changes, and the factor
+\(A_\epsilon\) multiplies the feedback as well as the external forcing.
+For \(\epsilon=0\) this recovers the aligned model. For
+\(\epsilon=0.2\), \(A_\epsilon\) has positive real part on
+\(\Re s\ge0\), and its imaginary part has the sign of \(\Im s\).
+The positive Stieltjes sum \(K_N\) has positive real part and the opposite
+imaginary sign. Consequently \(\Re(A_\epsilon K_N)>0\), so the feedback
+denominator cannot vanish there. This placement control concerns the
+first variation of the observed zero. Its extension to a nonlinear
+random front requires separate root tracking.
+
+\begin{algorithm}[htbp]
+\caption{Independent forcing-memory and integrated-response estimates}
+\small\textbf{Input:} Operational lag centres, forcing realisations, feedback parameters, rate bounds and forcing placement.\\
+\textbf{Output:} Input-memory intervals, response slopes, balance intervals and whole-window classifications.
+\begin{enumerate}\setlength{\itemsep}{0.1em}
+\item Fit each path at both Fourier resolutions. Form Student intervals across 32 paths at each spacing, resolution and input exponent. Use the two-sided critical value \(t_{31,1-0.05/16}\) for eight comparisons. For each input exponent keep the envelope of its four intervals.
+\item Evaluate \(\widehat G=H_\epsilon/s\) on the Bromwich line at \(s=(A/2+i\pi j)/u\). Multiply alternating real parts by \(e^{A/2}/u\), halve the zero term and Euler-average partial sums numbered \(n\) to \(n+m\) using weights \(2^{-m}\binom{m}{j}\) indexed from zero. Use \((A,n,m)=(24,40,30)\) and \((28,52,36)\).
+\item Repeat with 64 and 128 rate cells and 9 and 17 log-lag samples in each fit. Compare aligned inversions with finite pole inversion. Keep the minimum and maximum response slope across refinements at each centre.
+\item Combine endpoints monotonically, \([2\beta_{\min}+\gamma_{\rm lo}-1,\,2\beta_{\max}+\gamma_{\rm hi}-1]\). Compatibility requires inclusion in \([-0.1,0.1]\) at every centre. An offset is resolved only when all intervals lie strictly beyond the same edge. Retain other results as inconclusive and flag nonpositive responses.
+\end{enumerate}
+\end{algorithm}
+The input intervals describe finite-window estimates under the periodic
+forcing model. The response envelope measures observed numerical
+sensitivity. It supplies no coverage guarantee for continuum truncation
+or misspecification. At all tested aligned settings the largest absolute
+difference from independent finite pole inversion was
+\(3.32\times10^{-10}\) or less.
+
+\begin{table}[htbp]
+\centering\small
+\caption{Primary response experiment. The interval runs from the smallest lower endpoint to the largest upper endpoint over all 17 lag centres. Labels use the predeclared whole-window criterion.}
+\begin{tabular}{rrrrl}
+\toprule
+Input \(\gamma\) & Rate \(\theta\) & Min. lower & Max. upper & Outcome\\
+\midrule
+0.4 & 0.22 & $-0.219$ & $-0.116$ & Negative offset\\
+0.4 & 0.30 & $-0.071$ & $ 0.028$ & Compatible\\
+0.4 & 0.38 & $ 0.084$ & $ 0.185$ & Inconclusive\\
+0.6 & 0.12 & $-0.185$ & $-0.047$ & Inconclusive\\
+0.6 & 0.20 & $-0.051$ & $ 0.080$ & Compatible\\
+0.6 & 0.28 & $ 0.095$ & $ 0.219$ & Inconclusive\\
+\bottomrule
+\end{tabular}
+\end{table}
+\begin{figure}[htbp]
+\centering\includegraphics[width=.93\linewidth]{\FigDir/v2/response-balance.pdf}
+\caption{Measured balance of the aligned response for the two input laws. Curves give the finest-grid estimates for each prescribed rate exponent. Coloured bands combine the forcing intervals with observed response refinements. The grey strip marks the fixed compatibility tolerance. A signed estimate can be distinguishable from zero while its interval still overlaps the tolerance edge.}
+\label{fig:response-balance}
+\end{figure}
+\FloatBarrier
+Both primary matched cases satisfy the tolerance. Of the four primary
+offset controls, only the lower offset at input exponent 0.4 clears the
+separation threshold throughout the decade. At each matched setting
+raising the slow-rate floor to 0.02 produces a negative offset, as does
+turning feedback off. Reducing the feedback strength from four to one
+gives an inconclusive result for both matches. Raising the rate ceiling
+to 1000 or changing the linearised forcing profile with \(\epsilon=0.2\)
+preserves compatibility for both. The full sweep includes 36
+configurations and 612 lag-centre results. This demonstrates finite-window
+compatibility in a prescribed construction. The independent observed-root variance measurement on the same lag grid follows in Section~\ref{sec:actual-root}.
+
+\section{Variance of the moving zero on the aligned family}
+\label{sec:actual-root}
+
+For the special placement \(h_*=\kappa_*\psi\) the profile
+\(\Phi(x,u)=\Phi_*(x-q(u))\) solves the moving-source equation exactly:
+its time derivative is \(\dot q\,\psi\), its steady spatial terms cancel at
+each translation, and its forcing lies along \(\psi\). With the prescribed
+feedback the scalar velocity obeys the transfer \(H_N\) derived above.
+Since \(\Phi_*\) is strictly decreasing through zero, the actual zero is
+\(y=q\) in the continuum. Numerically we solve on this invariant family
+and locate the zero of the sampled field. This construction tests the
+lifting to the aligned interface; a perturbation of shape can separate
+the observed zero from the phase, as shown in the translating-field section.
+
+\subsection{Stationary increments, matching and the slow-rate floor}
+For centred stationary velocity with two-sided spectral density \(S_v\),
+integration over an operational interval gives
+\begin{equation}
+ V_y(\Delta)=\frac{1}{2\pi}\int_{\mathbb R}
+       \frac{2(1-\cos\omega\Delta)}{\omega^2}
+       |H(i\omega)|^2S_m(\omega)\,d\omega ,
+ \qquad D_{\rm eff}(\Delta)=V_y(\Delta)/\Delta .
+ \label{eq:actual-root-variance}
+\end{equation}
+The increment covariance is
+\(\mathop{\rm Cov}(y(t)-y(0),y(s)-y(0))
+ =[V_y(t)+V_y(s)-V_y(|t-s|)]/2\), where both arguments here are
+operational times. For the ideal continuum with \(g>0\), matched
+\(2\theta+\gamma=1\) and \(S_m(\omega)\sim A|\omega|^{\gamma-1}\),
+one obtains \(S_v(0)=A(\kappa_*/g)^2\). If \(S_v\) is bounded, continuous
+at zero and integrable, changing variable to \(x=\omega\Delta\) and
+applying dominated convergence gives \(V_y(\Delta)/\Delta\to S_v(0)\).
+With centred Gaussian forcing this implies convergence of the
+finite-dimensional laws of \([y(Tu)-y(0)]/\sqrt T\) to those of Brownian
+motion with variance rate \(S_v(0)\). Tightness follows from the Gaussian
+fourth moment and \(V_y(h)\le\|S_v\|_\infty h\). These hypotheses pertain
+to the continuum aligned system. For the frozen stationary tangent,
+\(V_\Delta\le4V_Y\) instead implies a vanishing asymptotic variance rate.
+
+For any finite rate grid with floor \(r_->0\), let \(H_0=H_N(0)>0\).
+If \(|\omega|\le\varepsilon r_-\) with \(0<\varepsilon<1\), then
+\[
+ |K_N(i\omega)-K_N(0)|\le\varepsilon K_N(0),\qquad
+ \left|\frac{H_N(i\omega)}{H_0}-1\right|
+ \le\frac{\varepsilon}{1-\varepsilon}.
+\]
+The first bound follows termwise; the second uses the reverse triangle
+inequality on \(1+gK_N(i\omega)\). At \(\varepsilon=0.01\) the relative
+transfer error is at most 1.011\% for frequencies below \(10^{-9}\) at
+the primary floor and \(2\times10^{-4}\) at the raised floor.
+For a nonperiodic input with the stated infrared power law and an
+integrable high-frequency contribution in Eq.~\eqref{eq:actual-root-variance},
+the low-frequency part then gives
+\[
+ V_y(\Delta)\sim
+ \frac{A H_0^2}{\Gamma(3-\gamma)\sin(\pi\gamma/2)}\,
+ \Delta^{2-\gamma},\qquad 0<\gamma<1 .
+\]
+Thus the positive floor permits intermediate compensation and ultimately
+restores superlinear variance. The finite periodic simulations below
+test the declared decade; the infrared conclusion uses this analytic bound.
+
+\subsection{Sampling, root finding and uncertainty}
+There are 32 independent periodic Gaussian inputs for each exponent and
+sampling design. The three \((T_u,h,\delta x)\) designs are
+\((65536,1,0.125)\), \((65536,1/2,0.0625)\) and
+\((131072,1,0.0625)\). Seeds from a separate stream give 192 independent
+inputs shared across the controls within each exponent and design. White
+noise of variance \(1/h\) is coloured by the previous section's discrete
+spectral shape, so the two-sided input spectral intensity uses the same
+units at both time steps. The DC and Nyquist coefficients are set to zero.
+The periodic stationary solution requires no burn-in. Its arbitrary
+constant position cancels from increments. Both prescribed matches,
+one offset on either side at each input exponent, feedback off and
+the raised floor use the same model parameters as their response tests.
+
+For each realisation evaluate the field on the two fixed-grid nodes
+bracketing its translated centre. If the left and right field values are
+\(a\ge0\) and \(b\le0\) with \(a>b\), the observed zero is
+\(x_L+\delta x\,a/(a-b)\). Check the bracket independently by bisection
+from a common spatial box every 256 observations. The zero estimates from
+the two searches agreed at every audited observation. All 104,857,600
+field measurements had valid brackets. The minimum measured slope
+magnitude was 0.9400, and the largest zero interpolation error relative
+to the known continuum phase was below 0.000752.
+
+\begin{algorithm}[htbp]
+\caption{Actual-root increment variance and its independent spectral check}
+\small\textbf{Input:} Independent forcing paths, finite rates, fixed spatial grid, operational lag centres and nine local regression lags per centre.\\
+\textbf{Output:} Observed-root variance, slope, variance rate, normalised rate and uncertainty.
+\begin{enumerate}\setlength{\itemsep}{0.1em}
+\item Construct the nonzero Fourier coefficients of the phase as
+\(\widehat m_k H_N(i\omega_k)/(i\omega_k)\).
+Reconstruct the translated profiles, measure their zeros and record bracket failures.
+\item Form integer-lag variances \(V_j=2[C_y(0)-C_y(jh)]\) from the circular
+sample autocovariance. For \(\Delta=(j+f)h\), the variance of the increment
+with linearly interpolated endpoint is
+\((1-f)V_j+fV_{j+1}-f(1-f)V_1\). All starting samples enter each path estimate.
+\item Independently sum the expected Fourier-mode powers times
+\(\left|(1-f)e^{ij\omega_kh}+fe^{i(j+1)\omega_kh}-1\right|^2\),
+with weight \(2/(Nh)\) over positive retained modes for the two-sided
+spectral density. Compare the expected and measured variances; repeat the
+prediction with 64 and 128 rate cells.
+\item Average variances across paths and fit \(p_y=d\log V_y/d\log\Delta\)
+over the nine log-lags centred at each of the 17 original centres. Form
+\(D_{\rm eff}\) and \(D_{\rm eff}(\Delta)/D_{\rm eff}(32)\).
+Recompute all three statistics with each independent path removed in turn.
+\item Use the delete-one-path jackknife standard error and Student critical
+value with 31 degrees of freedom and two-sided Bonferroni correction over
+\(3\times17\times10\times3\) comparisons. Take the interval envelope across
+the three designs. Invalid paths invalidate the configuration.
+\end{enumerate}
+\end{algorithm}
+The spectral sum and the path generator use the same finite transfer. The sum evaluates an ensemble expectation independently of the random paths and the field-zero estimator.
+These are approximate simultaneous sampling intervals under the specified
+periodic law. The ensemble mean variance observed on the spatial grid was
+between 0.9712 and 1.0408 of the finite-period theoretical phase variance.
+All 510 spectral predictions lay inside the corresponding sampling intervals.
+The largest relative change in predicted variance on refining the rate grid
+was \(6.11\times10^{-5}\).
+
+\begin{table}[htbp]
+\centering\small
+\caption{Measured aligned-root variance at the primary feedback and floor.
+The slope columns give the envelope over the 17 lag centres and all sampling
+designs. The last column gives the corresponding range for the rate relative
+to its value at lag 32.}
+\begin{tabular}{rrrrr}
+\toprule
+Input \(\gamma\)&Rate \(\theta\)&Lower slope&Upper slope&Relative-rate envelope\\
+\midrule
+0.4 &0.22 &1.077 &1.211 &1.000--1.484\\
+0.4 &0.30 &0.937 &1.073 &0.933--1.079\\
+0.4 &0.38 &0.787 &0.923 &0.671--1.000\\
+0.6 &0.12 &1.049 &1.192 &1.000--1.402\\
+0.6 &0.20 &0.927 &1.068 &0.904--1.045\\
+0.6 &0.28 &0.796 &0.933 &0.666--1.000\\
+\bottomrule
+\end{tabular}
+\end{table}
+\begin{figure}[htbp]
+\centering\includegraphics[width=.92\linewidth]{\FigDir/v2/root-variance.pdf}
+\caption{Slope of the increment variance of the measured moving zero in the
+two primary input laws. Each coloured pair bounds the sampling and design
+envelope for one prescribed rate exponent. The grey band denotes the
+predeclared slope criterion at each lag. Rate positivity and stability are
+tested separately.}
+\label{fig:actual-root-variance}
+\end{figure}
+\FloatBarrier
+Whole-window compatibility requires every slope interval inside
+\([0.9,1.1]\), a positive variance rate, and all relative-rate intervals
+inside \([0.8,1.25]\). Both prescribed matches satisfy all three criteria
+and the earlier response criterion on the same lag grid.
+Their absolute variance-rate envelopes are respectively
+\([0.01396,0.01664]\) and \([0.01593,0.01868]\), rounded to five
+decimal places. Under feedback off, the minimum slope lower endpoints
+are 1.482 and 1.308. With the raised floor they are 1.285 and 1.137.
+All four controls therefore clear the upper threshold throughout the
+window. None of the four primary offset variance experiments clears its
+directional threshold throughout the window. The one directional separation
+in the response experiment remains a response result. The other three
+response controls remain inconclusive. The joint measurement concerns the
+exactly aligned auxiliary model. Transverse fluctuations, rate selection
+from book kinetics and the empirical scope of the mechanism remain open.
+
+\section{Signed covariance of phase and shape}
+\label{sec:phase-shape}
+For a linear field perturbation \(f\), the spectral phase is
+\(q=\langle\psi,f\rangle/\|\psi\|^2\), the first variation of the zero is
+\(p=f(0)/\Liq\), and \(\xi=p-q\) is the stable-sector contribution to the
+observed displacement. For increments on a common operational interval,
+\begin{equation}
+ V_p=V_q+V_\xi+2C_{q\xi},\qquad C_{q\xi}=\mathrm{Cov}(\delta_\Delta q,\delta_\Delta\xi).
+ \label{eq:shape-accounting}
+\end{equation}
+Orthogonality of the spatial modes does not imply independence of their time
+increments. Their signed cross contribution is bounded by \(2\sqrt{V_qV_\xi}\).
+
+\subsection{Additive local response}
+Use the aligned phase transfer \(Q=H_N/s\) and a stationary Abel transfer
+\[
+ X_A(s)=0.1 e^{-\nu_\xi\tau_0}\,
+ \frac{\operatorname{erfcx}(\sqrt{(s+\nu_\xi)\tau_0})}{2\sqrt{s+\nu_\xi}},
+ \quad \nu_\xi=10^{-4},\quad\tau_0=0.25 .
+\]
+For independent Gaussian inputs \(m_1,m_2\) with the preceding section's
+periodic spectrum, set \(\widehat q=Q\widehat m_1\),
+\(\widehat\xi=X_A(\rho\widehat m_1+\sqrt{1-\rho^2}\widehat m_2)\)
+and \(Y=q+\xi\). The benchmark at \(\rho=0\) has exactly zero ensemble
+increment covariance. Changing \(\rho\) to \(\pm0.75\) changes the cross
+spectrum \(\rho Q\overline{X_A}S_m\) while preserving both marginal spectra.
+The local amplitude and resilience specify a constructed model.
+
+\subsection{Projection of a commonly driven field}
+With unit field scales, \(\psi=e^{-|x|}\) has squared norm one. Projecting
+the spatial force \(h_\epsilon\) onto this mode gives
+\(b_q=\langle\psi,h_\epsilon\rangle=(1-\epsilon)/2+\epsilon/3\).
+Put \(k=\sqrt{1+s}\), \(A_\epsilon=1-\epsilon/(k+2)\) and
+\(d=1+gA_\epsilon K_N\). Under fixed-gain feedback from the full observed
+root velocity the three displacement transfers are
+\begin{equation}
+ Q_\epsilon=\frac{b_q}{s d},\qquad
+ P_\epsilon=\frac{A_\epsilon}{2s d},\qquad
+ X_\epsilon=\frac{\epsilon}{6(k+1)(k+2)d}.
+ \label{eq:shape-transfer}
+\end{equation}
+Indeed \(A_\epsilon/2-b_q=\epsilon(k-1)/[6(k+2)]\) and
+\((k-1)(k+1)=s\). This yields a regular expression for the stable
+remainder \(P_\epsilon-Q_\epsilon\). For \(\omega>0\), the arguments
+of \(k+1\) and \(k+2\) lie between zero and \(\pi/4\). Therefore
+\(\Re(Q_\epsilon\overline{X_\epsilon})\) has the sign of \(b_q\epsilon\).
+The common denominator contributes \(|d|^{-2}\). The shape transfer vanishes identically at aligned placement \(\epsilon=0\). This argument
+concerns the first variation of the observed zero.
+
+\subsection{Covariance measurement}
+Use the two matched inputs, the three time grids and the fixed 17 lag
+centres of the preceding section. Fresh seeds give 32 independent Gaussian
+input pairs per exponent and grid. Within each design reuse the inputs
+across controls. For centred path samples let
+\(c(j)=[\langle q_n\xi_{n+j}\rangle+\langle\xi_nq_{n+j}\rangle]/2\).
+The covariance of increments is \(C_j=2[c(0)-c(j)]\). With the same linear
+endpoint interpolation at lag \((j+f)h\) in both series, its value is
+\((1-f)C_j+fC_{j+1}-f(1-f)C_1\). A direct time-domain product checks
+this equality. A separate mode sum weights the real cross spectrum by the
+squared increment multiplier derived in the preceding section.
+
+\begin{algorithm}[htbp]
+\caption{Comparing signed covariance with the observed-root variance}
+\small\textbf{Input:} Phase and shape transfer functions, forcing placement or input correlation, paired seeds and common lag grid.\\
+\textbf{Output:} Component variances, signed covariance, variance slopes and rate intervals.
+\begin{enumerate}\setlength{\itemsep}{.1em}
+\item Generate paired periodic forcing samples. Construct the additive coordinate or independently compute the full root transfer and its two projected components.
+\item Measure each variance and the increment cross product separately. Compare their sum with the total variance. Check the expected cross term using the appropriate signed cross spectrum.
+\item Fit marginal and total slopes on nine centred log-lag points. Form delete-one-path jackknife--Student intervals with 31 degrees of freedom and Bonferroni correction across seven metrics, 17 lags, 12 configurations and three designs. Take the envelope across designs.
+\item Resolve a covariance sign only if every interval has that sign. Require shape slopes strictly within \((0,0.9)\) and the preceding section's total slope and rate criteria at every lag to identify coexistence. An identically zero shape has undefined slope.
+\end{enumerate}
+\end{algorithm}
+All 612 expected cross terms lie within the corresponding design intervals.
+The largest relative variance-identity error is \(1.90\times10^{-12}\);
+the displacement-identity error, scaled by \(\max(1,\max|Y|)\), is below
+\(1.23\times10^{-15}\). Both independent benchmarks contain zero covariance
+at every centre and design.
+
+\begin{table}[htbp]\centering\small
+\caption{Signed covariance contribution as a percentage of the total variance
+over all lag centres and designs. The local column tests subdiffusion and the
+total column tests the full slope, positivity and relative-rate criterion.}
+\begin{tabular}{lrrrrr}\toprule
+Model & \(\gamma\)& Coupling & \(2C/V_Y\) (\%) & Local & Total\\\midrule
+Additive & .4 & 0 & $[-0.98,1.55]$ & yes & yes\\
+ & & $+.75$ & $[15.71,22.34]$ & yes & no\\
+ & & $-.75$ & $[-40.24,-22.32]$ & yes & no\\
+Additive & .6 & 0 & $[-0.70,0.87]$ & yes & no\\
+ & & $+.75$ & $[9.45,16.60]$ & yes & no\\
+ & & $-.75$ & $[-24.96,-11.46]$ & yes & yes\\
+Projected & .4 & 0 & $[0,0]$ & --- & yes\\
+ & & $+.2$ & $[0.0035,0.0504]$ & no & yes\\
+ & & $-.2$ & $[-0.0473,-0.0033]$ & no & yes\\
+Projected & .6 & 0 & $[0,0]$ & --- & no\\
+ & & $+.2$ & $[0.0043,0.0589]$ & no & no\\
+ & & $-.2$ & $[-0.0552,-0.0040]$ & no & no\\\bottomrule
+\end{tabular}\end{table}
+\begin{figure}[htbp]\centering
+\includegraphics[width=.94\linewidth]{\FigDir/v2/phase-shape.pdf}
+\caption{Signed covariance fraction for input exponent 0.4. Paired curves
+bound the interval across designs. The panels have separate vertical scales:
+the commonly driven projected field has a much smaller covariance
+contribution than the correlated additive construction.}\label{fig:shape-cov}
+\end{figure}\FloatBarrier
+Two additive cases meet both criteria: independent input at \(\gamma=0.4\)
+and negative input correlation at \(\gamma=0.6\). All six additive cases
+pass the broad local criterion; none places its entire slope band within
+0.1 of \(1-\gamma\). In the displaced projected field the covariance sign
+reverses with the placement and its magnitude stays below 0.059\% of the
+total variance. No projected case resolves positive subdiffusive shape
+growth throughout the decade. At \(\gamma=0.6\) even the aligned control
+on this new ensemble misses the whole-window total criterion: its lower
+slope envelope reaches 0.884. The preceding experiment used different
+paths, a spatially interpolated zero and a smaller family of simultaneous
+comparisons. Coexistence in a nonlinear field remains open.
+
+\section{Motion of the zero in the nonlinear field}\label{sec:nonlinear-field}
+A boundary which feeds its measured velocity back into the liquidity field can
+move by translation, deformation or both. To distinguish these motions, evolve
+the field on a fixed spatial grid, observe its zero and recover its translation
+phase independently. In the units \(D=\nu=\lambda_{\rm dep}=1\), the system is
+\begin{align}
+ \partial_u\Phi &= \partial_{xx}\Phi-\Phi-\operatorname{sgn}(x-y)
+                         + b\,h_\epsilon(x-y), & \Phi(y,u)&=0,\\
+ h_\epsilon(s)&=\tfrac12[(1-\epsilon)e^{-|s|}+\epsilon e^{-2|s|}],&
+ b &= m_u-(g/\kappa_*)\sum_j w_j z_j,\qquad
+ \dot z_j=-r_jz_j+\dot y .\label{eq:nonlinear-feedback}
+\end{align}
+Here \(g=4,\ \kappa_*=1/2\). The log-rate quadrature uses the preceding
+matched law \(\theta=(1-\gamma)/2\). At \(x=-L,+L\) impose \(+1,-1\),
+respectively. Start from the discrete steady profile at zero forcing
+with \(z_j(0)=0\). In addition to the aligned profile, use a narrower
+profile (\(\epsilon=+.2\)), a broader profile (\(\epsilon=-.2\)), and
+the narrower profile with its slowest rate raised from \(10^{-7}\) to
+\(0.02\). The fastest rate is 100 throughout.
+
+\subsection{Field update and observation}
+Write \(d=\delta u\), \(A=I+d(I-\Delta_h)\), and
+\(\ell_j=(1-e^{-r_jd})/r_j\). Sample the forcing profile \(h=h_\epsilon(x-y^n)\)
+at the old zero, and integrate the sign source over each spatial cell,
+\(S_i=-\mathrm{clip}(2(x_i-y^n)/\delta x,-1,1)\).
+For the piecewise constant step velocity the exact memory update is
+\(z_j^{n+1}=e^{-r_jd}z_j^n+\ell_j(y^{n+1}-y^n)/d\).
+Consequently the updated field has the affine displacement form
+\begin{align}
+ F &= A^{-1}\!\left[\Phi^n+d\{S+h(m_{n+1/2}
+       -(g/\kappa_*)\textstyle\sum_j w_j e^{-r_jd}z_j^n)\}\right],\\
+ U &= (g/\kappa_*)\Big(\textstyle\sum_j w_j\ell_j\Big)A^{-1}h,\qquad
+ \Phi^{n+1}=F-U(y^{n+1}-y^n).
+\end{align}
+The solve for \(F\) includes the fixed walls and that for \(U\) uses
+zero boundary values. Interpolation of the two solutions gives a scalar
+quadratic in each cell, \(F(x)-U(x)(x-y^n)=0\). After solving in the
+candidate bracket we measure the zero of the reconstructed field again.
+
+\begin{algorithm}[htbp]
+\caption{Evolving a field coupled to its observed zero}\small
+\textbf{Input:} Initial field, fixed walls, forcing samples, rate nodes and weights, cell width and time step.\\
+\textbf{Output:} Observed zero \(y\), local phase \(q\), residual \(\xi=y-q\), crossing and consistency diagnostics.
+\begin{enumerate}\setlength{\itemsep}{.1em}
+\item Interpolate the input to the step midpoint, average the sign over each cell and solve the two tridiagonal systems for \(F,U\).
+\item Find a unique descending nodal bracket for the scalar residual. Apply three Newton updates inside the interpolation formula. Reconstruct the field and inspect all its cells for a unique descending simple zero. Record the time and cause of a failed check, including feedback mismatch above \(10^{-8}\).
+\item Update each memory state using the measured displacement. At integer times initialise \(q\) at \(y\), and solve \(\int_{-L}^{L}(\Phi-\Phi_*(x-q))\psi(x-q)\,dx=0\) by trapezoidal quadrature and up to six Newton updates. Require an interior phase with absolute residual below \(10^{-8}\). This selects a local phase branch.
+\item On complete ensembles form centred increments of \(y,q,\xi\) with identical start times and linearly interpolated endpoints. Average the pathwise second moments. Retain all failures in the trajectory denominators.
+\end{enumerate}
+\end{algorithm}
+
+\subsection{Independent travelling-speed and weak-form checks}
+At constant input \(b\) and zero feedback a whole-line travelling profile
+with speed \(v\) obeys \((1-\partial_{ss}-v\partial_s)\Phi
+=-\operatorname{sgn}(s)+b h_\epsilon(s)\), \(s=x-vu\).
+Set \(c=\sqrt{1+v^2/4}\), \(a=c-v/2,\ t=c+v/2\); then \(at=1\).
+The bounded Green kernel has tails \(e^{as}\) for \(s<0\) and
+\(e^{-ts}\) for \(s>0\), divided by \(2c\).
+The zero condition at the origin reduces to
+\begin{equation}
+ v=\frac b2\left[(1-\epsilon)
+ \left(\frac1{a+1}+\frac1{t+1}\right)+\epsilon
+ \left(\frac1{a+2}+\frac1{t+2}\right)\right].\label{eq:nonlinear-speed}
+\end{equation}
+Thus \(v=b/2\) exactly at alignment. The joint refinement preserves the
+resting zero. At \(b=0.1\) it gives speeds \(0.04012,0.03749,0.04281\)
+for \(\epsilon=0,+.2,-.2\), against \(0.05000,0.04667,0.05333\)
+on the whole line. The numerical speeds measure displacement between
+times 8 and 32 from the resting initial condition. This comparison
+combines transients, walls and discretisation. It exposes a roughly
+one-fifth shortfall in all three moving controls.
+
+A subsequent deterministic calculation isolates time-step sensitivity.
+At fixed cell width .1, the aligned speeds for steps .125, .0625, .03125
+and .015625 are .04012, .04456, .04712 and .04855. At cell width .05 the
+corresponding endpoints are .04009 and .04850. At each width both forcing
+perturbations move monotonically closer to their analytic speeds as the
+step decreases. The old-root source placement is first order in time
+along a moving profile. These results identify substantial time-step
+sensitivity in the constant-forcing control. A matched refinement of
+the stochastic paths is a separate test.
+
+For an independent local weak test take \(\varphi=(1-s^2)^4\) on
+\(|s|<1\), zero elsewhere, with \(s=(x-y^n)/2\). The continuum
+sign integrates to zero by parity. With support inside the walls evaluate
+\[
+ R_\varphi=\int\left[\{(\Phi^{n+1}-\Phi^n)/d+\Phi^{n+1}-b h\}\varphi
+                      -\Phi^{n+1}\partial_{xx}\varphi\right]dx .
+\]
+Sample at integer times after burn-in. The mean absolute residual fell in
+each of the 32 matched baseline-to-fine comparisons. A single even test
+probes one component of the field equation and does not bound the error
+of the moving zero.
+
+\subsection{Resolution and exploratory variance}
+For each of \(\gamma=.4,.6\) draw four independent Gaussian inputs on a
+periodic time interval of length 4096 with spacing .25. The nonzero
+interior Fourier amplitudes are multiplied by
+\(\lvert2\sin(\omega h/2)/h\rvert^{(\gamma-1)/2}\), \(h=.25\).
+Set the DC and Nyquist modes to zero, normalise the inverse transform by
+\(1/\sqrt{h}\) and use amplitude .1. Reuse each continuous, linearly
+interpolated input across four placements or cutoffs and six designs.
+Run to 1280 and retain integer observations from 256 through 1280 for
+increment statistics. Use non-wrapping increments and the same nine-point
+log fits about 17 centres from 32 to 320 as in the preceding comparisons.
+
+\begin{table}[htbp]\centering\small
+\caption{Pathwise spatial displacement compared with the joint refinement.
+The error is the largest absolute difference at matched integer times
+from initialisation to 1280. The last column averages the pathwise mean
+absolute weak residual. The joint grid is the reference.}
+\begin{tabular}{lrrrr}\toprule
+Design & Tolerance & Within tolerance & Largest error & Mean \(\lvert R_\varphi\rvert\)\\\midrule
+Baseline & .05 & 20/32 & .18365 & .001293\\
+Space only & .03 & 27/32 & .06255 & .000172\\
+Time only & .03 & 7/32 & .09397 & .001294\\
+Walls only & .03 & 2/32 & .18365 & .001293\\
+Rates only & .03 & 2/32 & .18425 & .001293\\
+Joint reference & --- & --- & --- & .000173\\\bottomrule
+\end{tabular}\label{tab:nonlinear-convergence}\end{table}
+The baseline has \(L=12,\delta x=.2,d=.25\) and 32 rate nodes.
+Refine each separately to \(18,.1,.125,64\), then all together.
+Each of the 192 trajectories retains a unique decreasing zero and a
+measurable phase. The smallest observed crossing-slope magnitude is
+above .89. These finite-box path observations coexist with sizeable
+displacement errors. In particular the joint reference itself has a
+travelling-speed discrepancy. A converged nonlinear variance law
+requires additional resolution evidence.
+
+\begin{table}[htbp]\centering\small
+\caption{Minimum and maximum local slopes of the observed-zero variance
+at the 17 lag centres on the joint grid. Each entry uses four independent
+inputs. The ranges describe variation with lag and carry no simultaneous
+uncertainty coverage.}
+\begin{tabular}{lrr}\toprule
+Forcing or cutoff & \(\gamma=.4\) & \(\gamma=.6\)\\\midrule
+Aligned & .175--.963 & .233--1.023\\
+Narrower & .176--.966 & .233--1.025\\
+Broader & .174--.959 & .232--1.020\\
+Raised floor & .290--1.205 & .315--1.180\\\bottomrule
+\end{tabular}\end{table}
+The increment identity \(V_y=V_q+V_\xi+2C\) holds to a maximum
+relative error of \(2.63\times10^{-15}\) across all 816 lag rows.
+This checks the covariance accounting for the discrete observations.
+Four inputs per exponent and incomplete trajectory agreement leave
+the slope and variance-rate evidence exploratory.
+\begin{figure}[htbp]\centering
+\includegraphics[width=.93\linewidth]{\FigDir/v2/nonlinear-field.pdf}
+\caption{Measured root-variance slope on the jointly refined field at
+\(\gamma=.4\) (left) and worst pathwise root error against that grid for
+each alternative discretisation (right). The pathwise ceilings are .05
+for the baseline and .03 for each individual refinement.}
+\label{fig:nonlinear-field}\end{figure}\FloatBarrier
+
+\section{An intermediate response window for the moving zero}
+\label{sec:window-map}
+\paragraph{From order-flow persistence to the Bouchaud balance.}
+For centred signed input with covariance \(C_m(h)\sim c h^{-\gamma}\),
+\(c>0\) and \(0<\gamma<1\), the variance of the accumulated input
+\(M_\Delta=\int_u^{u+\Delta}m_v\,dv\) is
+\begin{equation}
+ \operatorname{Var} M_\Delta
+ = 2\int_0^\Delta(\Delta-h)C_m(h)\,dh
+ \sim \frac{2c}{(1-\gamma)(2-\gamma)}\Delta^{2-\gamma}.
+ \label{eq:accumulated-flow}
+\end{equation}
+Here the input is stationary and the power-law tail extends across the
+scales used for the asymptotic estimate. The frozen zero responds to
+this input through the boundary's diffusive Green function. Its
+increment variance instead scales as \(\Delta^{1-\gamma}\) in the
+separated window of Sec.~3 and saturates beyond the resilience time.
+Translation supplies a neutral mode on which displacement can accumulate.
+
+For the aligned translating zero, approximate \(G(\Delta)\) by
+\(C\Delta^{-\beta}\) within a scaling band, with \(0<\beta<1\).
+The corresponding velocity transfer is \(H(s)=s\widehat G(s)\);
+in the ideal power-law calculation \(H(s)\propto s^\beta\). Thus
+\(S_v(\omega)=|H(i\omega)|^2 S_m(\omega)\) has exponent
+\(2\beta+\gamma-1\). Its vanishing is the propagator balance of
+\href{https://arxiv.org/abs/cond-mat/0307332}{Bouchaud, Gefen, Potters and Wyart}.
+In a finite band a local slope of \(G\) alone does not determine the
+Fourier spectrum or the increment variance. We therefore estimate the
+input and displacement response independently and test the observed
+root variance on the same prespecified decade.
+For signed input with spectrum \(S_m(\omega)\propto|\omega|^{\gamma-1}\),
+the accumulated order flow can be persistent while the \emph{frozen}
+boundary increments grow sublinearly, \(V_\Delta\propto\Delta^{1-\gamma}\),
+above the microscopic cutoff and below the resilience time.
+A translating field admits a different response. Displacements along its
+neutral translation mode survive after the gapped shape modes have relaxed.
+Distributed reassessment can then attenuate the persistent part of the
+velocity spectrum. The exponent measured here is the decay exponent of the
+displacement impulse response \(G\). The exponent \(\chi_\gamma\) of the
+frozen variance rate measures a different observable.
+
+\subsection{Two scale ratios and their interpretation}
+Measure operational lag in units of the resilience time, \(z=\nu\Delta\),
+and vary the slowest reassessment rate in those units,
+\(a=r_{\min}/\nu\). The dimensionless product \(az=r_{\min}\Delta\)
+compares the same lag to the longest reassessment time. This gives the
+surface two independent axes. The calculation uses \(\nu=1\) and holds the
+fast endpoint \(r_{\max}/\nu=100\) fixed. An independent change of physical
+resilience at fixed dimensional parameters would also require transforming
+the other rates and couplings.
+
+For the aligned field the finite positive modal sum and its logarithmic
+derivative are
+\begin{equation}
+ G(\Delta)=H(0)+\sum_j A_j e^{-p_j\Delta},\qquad
+ \beta_{\rm eff}(\Delta)=
+ \frac{\Delta\sum_j p_j A_j e^{-p_j\Delta}}
+      {H(0)+\sum_j A_j e^{-p_j\Delta}} .
+ \label{eq:window-beta}
+\end{equation}
+Here \(p_j\) are the positive eigenvalues of
+\(\operatorname{diag}(r_j)+g b b^\top\), \(b_j=\sqrt{w_j}\).
+For normalised eigenvectors \(e_j\), \(A_j=\kappa_*g(e_j^\top b)^2/p_j\)
+and \(H(0)=\kappa_*/(1+g\sum_j w_j/r_j)\). With a finite rate band,
+\(G(0^+)=\kappa_*\) and \(G(\infty)=H(0)>0\), hence \(\beta_{\rm eff}\)
+tends to zero at both ends. The guide \(az=1\) marks one slow relaxation
+time. The measured contour depends on the full spectrum and gain.
+
+In the intermediate range the matching argument predicts a velocity
+spectral exponent \(2\beta+\gamma-1\) near zero. In the reference
+case \((\gamma,\theta)=(.4,.30)\) the independently fitted response
+exponent is .2978--.2987 at the 17 lag centres from 32 to 320.
+The corresponding aligned observed-root variance-slope envelope is
+.937--1.073, and \(V_y/\Delta\) lies between .01396 and .01665 in the
+specified units. Raising \(r_{\min}\) to .02 gives a variance-slope
+envelope of 1.285--1.584. At a fixed positive lower rate the ultimate
+low-frequency velocity response is finite. With the specified persistent
+input this restores enhanced low-frequency velocity power. The plateau
+in the \emph{response exponent} describes a finite range of operational
+scales, within which the variance measurement provides a separate test.
+Fast-rate elimination is carried out in \(u\). The surface neither varies
+the observation clock nor specifies a Wilsonian rescaling or fixed point.
+
+\begin{figure}[htbp]\centering
+\includegraphics[width=.96\linewidth]{\FigDir/v2/scale-window.pdf}
+\caption{Operational-scale response and price memory for the aligned
+Gaussian family, with \(g=4,\ \kappa_*=1/2\). A: the response exponent
+from 128 rates, plotted over \(375\times92\) lag--floor pairs. The white
+contour marks .25, the pink diagonal \(r_{\min}\Delta=1\), and the dashed
+verticals the observed decade. B: simultaneous measured root-variance slope
+envelopes over the three sampling designs, with grey tolerance band.
+C: analytic finite-grid conditional correlations at equal separations;
+bands span the three spectral designs. The circle and square in A mark
+the reference and raised floors used in B and C.}
+\label{fig:scale-window}\end{figure}\FloatBarrier
+
+\subsection{How much does an earlier price add?}
+Work with \(X_u=y(u)-y(0)\), measured from a fixed origin. In the aligned
+Gaussian model its stationary increments give the covariance
+\(K_{ij}=[V(t_i)+V(t_j)-V(|t_i-t_j|)]/2\).
+For \(t_1=d,\ t_2=d+h,\ t_3=d+h+k\) set
+\(R_{ij}=K_{ij}-K_{i2}K_{2j}/K_{22}\). Two complementary diagnostics are
+\begin{equation}
+ \rho_{13\mid2}=\frac{R_{13}}{\sqrt{R_{11}R_{33}}},\qquad
+ Q(d,h,k)=\frac{R_{33}}{V(k)} .
+ \label{eq:window-history}
+\end{equation}
+Given \(X_{t_2}\), the next increment has variance \(R_{33}\) and mean
+\((K_{32}/K_{22}-1)X_{t_2}\). Adding \(X_{t_1}\) reduces its remaining
+prediction variance by a fraction \(\rho_{13\mid2}^2\).
+Thus \(Q V(k)/k\) gives a present-conditioned operational variance rate
+on these triples. The conditional second moment also contains the square
+of the conditional mean. A Brownian covariance gives \(Q=1,\rho=0\).
+A Gaussian Markov assertion would require the corresponding conditional
+independences across all triples in its domain.
+
+\begin{table}[htbp]\centering\small
+\caption{Maximum absolute earlier-price partial correlation over 64 triples
+and three periodic spectral grids for each input exponent. The elapsed
+age and both gaps independently take values \(32,80,160,320\).
+The offset controls change the rate exponent by the stated amount.}
+\begin{tabular}{lrr}\toprule
+Mechanism & \(\gamma=.4\) & \(\gamma=.6\)\\\midrule
+Matched rate exponent & .00637 & .01397\\
+Rate exponent minus .08 & .08338 & .05721\\
+Rate exponent plus .08 & .07100 & .08252\\
+Raised slow-rate floor & .19695 & .11932\\
+Feedback off & .36534 & .24138\\
+Fourfold relaxation speed & .05637 & .04722\\\bottomrule
+\end{tabular}\label{tab:unequal-history}\end{table}
+Across the reference triples \(Q\) stays above .999969 at \(\gamma=.4\)
+and .999723 at \(\gamma=.6\). With a raised floor it falls to .8015
+and .9214, respectively. These are population calculations for the
+finite Gaussian spectral models. The largest absolute change in the
+response surface on raising the rate quadrature from 64 to 128 nodes
+was .000450 or less. Each equal-gap design reproduces its independently
+tabulated spectral variance at lag 32.
+
+To compare a second constant clock, let liquidity relaxation advance
+at speed \(c>0\) relative to \(u\) and load the modes by displacement
+on the operational clock, \(dz_j=-c r_j z_j\,du+dy\).
+The modal weights and gain are held fixed. For the adopted rate
+density, changing the integration variable to \(r'=cr\) yields
+\[
+ g\sum_j\frac{w_j}{s+cr_j} =
+ g c^{\theta-1}\sum_j\frac{w'_j}{s+r'_j},
+ \qquad w'_j=c^{1-\theta}w_j .
+\]
+Consequently the transfer alone cannot identify clock speed separately
+from both rate endpoints and coupling. An independently measured kinetic
+timescale would break this degeneracy. This deterministic relative-rate
+comparison does not subordinate operational time to calendar time.
+
+\subsection{Matched refinement of nonlinear trajectories}
+Retain the eight driving paths and four field controls of
+Section~\ref{sec:nonlinear-field}, the fixed half-width 18 and 64 rate
+nodes. The previous joint grid now provides the starting resolution.
+The new joint reference has \(\delta x=.05,d=.03125\), with \(d\) here
+denoting the integration step. Compare \(y\) at all 1281 integer times,
+including the initial transient. Every one of the 160 grid trajectories
+retained a descending zero and passed the phase check.
+\begin{table}[htbp]\centering\small
+\caption{Largest pathwise displacement difference against the new joint
+reference. Each count covers all 32 common-input configurations.
+The earlier 20/32 baseline result concerned the coarser meshes in
+Table~\ref{tab:nonlinear-convergence}.}
+\begin{tabular}{rrrrr}\toprule
+\(\delta x\) & \(d\) & Ceiling & Within ceiling & Largest difference\\\midrule
+.10 & .125   & .05 & 32/32 & .03921\\
+.10 & .0625  & .03 & 32/32 & .02066\\
+.10 & .03125 & .03 & 32/32 & .01708\\
+.05 & .0625  & .03 & 32/32 & .01151\\\bottomrule
+\end{tabular}\label{tab:refined-paths}\end{table}
+At \(\delta x=.1\) the second time halving gave a smaller pathwise
+change than the first on all 32 configurations. The maxima of these
+successive changes were .03543 and .01331. Comparison to a finite
+reference tests discretisation sensitivity at fixed walls, input
+interpolation, burn-in and rate quadrature; it supplies no bound on
+their combined error against a whole-line continuum solution.
+
+\begin{algorithm}[htbp]
+\caption{Comparing response, variance and predictive memory on operational scales}
+\small\textbf{Input:} Finite reassessment spectrum, Gaussian input exponent,
+root trajectories, common resolution grids and lag supports.\\
+\textbf{Output:} Response exponent, marginal and conditional increment
+variances, covariance identity, root displacement error and prediction errors.
+\begin{enumerate}\setlength{\itemsep}{.1em}
+\item Diagonalise the positive finite-rate matrix and differentiate its
+modal response sum. Sweep lag and minimum rate. Compare the local derivative
+to the coarser quadrature and the earlier fitted response at its lag centres.
+\item Filter the signed-input spectrum, omit DC and Nyquist, and invert
+the discrete spectrum to obtain the integer-lag variogram. Form the
+three-time covariance and compute both ratios in Eq.~\eqref{eq:window-history}.
+\item Evolve the nonlinear field on the five common-input grids. Inspect
+every path and compare its observed zero to the joint grid. Retain phase
+and shape separately and reconstruct the centred increment variance.
+\item On the joint grid hold out one entire driving path at a time within
+each case. On the three training paths fit linear predictions with an
+intercept using the present displacement alone and then both present
+and earlier displacements. Score the next increment on the untouched
+path. Pool squared errors across the four holdouts for each gap triple.
+\end{enumerate}
+\end{algorithm}
+
+\subsection{Variance and residual memory after refinement}
+The previous joint grid reproduces its 136 original variance rows.
+Across the five grids, both exponents, four controls and 17 lag centres,
+the relative error in \(V_y=V_q+V_\xi+2C_{q\xi}\) is below
+\(2.36\times10^{-15}\). At fixed integration step .03125, halving
+the spatial cell changes \(V_y/\Delta\) by at most 1.38\% relative
+to the joint reference. At the finest spatial mesh, halving the
+time step changes the same rate by at most 2.03\%. Comparing the old
+and new joint grids gives a maximum relative rate difference of 5.38\%.
+These bounds describe the sampled ensemble at fixed input paths.
+\begin{table}[htbp]\centering\small
+\caption{Range of measured nonlinear variance slopes at the 17 lag
+centres on the refined joint grid. Each case uses four paths per input
+exponent. The bounds are extrema across lags.}
+\begin{tabular}{lrr}\toprule
+Forcing or cutoff & \(\gamma=.4\) & \(\gamma=.6\)\\\midrule
+Aligned placement & .168--.951 & .227--1.016\\
+Narrower placement & .169--.954 & .228--1.020\\
+Broader placement & .167--.948 & .226--1.014\\
+Raised floor & .297--1.203 & .330--1.175\\\bottomrule
+\end{tabular}\label{tab:window-nonlinear-variance}\end{table}
+Every nonlinear case has centres outside the earlier slope band
+\([.9,1.1]\), already at the point-estimate level. For aligned placement
+the minimum variance rate relative to lag 32 is .516 and .612 for
+\(\gamma=.4,.6\). The previous aligned invariant-family calculation
+used stationary periodic trajectories and a larger ensemble. These
+finite-box trajectories start from the resting field with zero memory.
+Their local slopes therefore test a different preparation as well as a
+different numerical evolution.
+
+For an exploratory check on additional price memory in the nonlinear
+field, use each integer origin after burn-in for which the last
+observation lies within the trajectory. Choose the age and both gaps
+independently from \(32,80,160\). Measure held-out error reduction as
+\(1-\mathrm{MSE}_{\rm present,past}/\mathrm{MSE}_{\rm present}\).
+Across the eight cases and 27 triples per case, adding an earlier
+displacement improves mean-square prediction in 17 of 216 comparisons.
+The changes range from a 20.45\% deterioration to a 1.21\% improvement.
+Shared paths and overlapping increments create dependence across those
+comparisons. This four-path experiment measures predictive performance
+for a specified linear predictor; the exact conditional-variance identity
+used for the Gaussian benchmark requires additional assumptions here.
+
+A price-only operational model has its strongest support on the aligned
+intermediate window: the measured root variance grows approximately
+linearly and the population Gaussian innovation variance is nearly
+unchanged by conditioning on the present displacement. These finite-lag
+diagnostics leave open both the full Markov property and a
+state-dependent local-volatility coefficient for the nonlinear field.
+Calendar-time pricing further requires an activity clock, a measure and
+adjoint forward and backward operators on the chosen state space.
+\FloatBarrier
+
+\section{Limitations and interpretation}
+
+The simulations are structural illustrations. They do not estimate
+\(\Liq(S)\), \(\nu(S)\), \(\Aeff(S)\), \(\gamma(S)\), or \(\alpha(T)\) from
+market data. The stock dependence of the plotted surfaces is selected through
+declared phenomenological profiles: inverse-square liquidity effects,
+response dependence through \(z(S)=\nu(S)\Delta\), and a stylised downside
+forcing scale. The role of the figures is therefore to make the theory
+visually testable and to clarify which structural channels can plausibly
+produce surface morphology before any empirical calibration is attempted.
+
+The frozen boundary and the translating boundary answer different physical
+questions at finite resolution. In the frozen model, resilience bounds
+the variance of the stationary level. In the translating model, the
+neutral mode can accumulate displacement. With a prescribed broad spectrum
+of reassessment rates its velocity can have nearly flat spectral power
+over the measured band. The independent aligned-root trajectories support
+that construction. The projected-field and nonlinear calculations limit
+its extension to other forcing placements and initial conditions.
+
+The phase--shape covariance, the change of root position under grid
+refinement and the three-time conditional variance diagnose different
+errors. On the refined nonlinear grids the position tolerance is met
+while whole-window variance scaling is still unresolved. On the aligned
+Gaussian family a small conditional correlation quantifies how little
+one earlier price adds at the tested ages and gaps. A more general
+price-only closure would require information about histories and states
+outside that experiment. Selecting the rate spectrum from order-book
+kinetics and projecting operational dynamics to pricing time remain
+separate physical inputs.
+
+\paragraph{What the finite window contributes to local volatility.}
+On the aligned translating family, the observed ratio
+\(D_{\rm win}(\Delta)=V_y(\Delta)/\Delta\) is positive and approximately
+constant over the measured decade. It provides an operational variance
+scale for a candidate coarse-grained description of that family.
+The surface calculation additionally requires a coefficient conditional
+on the current state. With the deterministic clock and pricing measure
+of Sec.~6.1 this would give
+\(\sigma_{\rm loc}^2(x,t)=U'(t)\,\Xi^{\mathbb Q}(\log(x/x_0),U(t);\Delta)\).
+The regime map measures an unconditional variance on specified paths;
+the structural surface evaluates a prescribed state profile. Inferring
+the state dependence of \(\Xi^{\mathbb Q}\) from the translating field,
+deriving a general nonlinear diffusion law and determining whether price
+alone is a sufficient Markov state belong to the subsequent effective
+field theory. A finite-window variance and three-time history test give
+benchmarks for that theory.
+
+\section*{Use of Generative AI}
+
+Generative AI tools were used as computational and editorial assistance in
+preparing this supplementary note, including drafting explanatory text,
+organizing simulation code, and checking figure and table presentation. The
+theoretical interpretation, modelling assumptions, parameter choices, code
+outputs, and final scientific claims in the historical edition were reviewed by the author(s). The authors accepted the v1.9.0 scientific integration on 26 November 2026. This edition relates the two structural surfaces and the intermediate operational-time response to their respective variance measurements. No empirical market data are used in
+these simulations; the figures are generated from the stated equations and
+declared parameter profiles.
+
+\end{document}
