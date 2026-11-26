@@ -71,3 +71,5 @@ The [v1.6.0 consolidated supplement](supplementary-materials/ReactionBoundaryVol
 The [v1.7.0 consolidated supplement](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.7.0.tex) adds the evolving-field equations, measured-zero algorithm, independent speed benchmark and pathwise refinement results. Substitute `v1.7.0` in the build command above. The [field calculation](docs/audits/nonlinear-field-v1.7.0.md) links the complete numerical evidence.
 
 The [v1.8.0 consolidated supplement](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.8.0.tex) adds the response surface, conditional increments and matched nonlinear refinement. Build with the preceding command using v1.8.0. The [scale-window audit](docs/audits/scale-window-v1.8.0.md) maps the two executable scripts to the figure and six data tables.
+
+The [v1.8.1 companion](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.8.1.tex) adds the log-price density, boundary term and spot-coordinate form of the pricing operator to the accepted v1.8.0 calculation. Use the same build command with v1.8.1.
