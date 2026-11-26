@@ -1,6 +1,6 @@
 # DOI, citation, and license information
 
-Published baseline: `v1.0.0`
+The accepted v2.0.0 edition is documented in the [release notes](RELEASE-NOTES-v2.0.0.md). The DOI below identifies the historical v1.0.0 software deposit.
 
 ZivaHub records the staged software archive. The GitHub tag identifies the released repository tree.
 
@@ -9,13 +9,13 @@ ZivaHub records the staged software archive. The GitHub tag identifies the relea
 | Item | Value |
 |---|---|
 | Associated paper | https://arxiv.org/abs/2607.05011 |
-| Supplementary PDF | supplementary-materials/ReactionBoundaryVolSurface-Supplement-v0.1.pdf |
+| Historical supplementary PDF | supplementary-materials/ReactionBoundaryVolSurface-Supplement-v0.1.pdf |
 | GitHub repository | https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility |
-| GitHub release | https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/releases/tag/v1.0.0 |
+| Historical GitHub release | https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/releases/tag/v1.0.0 |
 | ZivaHub/Figshare DOI | https://doi.org/10.25375/uct.32936867 |
 | ZivaHub/Figshare landing page | https://zivahub.uct.ac.za/articles/software/Reaction-boundary_volatility_surface_reproducibility_code_for_arXiv_2607_05011/32936867 |
 
-## Repository citation
+## Historical deposit citation
 
 ```text
 Gebbie, T., & Angstmann, C. (2026). Reaction-boundary volatility surface

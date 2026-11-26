@@ -2,14 +2,14 @@ cff-version: 1.2.0
 title: "Reaction-boundary volatility surface reproducibility code for arXiv:2607.05011"
 message: "If you use this software, please cite it using the metadata from this file."
 type: software
+version: "2.0.0"
 authors:
   - family-names: Gebbie
     given-names: Tim
   - family-names: Angstmann
     given-names: Chris
 year: 2026
-doi: 10.25375/uct.32936867
 repository-code: "https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility"
-url: "https://doi.org/10.25375/uct.32936867"
+url: "https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility"
 license: MIT
 abstract: "Python reproducibility code for reaction-boundary volatility surface simulations associated with arXiv:2607.05011."

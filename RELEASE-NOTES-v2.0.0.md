@@ -1,0 +1,9 @@
+# v2.0.0 — Boundary response across operational scales
+
+This edition connects two calculations driven by persistent signed order flow. The frozen reaction boundary gives structural volatility surfaces and a subdiffusive increment law above the microscopic cutoff and below the resilience time. For an aligned translating zero with prescribed liquidity reassessment, the displacement response can instead balance input persistence over a finite interval of operational lags. [Preprint](https://arxiv.org/abs/2607.05011v4) · [Mathematical and computational supplement](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v2.0.0.pdf)
+
+For input exponent 0.4 the reference response exponent was 0.2978–0.2987 across lags 32–320. The independently measured root-variance slope spanned 0.937–1.073. Raising the slowest reassessment rate produced slopes of 1.285–1.584. All 32 continuing nonlinear trajectories met the refined displacement tolerance. Each of the eight nonlinear cases retained lags outside the 0.9–1.1 variance-slope interval.
+
+The full replay passed 33 scientific tests, 42 baseline diagnostics and 19 sensitivity checks. Twenty-eight of 29 extension tables reproduced byte for byte. The remaining table differed by at most 1.12 × 10⁻¹⁶ in absolute value. The regime map, twelve structural panels and consolidated supplement were checked against regenerated outputs. [Replay record](docs/audits/release-candidate-v2.0.0-rc.1.md) · [Reproduction instructions](README.md#reproducing-the-accepted-outputs)
+
+The evidence for finite-window diffusion concerns the observed zero on the aligned family. Measurement of a quoted midprice, a general nonlinear diffusion law, price-only Markov closure and a pricing-measure volatility surface derived from two-field kinetics remain open. The DOI cited for the historical software deposit belongs to v1.0.0.

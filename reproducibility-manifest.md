@@ -94,3 +94,5 @@ The first seven extension scripts emit SVG. Their corresponding PDFs are the vec
 ## Release candidate v2.0.0-rc.1
 
 The [end-to-end replay](docs/audits/release-candidate-v2.0.0-rc.1.md) records the exact scientific source, environment, execution order and measured discrepancies. Build the [candidate supplement](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v2.0.0-rc.1.tex) using the regenerated structural PDFs, the seven vector conversions and the directly generated regime-map PDF. The numerical configuration is that of the accepted v1.9.0 checkpoint.
+
+The [v2.0.0 source](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v2.0.0.tex) and [compiled supplement](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v2.0.0.pdf) promote the replayed equations, figures and algorithms to the accepted milestone. Use the preceding build command with the v2.0.0 filename. [Release notes](RELEASE-NOTES-v2.0.0.md)
