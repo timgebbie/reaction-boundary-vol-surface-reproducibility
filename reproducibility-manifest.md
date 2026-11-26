@@ -73,3 +73,20 @@ The [v1.7.0 consolidated supplement](supplementary-materials/ReactionBoundaryVol
 The [v1.8.0 consolidated supplement](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.8.0.tex) adds the response surface, conditional increments and matched nonlinear refinement. Build with the preceding command using v1.8.0. The [scale-window audit](docs/audits/scale-window-v1.8.0.md) maps the two executable scripts to the figure and six data tables.
 
 The [v1.8.1 companion](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.8.1.tex) adds the log-price density, boundary term and spot-coordinate form of the pricing operator to the accepted v1.8.0 calculation. Use the same build command with v1.8.1.
+
+## Figure sources for the v1.9.0-dev companion
+
+The twelve structural panels in §8 use the three named profiles, each evaluated on both response branches. The [figure register](figure-table-provenance-register.csv) identifies each PDF individually. The grid, profile functions and two multipliers are evaluated by [the v3 figure script](scripts/05_generate_matplotlib_figures_v3.py) from [the baseline configuration](config/profile-definitions-v1.json). Both views of each surface use the same volatility array. The historical high-<i>z</i> README pair supplies the layout. Run `python scripts/compose_readme_low_z.py` to assemble the low-<i>z</i> pair from its released PNG panels.
+
+| Companion figure | Calculation | Numerical evidence |
+|---|---|---|
+| [response-crossover](figures/v2/response-crossover.pdf) | [run_frozen_response.py](scripts/run_frozen_response.py) | [response-crossover](outputs/v2/response-crossover.csv) |
+| [translation-modes](figures/v2/translation-modes.pdf) | [run_translating_front.py](scripts/run_translating_front.py) | [translation-spectrum](outputs/v2/translation-spectrum.csv) · [aligned-root-checks](outputs/v2/aligned-root-checks.csv) |
+| [liquidity-feedback](figures/v2/liquidity-feedback.pdf) | [run_liquidity_feedback.py](scripts/run_liquidity_feedback.py) | [feedback-time](outputs/v2/feedback-time.csv) · [feedback-shell](outputs/v2/feedback-shell.csv) |
+| [response-balance](figures/v2/response-balance.pdf) | [run_response_balance.py](scripts/run_response_balance.py) | [balance-window](outputs/v2/balance-window.csv) |
+| [root-variance](figures/v2/root-variance.pdf) | [run_root_variance.py](scripts/run_root_variance.py) | [root-variance-window](outputs/v2/root-variance-window.csv) |
+| [phase-shape](figures/v2/phase-shape.pdf) | [run_phase_shape.py](scripts/run_phase_shape.py) | [phase-shape-window](outputs/v2/phase-shape-window.csv) |
+| [nonlinear-field](figures/v2/nonlinear-field.pdf) | [run_nonlinear_field.py](scripts/run_nonlinear_field.py) | [nonlinear-field-variance](outputs/v2/nonlinear-field-variance.csv) · [nonlinear-field-audit](outputs/v2/nonlinear-field-audit.csv) |
+| [scale-window](figures/v2/scale-window.pdf) | [run_scale_window.py](scripts/run_scale_window.py) | [response-surface](outputs/v2/response-surface.csv) · [root-variance-window](outputs/v2/root-variance-window.csv) · [conditional-history](outputs/v2/conditional-history.csv) |
+
+The first seven extension scripts emit SVG. Their corresponding PDFs are the vector inputs for pdfLaTeX. The regime-map script writes PDF and PNG directly. From the repository root, build the [development companion](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.9.0-dev.tex) with `latexmk -pdf -outdir=supplementary-materials supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.9.0-dev.tex`.
