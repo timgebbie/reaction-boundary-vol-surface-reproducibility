@@ -52,7 +52,7 @@ B(\Delta)=2\beta_{\mathrm{eff}}(\Delta)+\gamma-1.
 
 v1.3.0 measures the causal transfer and the error from eliminating fast reassessment rates. v1.4.0 independently estimates the input exponent $`\gamma`$. v1.5.0 measures the aligned actual-root increment variance $`V_y(\Delta)`$, and a positive, approximately constant $`V_y(\Delta)/\Delta`$ on the same prespecified interval. Off-match rates, a finite slow-rate floor and non-aligned forcing test the limits of the construction. If these observations disagree, that disagreement belongs in the v2.0.0 result. The feedback spectrum is prescribed in this construction. v1.6.0 measures the transverse contribution in a specified linearised field. The v1.7.0 calculation observes the nonlinear zero directly. Section 16 follows the same nonlinear paths under finer spatial and temporal resolution. The paths converge to the stated displacement tolerance, while each tested nonlinear case retains lags outside the variance-slope band. Deriving the reassessment spectrum from bid and ask kinetics remains open. [Supplement §§11–16](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.8.0.tex#L606)
 
-### Structural volatility surface at high <i>z</i>
+## Second figure: the structural volatility surface at high <i>z</i>
 
 ![Combined structural high-z surface and contour pair](figures/readme-combined-structural-high-z-pair-v1.png)
 
@@ -154,7 +154,7 @@ The historical Windows author run used Python 3.13.9. The November replay and v1
 ```bash
 git clone https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility.git
 cd reaction-boundary-vol-surface-reproducibility
-git checkout main
+git checkout e9853ce59321304ac3d9a40fd197387e573685be
 ```
 
 For the accepted v1.7.0 calculation, use commit `f83f8690c45505b5f73cbc9a2a707dc88d0faf32`. For the original published surfaces alone, use the same repository at tag `v1.0.0`.
