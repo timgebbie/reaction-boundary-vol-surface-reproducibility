@@ -62,66 +62,21 @@ v1.3.0 measures the causal transfer and the error from eliminating fast reassess
 
 ## Current situation: v1.7.0 accepted
 
-### Motion of the zero in the nonlinear field (v1.7.0)
+The nonlinear calculation follows the zero of the evolving liquidity field. The strongest evidence for approximately linear price variance over operational lags 32–320 comes from the aligned translating family at v1.5.0. The consolidated [mathematical and computational supplement](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.7.0.pdf) develops both calculations.
 
-With feedback driven by the measured zero, all 192 finite-grid trajectories retained a unique descending crossing. Only 20 of 32 baseline paths met the displacement tolerance against joint refinement. In the deterministic aligned control, reducing the time step eightfold at fixed cell width moved the speed from 0.04012 to 0.04855, against the exact 0.05000. Nonlinear variance slopes remain exploratory. [Field evolution and convergence](docs/audits/nonlinear-field-v1.7.0.md) · [Consolidated supplement v1.7.0 (PDF)](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.7.0.pdf) · [TeX](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.7.0.tex)
+**Evidence inventory**
 
-### How does shape enter the observed variance? (v1.6.0)
-
-The observed displacement is the sum of the phase and a shape contribution. Their increment covariance changes sign when forcing placement is reversed. In the linearised moving field its magnitude contributes less than 0.059% of total variance over the tested decade. Two additive benchmarks meet both the shape and total scaling criteria. No projected-field case does so. The fresh aligned control at input exponent 0.6 also misses the lower total-slope threshold. [Signed covariance and controls](docs/audits/phase-shape-v1.6.0.md) · [All lag outcomes](outputs/v2/phase-shape-window.csv)
-
-### Variance of the moving zero (v1.5.0)
-
-The two matched constructions also pass the independent root-variance test on the 17 operational lags used to measure response. On newly generated paths the measured variance-slope envelopes are 0.937–1.073 and 0.927–1.068. The variance per unit lag stays positive and within the predeclared relative-rate tolerance. Removing feedback or raising the slow-rate floor gives superlinear variance across the tested decade. The primary offset variance comparisons remain inconclusive under the whole-window separation rule. [Actual-root calculation and evidence](docs/audits/actual-root-variance-v1.5.0.md) · [Consolidated supplement](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.5.0.pdf)
-
-### Independent response balance (v1.4.0)
-
-The input memory is measured from forcing paths and the response exponent from a separate displacement experiment. Both prescribed matches satisfy the fixed tolerance at all 17 sampled lags from 32 to 320. Of four primary offset controls, one clears the separation threshold over the full window. The other three remain inconclusive under that rule. The v1.5.0 calculation measures root variance independently on this same window. [All cases and reproduction commands](docs/audits/response-balance-v1.4.0.md) · [Consolidated supplement](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.4.0.pdf)
-
-### From reassessment rates to effective memory (v1.3.0)
-
-The calculation gives the causal response of the aligned root to a distribution of liquidity reassessment rates. The finite-rate velocity response agrees with independent pole inversion to within 4.02 × 10⁻⁹ on the tested lags. Eliminating fast rates induces a memory term whose first-derivative approximation can be checked directly on the retained frequency band. This calculation leaves the forcing exponent to the independent v1.4.0 measurement and the root-variance slope to v1.5.0. [Calculation and reproduction commands](docs/audits/liquidity-feedback-v1.3.0.md) · [Consolidated supplement](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.3.0.pdf)
-
-### Translation mode and measured zero (v1.2.0)
-
-The v1.2.0 calculation asks what changes when the deposition profile follows the observed zero. In the auxiliary field the translated profile has a neutral tangent, while the shape sector retains the resilience gap. With forcing proportional to that tangent, the zero follows the translation coordinate exactly. An orthogonal shape perturbation can shift the zero even when its spectral phase vanishes. [Translating-front calculation and tests](docs/audits/translating-front-v1.2.0.md)
-
-### Frozen boundary variance at finite cutoff (v1.1.0)
-
-The accepted v1.1.0 calculation returns the operational increment variance of the stationary frozen boundary at positive microscopic cutoff. Its independent time-domain evaluation gives a direct check on the spectral calculation in Appendix A of the paper. The original structural surfaces remain the published baseline. [Finite-cutoff comparison](docs/audits/frozen-response-v1.1.0.md)
-
-### Historical replay and checksum reconciliation (v1.0.1)
-
-The released and pre-checkpoint trees passed all 42 diagnostics and 19 sensitivity checks. The checksum comparison records which files in the staged archive match the tagged source. [Preservation audit](docs/audits/baseline-v1.0.0.md)
-
-### Historical structural-surface baseline: v1.0.0
-
-The published v1.0.0 bundle supports the claim that a reaction-boundary variance closure can be projected into local-volatility-like surfaces whose shape reflects structural order-book ingredients rather than direct option calibration.
-
-The published bundle includes
-
-- reproducible simulations for the liquidity-only, resilience/response-only, and combined structural regimes;
-- low-<i>z</i> and high-<i>z</i> response cases;
-- surface and contour representations of the projected local-volatility surfaces;
-- parameter tables linking the mathematical construction to the numerical profiles;
-- diagnostics and sensitivity checks used to verify the active simulation route;
-- the supplementary-materials PDF and LaTeX source.
-
-This is a **simulation and interpretation bundle** for the supplementary materials. It is not an empirical market-data calibration, not a Dupire inversion from option prices, not a trading strategy, and not a production pricing library.
-
-### Evidence inventory
-
-| Identifier | Claim, experiment, or feature | Evidence artifact | Verification status |
+| Version | Calculation | Finding | Evidence |
 |---|---|---|---|
-| Nonlinear field | Measured zero and local phase | [Resolution table](outputs/v2/nonlinear-field-audit.csv) · [Speed refinement](outputs/v2/nonlinear-speed-refinement.csv) | 192 unique roots. Twenty of 32 baseline paths meet the displacement tolerance. |
-| Phase and shape | Independent and jointly forced components | [Spectral and path comparison](outputs/v2/phase-shape-designs.csv) · [Figure](figures/v2/phase-shape.svg) | Signed covariance checked for all 612 design and lag entries. |
-| Aligned moving zero | Independent increment variance on the response window | [All lag comparisons](outputs/v2/root-variance-window.csv) · [Slope figure](figures/v2/root-variance.svg) | Two joint matches, with superlinear variance under feedback-off and raised-floor controls. |
-| Response balance | Independent forcing and response exponents | [612 lag measurements](outputs/v2/balance-window.csv) · [Figure](figures/v2/response-balance.svg) | Two prescribed matches satisfy the tolerance. One of four primary offsets separates across the full grid. |
-| Causal reassessment and fast-rate elimination | Finite transfer, time response and effective memory on the retained band | [Evidence and commands](docs/audits/liquidity-feedback-v1.3.0.md) · [Response and error figure](figures/v2/liquidity-feedback.svg) | 408 frequency comparisons, 25 time points and 75 shell comparisons. |
-| Translating front (W02) | Pinned and moving spectra, translated root, weak field residual across the zero | [Spectra](outputs/v2/translation-spectrum.csv) · [Root and residual](outputs/v2/aligned-root-checks.csv) · [Mode figure](figures/v2/translation-modes.svg) | Eight W02 tests passed. The field and the placement of forcing are specified by the auxiliary construction. |
-| SV2-F01 | Cutoff dependence and the full zero-cutoff crossover | [Figure](figures/v2/response-crossover.svg) · [Figure data](outputs/v2/response-crossover.csv) | Reproduced on the recorded Linux environment. |
-| Frozen increment variance | Independent spectral and time-domain evaluations at finite cutoff | [48 comparisons](outputs/v2/frozen-variance-checks.csv) · [Audit](docs/audits/frozen-response-v1.1.0.md) | Maximum observed relative discrepancy $`3.84\times10^{-11}`$ on the stated grid. |
-| Structural surfaces | Three structural profiles in the low- and high-<i>z</i> regimes | [Diagnostics](diagnostics/stage07-diagnostics-v1.csv) · [Sensitivity checks](diagnostics/stage09-sensitivity-checks-v1.csv) | 42 diagnostics and 19 sensitivity checks passed in the baseline replay. |
+| **v1.7.0** | Nonlinear moving zero | All 192 trajectories kept a unique zero. Only 20 of 32 baseline paths met the displacement tolerance. | [Field audit](docs/audits/nonlinear-field-v1.7.0.md) · [Resolution](outputs/v2/nonlinear-field-audit.csv) |
+| v1.6.0 | Phase and shape | Reversing forcing placement reverses the covariance sign. No projected case met both scaling criteria. | [Covariance audit](docs/audits/phase-shape-v1.6.0.md) · [Lag results](outputs/v2/phase-shape-window.csv) |
+| v1.5.0 | Aligned moving zero | Both matched cases passed the variance test across the decade. All four primary offset tests remained inconclusive. | [Variance audit](docs/audits/actual-root-variance-v1.5.0.md) · [Lag results](outputs/v2/root-variance-window.csv) |
+| v1.4.0 | Forcing and response | Both prescribed matches passed at all 17 lags. One of four primary offsets separated across the window. | [Response audit](docs/audits/response-balance-v1.4.0.md) · [Measurements](outputs/v2/balance-window.csv) |
+| v1.3.0 | Reassessment and memory | The aligned response agrees with independent pole inversion to within 4.02 × 10⁻⁹ on the tested lags. | [Feedback audit](docs/audits/liquidity-feedback-v1.3.0.md) · [Fast-rate error](outputs/v2/feedback-shell.csv) |
+| v1.2.0 | Translating front | Translation has a neutral mode. Transverse modes have a resilience gap and can displace the measured zero. | [Front audit](docs/audits/translating-front-v1.2.0.md) · [Spectrum](figures/v2/translation-modes.svg) |
+| v1.1.0 | Frozen boundary | Time and frequency calculations agree to within 3.84 × 10⁻¹¹ in relative variance across 48 cases. | [Variance checks](outputs/v2/frozen-variance-checks.csv) · [Crossover](figures/v2/response-crossover.svg) |
+| v1.0.1 | Historical replay | All 42 diagnostics and 19 sensitivity checks passed. The audit identifies differences between the staged archive and tagged source. | [Preservation audit](docs/audits/baseline-v1.0.0.md) |
+| v1.0.0 | Published structural surfaces | Three liquidity and resilience profiles generate low- and high-<i>z</i> surface and contour pairs. | [Figures](figures) · [Published release](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/releases/tag/v1.0.0) |
 
 ### Prior implementations and methodological antecedents
 
