@@ -90,3 +90,7 @@ The twelve structural panels in §8 use the three named profiles, each evaluated
 | [scale-window](figures/v2/scale-window.pdf) | [run_scale_window.py](scripts/run_scale_window.py) | [response-surface](outputs/v2/response-surface.csv) · [root-variance-window](outputs/v2/root-variance-window.csv) · [conditional-history](outputs/v2/conditional-history.csv) |
 
 The first seven extension scripts emit SVG. Their corresponding PDFs are the vector inputs for pdfLaTeX. The regime-map script writes PDF and PNG directly. From the repository root, build the [accepted companion](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.9.0.tex) with `latexmk -pdf -outdir=supplementary-materials supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.9.0.tex`.
+
+## Release candidate v2.0.0-rc.1
+
+The [end-to-end replay](docs/audits/release-candidate-v2.0.0-rc.1.md) records the exact scientific source, environment, execution order and measured discrepancies. Build the [candidate supplement](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v2.0.0-rc.1.tex) using the regenerated structural PDFs, the seven vector conversions and the directly generated regime-map PDF. The numerical configuration is that of the accepted v1.9.0 checkpoint.
