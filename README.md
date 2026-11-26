@@ -1,30 +1,22 @@
 # Reaction-boundary volatility surface reproducibility bundle
 
-Version: v1.7.0 — Motion of the zero in the nonlinear field
+Version: v1.7.0 accepted · v1.8.0 review edition
 
 Supplementary code and materials for:
 
 > Chris Angstmann and Tim Gebbie, **“Reaction-boundary variance and adjoint-consistent local-volatility projection,”** [arXiv:2607.05011v4](https://arxiv.org/abs/2607.05011v4).
 
-The mathematical and computational supplement for the current checkpoint is **v1.7.0**. It includes the finite-cutoff variance, the translating-front spectrum, the algorithm for the moving zero and the causal response induced by fast and slow liquidity reassessment. It now also derives the forcing and response estimators and reports the matched and offset tests on a common lag window. The same window now carries an independent variance measurement of the moving zero. The phase–shape calculation traces the signed covariance from common forcing to total variance. The nonlinear calculation follows the descending zero on an Eulerian grid and measures its displacement error against joint refinement.
+The consolidated mathematical and computational supplement follows the frozen-boundary calculation through the translating zero, its response to liquidity reassessment and the variance of its increments. Section 16 introduces the operational-scale regime map and tests how much an earlier price adds once the present price is known.
 
-> [Supplement v1.7.0 (PDF)](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.7.0.pdf) · [Consolidated LaTeX source](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.7.0.tex)
-
-The historical supplement accompanies the [published v1.0.0 software release](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/releases/tag/v1.0.0):
-
-> [ReactionBoundaryVolSurface-Supplement-v0.1.pdf](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v0.1.pdf)
-
-The [v1.2.0 source](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/commit/b65bf066e28466faa6781548a1f21e1b994e780c) and its [computational audit](docs/audits/translating-front-v1.2.0.md) give the translating-front calculation. The [baseline audit](docs/audits/baseline-v1.0.0.md) and [finite-cutoff comparison](docs/audits/frozen-response-v1.1.0.md) document the two earlier checkpoints.
+> [Supplement v1.8.0 (PDF)](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.8.0.pdf) · [Consolidated LaTeX source](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.8.0.tex) · [Historical supplement to v1.0.0](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v0.1.pdf)
 
 This repository is a quantitative-finance reproducibility bundle. Its purpose is to show how the reaction-boundary variance construction generates projected local-volatility surface shapes from liquidity, resilience, and response terms. The code is included so that the figures, tables, diagnostics, and sensitivity checks can be regenerated from the same parameter profiles used in the supplementary materials. This is slightly over-engineered so that it can be easily extended for more sophisticated simulation and calibration work if required. 
 
-## Key figure: combined structural high-z response
+## Key figure: the operational-scale regime map
 
-![Combined structural high-z surface and contour pair](figures/readme-combined-structural-high-z-pair-v1.png)
+[![Three-panel regime map showing the response exponent, moving-zero variance slope and residual price memory](figures/v2/scale-window.png)](figures/v2/scale-window.pdf)
 
-**Figure. Combined structural reaction-boundary volatility surface under the high-<i>z</i> response regime.** Panel A gives the boxed surface view of the projected local volatility $`\sigma_{\mathrm{loc}}`$ over log-moneyness $`m=\ln(x/x_0)`$ and maturity $`T`$. Panel B gives the corresponding black-line contour projection of the same surface. This is the key pair in the supplement because it shows the point of the exercise: the model is not fitting an option-implied surface, but generating a structurally interpretable local-volatility shape from reaction-boundary ingredients. The high-<i>z</i> case emphasises the response-sensitive regime in which liquidity, resilience, and the structural response profile combine to produce a persistent skew-like surface over maturity. The contour view is included because it is easier to compare shape, monotonicity, and curvature across regimes without the visual distortion of a 3D perspective plot.
-
-The combined high-<i>z</i> figure uses the profile definitions and the high-<i>z</i> asymptote in the v1.0.0 structural-surface calculation. The sensitivity summary reports the numerical characteristics of all six surfaces. [Profile definitions](config/profile-definitions-v1.json) · [Sensitivity summary](outputs/stage09-sensitivity-summary-v1.csv) · [Figure register](figure-table-provenance-register.csv)
+**Figure. The intermediate response window of the aligned translating boundary.** Panel A shows the displacement-response exponent $`\beta_{\mathrm{eff}}`$ against operational lag $`z=\nu\Delta`$ and the slowest reassessment rate $`r_{\min}/\nu`$. The diagonal $`r_{\min}\Delta=1`$ marks one relaxation time of the slowest mode. Panel B tests the response against an independent measurement of the moving zero. Across lags 32–320, the variance-slope envelope is 0.937–1.073 at the reference rate floor and rises to 1.285–1.584 when the slowest relaxation enters the window. Panel C measures the dependence between earlier and later prices after conditioning on the present price, at equal operational-time separations. The reference case combines approximately linear variance growth with little residual price memory on the tested scales. A Markov description of the nonlinear zero remains open. [Supplement §§16.1–16.2](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.8.0.tex#L1287) · [Vector figure](figures/v2/scale-window.pdf)
 
 ## The physics
 
@@ -40,11 +32,11 @@ The first calculation asks how liquidity slope, forcing intensity and resilience
 
 The dimensionless lag $`z=\nu\Delta`$ compares the observation interval $`\Delta`$ with the liquidity replenishment time $`\nu^{-1}`$. On the ultraviolet (short-time) side of this crossover, $`\tau_0\ll\Delta\ll\nu^{-1}`$. The boundary responds to persistent signed order flow before liquidity has time to replenish, giving $`V_\Delta\propto\Delta^{1-\gamma}`$. Resilience therefore drops out of the leading variance law, and the microscopic cutoff $`\tau_0`$ sets the lower limit of this scaling window. On the infrared (long-time) side, $`z\gg1`$, replenishment limits the displacement of the frozen boundary. Its increment variance approaches twice the stationary level variance, so the variance per unit operational time falls as $`1/\Delta`$. This distinction motivates the proposed renormalisation-group calculation for the translating boundary: when fast liquidity-reassessment modes are integrated out, which memory terms must be retained to reproduce the root response at lower frequencies?
 
-A state-conditioned local-pricing coefficient requires additional information even when the stationary variance is known. The accepted W01 calculation checks the finite-cutoff result in both time and frequency. [Variance comparison and crossover](docs/audits/frozen-response-v1.1.0.md)
+A state-conditioned local-pricing coefficient requires additional information even when the stationary variance is known. The accepted W01 calculation checks the finite-cutoff result in both time and frequency. [Supplement §3, including the finite-cutoff comparison](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.8.0.tex#L144)
 
 ### From a frozen zero to a translating root (v1.2.0)
 
-When the deposition profile follows the observed zero, the auxiliary field admits translated profiles $`\Phi_{\ast}(x-q)`$. Their tangent $`\psi=-\Phi_{\ast}'`$ is a neutral mode. The transverse spectrum lies at or below $`-\nu`$. For initial data on this family and forcing aligned with $`\psi`$, the observed root is exactly $`y=q`$. A shape perturbation with zero spectral phase can still move the observed zero. This distinction determines which coordinate must be measured in later variance tests. [Profile, spectrum and measured root](docs/audits/translating-front-v1.2.0.md)
+When the deposition profile follows the observed zero, the auxiliary field admits translated profiles $`\Phi_{\ast}(x-q)`$. Their tangent $`\psi=-\Phi_{\ast}'`$ is a neutral mode. The transverse spectrum lies at or below $`-\nu`$. For initial data on this family and forcing aligned with $`\psi`$, the observed root is exactly $`y=q`$. A shape perturbation with zero spectral phase can still move the observed zero. This distinction determines which coordinate must be measured in later variance tests. [Supplement §10, translating profile and observed zero](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.8.0.tex#L532)
 
 ### What would carry the result to v2.0.0?
 
@@ -58,32 +50,43 @@ The proposed extension asks whether delayed liquidity reassessment can compensat
 B(\Delta)=2\beta_{\mathrm{eff}}(\Delta)+\gamma-1.
 ```
 
-v1.3.0 measures the causal transfer and the error from eliminating fast reassessment rates. v1.4.0 independently estimates the input exponent $`\gamma`$. v1.5.0 measures the aligned actual-root increment variance $`V_y(\Delta)`$, and a positive, approximately constant $`V_y(\Delta)/\Delta`$ on the same prespecified interval. Off-match rates, a finite slow-rate floor and non-aligned forcing test the limits of the construction. If these observations disagree, that disagreement belongs in the v2.0.0 result. The feedback spectrum is prescribed in this construction. v1.6.0 measures the transverse contribution in a specified linearised field. The v1.7.0 calculation observes the nonlinear zero directly. Its variance law and the origin of the feedback spectrum remain open.
+v1.3.0 measures the causal transfer and the error from eliminating fast reassessment rates. v1.4.0 independently estimates the input exponent $`\gamma`$. v1.5.0 measures the aligned actual-root increment variance $`V_y(\Delta)`$, and a positive, approximately constant $`V_y(\Delta)/\Delta`$ on the same prespecified interval. Off-match rates, a finite slow-rate floor and non-aligned forcing test the limits of the construction. If these observations disagree, that disagreement belongs in the v2.0.0 result. The feedback spectrum is prescribed in this construction. v1.6.0 measures the transverse contribution in a specified linearised field. The v1.7.0 calculation observes the nonlinear zero directly. Section 16 follows the same nonlinear paths under finer spatial and temporal resolution. The paths converge to the stated displacement tolerance, while each tested nonlinear case retains lags outside the variance-slope band. Deriving the reassessment spectrum from bid and ask kinetics remains open. [Supplement §§11–16](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.8.0.tex#L606)
 
-## Current situation: v1.7.0 accepted
+### Structural volatility surface at high <i>z</i>
 
-The nonlinear calculation follows the zero of the evolving liquidity field. The strongest evidence for approximately linear price variance over operational lags 32–320 comes from the aligned translating family at v1.5.0. The consolidated [mathematical and computational supplement](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.7.0.pdf) develops both calculations.
+![Combined structural high-z surface and contour pair](figures/readme-combined-structural-high-z-pair-v1.png)
+
+**Figure. Combined structural reaction-boundary volatility surface under the high-<i>z</i> response regime.** Panel A gives the boxed surface view of the projected local volatility $`\sigma_{\mathrm{loc}}`$ over log-moneyness $`m=\ln(x/x_0)`$ and maturity $`T`$. Panel B gives the corresponding black-line contour projection of the same surface. Both views show the skew generated by the prescribed liquidity and resilience profiles. The high-<i>z</i> case emphasises the response-sensitive regime in which liquidity, resilience, and the structural response profile combine to produce a persistent skew-like surface over maturity. The contour view is included because it is easier to compare shape, monotonicity, and curvature across regimes without the visual distortion of a 3D perspective plot.
+
+The combined high-<i>z</i> figure uses the profile definitions and the high-<i>z</i> asymptote in the v1.0.0 structural-surface calculation. The sensitivity summary reports the numerical characteristics of all six surfaces. [Supplement §8.3](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.8.0.tex#L468) · [Profile definitions](config/profile-definitions-v1.json) · [Sensitivity summary](outputs/stage09-sensitivity-summary-v1.csv) · [Figure register](figure-table-provenance-register.csv)
+
+## Current situation: v1.8.0 review candidate
+
+The regime map is accepted as the principal figure. The v1.8.0 calculation is under review. The latest accepted scientific checkpoint is v1.7.0.
 
 **Evidence inventory**
 
 | Version | Calculation | Finding | Evidence |
 |---|---|---|---|
-| **v1.7.0** | Nonlinear moving zero | All 192 trajectories kept a unique zero. Only 20 of 32 baseline paths met the displacement tolerance. | [Field audit](docs/audits/nonlinear-field-v1.7.0.md) · [Resolution](outputs/v2/nonlinear-field-audit.csv) |
-| v1.6.0 | Phase and shape | Reversing forcing placement reverses the covariance sign. No projected case met both scaling criteria. | [Covariance audit](docs/audits/phase-shape-v1.6.0.md) · [Lag results](outputs/v2/phase-shape-window.csv) |
-| v1.5.0 | Aligned moving zero | Both matched cases passed the variance test across the decade. All four primary offset tests remained inconclusive. | [Variance audit](docs/audits/actual-root-variance-v1.5.0.md) · [Lag results](outputs/v2/root-variance-window.csv) |
-| v1.4.0 | Forcing and response | Both prescribed matches passed at all 17 lags. One of four primary offsets separated across the window. | [Response audit](docs/audits/response-balance-v1.4.0.md) · [Measurements](outputs/v2/balance-window.csv) |
-| v1.3.0 | Reassessment and memory | The aligned response agrees with independent pole inversion to within 4.02 × 10⁻⁹ on the tested lags. | [Feedback audit](docs/audits/liquidity-feedback-v1.3.0.md) · [Fast-rate error](outputs/v2/feedback-shell.csv) |
-| v1.2.0 | Translating front | Translation has a neutral mode. Transverse modes have a resilience gap and can displace the measured zero. | [Front audit](docs/audits/translating-front-v1.2.0.md) · [Spectrum](figures/v2/translation-modes.svg) |
+| **v1.8.0 (candidate)** | Operational scale and price memory | All 32 paths met the refined displacement tolerance. Each nonlinear case still has lags outside the diffusion-slope band. | [Scale map](figures/v2/scale-window.pdf) · [Supplement §16](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.8.0.tex#L1274) |
+| v1.7.0 | Nonlinear moving zero | All 192 trajectories kept a unique zero. Only 20 of 32 baseline paths met the displacement tolerance. | [Supplement §15](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.8.0.tex#L1120) · [Resolution](outputs/v2/nonlinear-field-audit.csv) |
+| v1.6.0 | Phase and shape | Reversing forcing placement reverses the covariance sign. No projected case met both scaling criteria. | [Supplement §14](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.8.0.tex#L1004) · [Lag results](outputs/v2/phase-shape-window.csv) |
+| v1.5.0 | Aligned moving zero | Both matched cases passed the variance test across the decade. All four primary offset tests remained inconclusive. | [Supplement §13](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.8.0.tex#L838) · [Lag results](outputs/v2/root-variance-window.csv) |
+| v1.4.0 | Forcing and response | Both prescribed matches passed at all 17 lags. One of four primary offsets separated across the window. | [Supplement §12](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.8.0.tex#L712) · [Measurements](outputs/v2/balance-window.csv) |
+| v1.3.0 | Reassessment and memory | The aligned response agrees with independent pole inversion to within 4.02 × 10⁻⁹ on the tested lags. | [Supplement §11](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.8.0.tex#L606) · [Fast-rate error](outputs/v2/feedback-shell.csv) |
+| v1.2.0 | Translating front | Translation has a neutral mode. Transverse modes have a resilience gap and can displace the measured zero. | [Supplement §10](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.8.0.tex#L532) · [Spectrum](figures/v2/translation-modes.svg) |
 | v1.1.0 | Frozen boundary | Time and frequency calculations agree to within 3.84 × 10⁻¹¹ in relative variance across 48 cases. | [Variance checks](outputs/v2/frozen-variance-checks.csv) · [Crossover](figures/v2/response-crossover.svg) |
 | v1.0.1 | Historical replay | All 42 diagnostics and 19 sensitivity checks passed. The audit identifies differences between the staged archive and tagged source. | [Preservation audit](docs/audits/baseline-v1.0.0.md) |
 | v1.0.0 | Published structural surfaces | Three liquidity and resilience profiles generate low- and high-<i>z</i> surface and contour pairs. | [Figures](figures) · [Published release](https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/releases/tag/v1.0.0) |
 
-### Prior implementations and methodological antecedents
+### Theoretical antecedents
 
-| Source | Exact version / commit | Reused or adapted element | Differences and checks |
-|---|---|---|---|
-| [Reaction-boundary paper](https://arxiv.org/abs/2607.05011v4) | arXiv:2607.05011v4 | Eqs. (21) and (47), with Gaussian tangent-state conditioning in Appendix D | Separate implementations compare the finite-cutoff coefficient with the zero-cutoff crossover. |
-| [Translating-front implementation](functions/translating_front.py) | W02 at `b65bf06` | Auxiliary field and aligned forcing used by the numerical extension | [Spectrum and root checks](docs/audits/translating-front-v1.2.0.md) |
+| Source | Result used here |
+|---|---|
+| [Angstmann and Gebbie, arXiv:2607.05011v4](https://arxiv.org/abs/2607.05011v4) | Frozen-boundary variance and local-volatility projection, Eqs. (21) and (47). Appendix D specifies the Gaussian tangent-state conditioning. |
+| [Supplement §§10–11](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.8.0.tex#L532) | Translation of the observed zero, its neutral mode and the causal response induced by liquidity reassessment. |
+| [Supplement §§12–14](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.8.0.tex#L712) | Response balance, independent measurement of aligned-root variance and signed covariance between phase and shape. |
+| [Supplement §§15–16](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.8.0.tex#L1120) | Nonlinear root dynamics, the operational-scale regime map and conditional price memory. |
 
 ## Future situation: possible extensions
 
@@ -144,17 +147,17 @@ provenance/              Stage notes, audits, registers, source freeze, legacy s
 
 ## Installation
 
-The historical Windows author run used Python 3.13.9. The November replay and v1.1.0–v1.7.0 calculations used Linux, Python 3.12.14, NumPy 2.3.5, SciPy 1.17.0 and Matplotlib 3.11.0. The requirements files specify the supported installation constraints. The exact versions above identify the recorded run.
+The historical Windows author run used Python 3.13.9. The November replay and v1.1.0–v1.8.0 calculations used Linux, Python 3.12.14, NumPy 2.3.5, SciPy 1.17.0 and Matplotlib 3.11.0. The requirements files specify the supported installation constraints. The exact versions above identify the recorded run.
 
-### Obtain the accepted scientific source
+### Obtain the scientific source
 
 ```bash
 git clone https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility.git
 cd reaction-boundary-vol-surface-reproducibility
-git checkout f83f8690c45505b5f73cbc9a2a707dc88d0faf32
+git checkout main
 ```
 
-For the original published surfaces alone, use the same repository at tag `v1.0.0`.
+For the accepted v1.7.0 calculation, use commit `f83f8690c45505b5f73cbc9a2a707dc88d0faf32`. For the original published surfaces alone, use the same repository at tag `v1.0.0`.
 
 ### Install dependencies
 
@@ -243,6 +246,8 @@ python -W error scripts/run_root_variance.py
 python -W error scripts/run_phase_shape.py
 python -W error scripts/run_nonlinear_field.py
 python -W error scripts/check_nonlinear_speed.py
+OPENBLAS_NUM_THREADS=1 python -W error scripts/run_scale_window.py
+OPENBLAS_NUM_THREADS=1 python -W error scripts/run_matched_refinement.py
 ```
 
 | Output | Location | Format | Acceptance criterion |
@@ -256,6 +261,7 @@ python -W error scripts/check_nonlinear_speed.py
 | Aligned moving zero | [Per-design variances](outputs/v2/root-variance-designs.csv) · [Joint lag table](outputs/v2/root-variance-window.csv) | CSV, SVG | Both matched root-variance intervals pass on the accepted common window. |
 | Phase and shape | [Per-design comparisons](outputs/v2/phase-shape-designs.csv) · [Whole-window outcomes](outputs/v2/phase-shape-window.csv) | CSV, SVG | All 612 expected cross terms lie inside the corresponding design intervals. Two additive configurations meet both scaling criteria. |
 | Nonlinear moving zero | [Fields, speeds and lag estimates](docs/audits/nonlinear-field-v1.7.0.md) | CSV, SVG | Five output CSVs and the figure reproduced byte for byte from clean source. |
+| Operational-scale regime map and matched refinement | [Regime map](figures/v2/scale-window.pdf) · [Response grid](outputs/v2/response-surface.csv) · [Refinement](outputs/v2/matched-field-refinement.csv) | PNG, PDF, CSV | Six tables and both figure formats reproduced byte for byte in the recorded environment. |
 
 ### Repeating the analysis in an already-used tree
 
@@ -267,6 +273,7 @@ The same commands regenerate the derived files in place. Use the reference check
 |---|---|---|
 | Environment and dependencies | [Baseline replay](docs/audits/baseline-v1.0.0.md) · [Finite-cutoff run](docs/audits/frozen-response-v1.1.0.md) | Recorded on 22 November 2026. |
 | Unit and scientific regression | v1.7.0 scientific suite | All 29 tests passed with warnings treated as errors, including checks of root interpolation, fractional lag increments and spectral normalisation. |
+| Review-edition regression | v1.8.0 scientific suite | All 33 tests passed with warnings treated as errors. |
 | Source integrity | [Archived file and checksum reconciliation](docs/audits/baseline-v1.0.0.md) | Frozen TeX and BibTeX verified. The staged inventory differs from the Git tree. |
 | Clean source reproduction | Independent checkout of the v1.5.0 source | The response and root-variance CSVs and SVGs reproduced byte-for-byte with single-threaded BLAS. Changing BLAS threading moved two earlier time-response columns by at most 1.12 × 10⁻¹⁶. All 61 historical checks passed. |
 | Cross-platform evidence | [Original author and clean-clone report](TEST-REPORT-v1.0.md) | Windows evidence applies to the historical route. The extension was verified on Linux. |
@@ -345,7 +352,8 @@ Gebbie, Tim and Angstmann, Chris (2026). *Reaction-boundary volatility surface r
 | Response-balance supplement v1.4.0 | [PDF](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.4.0.pdf) · [TeX](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.4.0.tex) |
 | Moving-zero supplement v1.5.0 | [PDF](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.5.0.pdf) · [TeX](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.5.0.tex) |
 | Covariance supplement v1.6.0 | [PDF](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.6.0.pdf) · [TeX](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.6.0.tex) |
-| Current supplement v1.7.0 | [PDF](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.7.0.pdf) · [TeX](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.7.0.tex) |
+| Review supplement v1.8.0 | [PDF](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.8.0.pdf) · [TeX](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.8.0.tex) |
+| Accepted supplement v1.7.0 | [PDF](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.7.0.pdf) · [TeX](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.7.0.tex) |
 | GitHub repository | `https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility` |
 | GitHub release | `https://github.com/timgebbie/reaction-boundary-vol-surface-reproducibility/releases/tag/v1.0.0` |
 | ZivaHub/Figshare DOI | [`10.25375/uct.32936867`](https://doi.org/10.25375/uct.32936867) |
@@ -365,14 +373,13 @@ See also `CITATION.cff` and `DOI-CITATION-LICENSE.md`.
 
 ## Current decision and next gate
 
-The v1.1.0 checkpoint verifies the stationary frozen tangent variance on the operational clock. Independent spectral and time-domain calculations agree within $`4\times10^{-11}`$ across the 48 tested configurations. The accepted v1.2.0 checkpoint verifies the neutral translation mode and stable shape spectrum. The v1.3.0 checkpoint checks the causal response of that aligned root and the error from eliminating fast rates. [Feedback calculation and reproduction commands](docs/audits/liquidity-feedback-v1.3.0.md). See the [scientific audit and reproduction commands](docs/audits/frozen-response-v1.1.0.md) and the [crossover figure](figures/v2/response-crossover.svg).
-
+The frozen variance, neutral translation mode and causal response provide the successive comparisons for the regime map. [Frozen variance (§3)](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.8.0.tex#L144) · [Translating profile (§10)](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.8.0.tex#L532) · [Causal reassessment (§11)](supplementary-materials/ReactionBoundaryVolSurface-Supplement-v1.8.0.tex#L606)
 
 | Decision record | Current position |
 |---|---|
-| Current situation | W08/v1.7.0 accepted on `main`. Published software baseline v1.0.0. |
-| Future situation | Map the response exponent across operational scales and assess the precision of the nonlinear displacement. |
+| Current situation | v1.7.0 accepted. The v1.8.0 regime map is the accepted principal figure. Published software baseline v1.0.0. |
+| Future situation | Compare the aligned operational window with the nonlinear variance and price-history controls. |
 | Accepted evidence | Historical surface replay, independent frozen-variance comparison, translating spectrum and aligned-root residual, independent causal-response and shell-reduction checks, the matched and offset balance measurements, and the independent moving-zero variance. The signed phase–shape decomposition agrees with the cross-spectral comparison. See the version table. |
 | Unresolved issues | Historical archive reconciliation and the derivation of effective liquidity feedback from physical kinetics. |
-| Decision required | Evaluate stochastic refinement before attributing a nonlinear variance slope to a change of mechanism. Three response and four primary offset variance classifications remain inconclusive. A GitHub release requires a separate major-milestone decision. |
-| Next gate | W09 compares mechanisms and tests the scale and state dependence of an effective variance rate. |
+| Decision required | Review the refined nonlinear results alongside the aligned Gaussian benchmark. Three response and four primary offset variance classifications remain inconclusive. A GitHub release requires a separate major-milestone decision. |
+| Next gate | Review the v1.8.0 calculation before the v1.9.x claim-by-claim reproduction audit. |
